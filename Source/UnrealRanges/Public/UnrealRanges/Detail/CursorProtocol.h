@@ -1,12 +1,13 @@
 #pragma once
+#include "UnrealRanges/Utility.h"
 
 namespace Ur {
-struct FCursorApi
+struct FCursorProtocol
 {
-    template<typename TView, typename TFn>
-    static decltype(auto) InternalIteration(TView& View, TFn Fn)
+    template<bool IsForward, typename TView, typename TFn>
+    static decltype(auto) InternalIteration(Direction::FDirection<IsForward>, TView& View, TFn Fn)
     {
-        return View.InternalIteration(Fn);
+        return View.InternalIteration<IsForward, TFn>(Fn);
     }
 
     template<typename TView>
@@ -19,6 +20,18 @@ struct FCursorApi
     static decltype(auto) CursorEnd(TView& View)
     {
         return View.CursorEnd();
+    }
+
+    template<typename TView>
+    static decltype(auto) CursorRBegin(TView& View)
+    {
+        return View.CursorRBegin();
+    }
+
+    template<typename TView>
+    static decltype(auto) CursorREnd(TView& View)
+    {
+        return View.CursorREnd();
     }
 
     template<typename TView, typename TCursor>

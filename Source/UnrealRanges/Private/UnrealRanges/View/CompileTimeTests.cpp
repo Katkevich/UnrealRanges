@@ -69,6 +69,16 @@ namespace Ur::View::Test {
         CheckReferenceTypes<const FStringView, const TCHAR&, const TCHAR&>();
     }
 
+    static void BiDirIterator()
+    {
+        using namespace Ur::View;
+
+        TArray<FString> Array;
+        TReverseView<TRefView<TArray<FString>>> ReverseView = Ur::View::Reverse(Array);
+        TReverseView<TRefView<TArray<FString>>> ReverseView2 = Ur::View::Ref(Array).Reverse();
+        TReverseView<TRefView<const TArray<FString>>> DeepConstReverseView = Ur::View::Cref(Array).Reverse();
+    }
+
     static void IteratorReference()
     {
         TArray<FString> Array;

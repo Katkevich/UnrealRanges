@@ -1,13 +1,15 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorApi.h"
+#include "UnrealRanges/Detail/CursorProtocol.h"
 #include <type_traits>
 #include <concepts>
 
 namespace Ur::View {
 
-    template<typename TView>
+    template<typename TView, bool Reverse>
     class TIterator
     {
+        using CursorType = std::conditional_t<Reverse, typename TView::Cursor, typename TView::ReverseCursor>;
+
     public:
         using value_type = typename TView::value_type;
         using reference = std::conditional_t<
@@ -22,10 +24,10 @@ namespace Ur::View {
         >;
 
         // some UE iterators aren't semiregular (TDoubleLinkedList iterator has no default ctor for instance)
-        TIterator() requires std::semiregular<typename TView::Cursor> = default;
+        TIterator() requires std::semiregular<CursorType> = default;
 
-        template<typename UView>
-        TIterator(typename UView::Cursor InCurs, const UView& InView)
+        template<typename UView, typename UCursor>
+        TIterator(UCursor InCurs, const UView& InView)
             : Curs(InCurs)
             , View(std::addressof(InView))
         {
@@ -33,75 +35,122 @@ namespace Ur::View {
 
         reference operator*() const
         {
-            return FCursorApi::CursorDeref(*View, Curs);
+            return FCursorProtocol::CursorDeref(*View, Curs);
         }
 
-        TIterator<TView>& operator++()
+        TIterator& operator++()
         {
-            FCursorApi::CursorInc(*View, Curs);
+            FCursorProtocol::CursorInc(*View, Curs);
             return *this;
         }
 
-        bool operator==(const TIterator<TView>& That) const
+        bool operator==(const TIterator& That) const
         {
             // default iterator is equivalent to end() iterator
-            return View == That.View && (View == nullptr || FCursorApi::CursorEq(*View, Curs, That.Curs));
+            return View == That.View && (View == nullptr || FCursorProtocol::CursorEq(*View, Curs, That.Curs));
         }
 
-        bool operator!=(const TIterator<TView>& That) const
+        bool operator!=(const TIterator& That) const
         {
             return !operator==(That);
         }
 
     private:
-        typename TView::Cursor Curs{};
+        CursorType Curs{};
         const TView* View{};
     };
 
     template<typename TView>
     struct TIteratorMixin
     {
-        using iterator = TIterator<TView>;
-        using const_iterator = TIterator<const TView>;
+        using iterator = TIterator<TView, true>;
+        using const_iterator = TIterator<const TView, true>;
 
         auto begin()
         {
-            return TIterator<TView>{ FCursorApi::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return iterator{ FCursorProtocol::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto end()
         {
-            return TIterator<TView>{ FCursorApi::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return iterator{ FCursorProtocol::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto begin() const
         {
-            return TIterator<const TView>{ FCursorApi::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto end() const
         {
-            return TIterator<const TView>{ FCursorApi::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cbegin()
         {
-            return TIterator<const TView>{ FCursorApi::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cend()
         {
-            return TIterator<const TView>{ FCursorApi::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cbegin() const
         {
-            return TIterator<const TView>{ FCursorApi::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cend() const
         {
-            return TIterator<const TView>{ FCursorApi::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ FCursorProtocol::CursorEnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+    };
+
+    template<typename TView>
+    struct TReverseIteratorMixin
+    {
+        using reverse_iterator = TIterator<TView, false>;
+        using const_reverse_iterator = TIterator<const TView, false>;
+
+        auto rbegin()
+        {
+            return reverse_iterator{ FCursorProtocol::CursorRBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto rend()
+        {
+            return reverse_iterator{ FCursorProtocol::CursorREnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto rbegin() const
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorRBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto rend() const
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorREnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto crbegin()
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorRBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto crend()
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorREnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto crbegin() const
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorRBegin(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+        }
+
+        auto crend() const
+        {
+            return const_reverse_iterator{ FCursorProtocol::CursorREnd(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
     };
 }

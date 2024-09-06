@@ -12,6 +12,12 @@ namespace Ur {
         Ur::End(Rng);
     };
 
+    template<typename TRng>
+    concept BiDirRange = Range<TRng> && requires(TRng Rng) {
+        Ur::RBegin(Rng);
+        Ur::REnd(Rng);
+    };
+
     template<typename TIt>
     struct IteratorTraits
     {
@@ -37,6 +43,12 @@ namespace Ur {
 
     template<Range TRng>
     using RangeConstIterator = decltype(Ur::Begin(std::declval<std::add_lvalue_reference_t<std::add_const_t<std::remove_reference_t<TRng>>>>())); // const TRng& && -> const TRng&
+
+    template<BiDirRange TRng>
+    using RangeReverseIterator = decltype(Ur::RBegin(std::declval<std::add_lvalue_reference_t<TRng>>())); // TRng& && -> TRng&
+
+    template<BiDirRange TRng>
+    using RangeReverseConstIterator = decltype(Ur::RBegin(std::declval<std::add_lvalue_reference_t<std::add_const_t<std::remove_reference_t<TRng>>>>())); // const TRng& && -> const TRng&
 
     template<Range TRng>
     using RangeValue = IteratorValue<RangeIterator<TRng>>;
