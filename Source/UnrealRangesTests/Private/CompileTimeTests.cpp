@@ -4,7 +4,6 @@
 #include "Containers/Map.h"
 #include "Containers/List.h"
 #include "Containers/StaticArray.h"
-#include "Containers/BitArray.h"
 #include "Containers/ChunkedArray.h"
 #include "Containers/Deque.h"
 #include "Containers/IndirectArray.h"

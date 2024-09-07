@@ -12,10 +12,11 @@ namespace Ur::View {
     template<typename TView>
     class TReverseView
         : public FView
-        , public TReverseMixin<TReverseView<TView>>
+        , public TTransformMixin<TReverseView<TView>>
+        , public TToMixin<TReverseView<TView>>
         , public TIteratorMixin<TReverseView<TView>>
         , public TReverseIteratorMixin<TReverseView<TView>>
-        , public TToMixin<TReverseView<TView>>
+        , public TReverseMixin<TReverseView<TView>>
     {
         friend struct FCursorProtocol;
 
@@ -27,7 +28,7 @@ namespace Ur::View {
         using Cursor = typename TView::ReverseCursor;
         using ReverseCursor = typename TView::Cursor;
 
-        static constexpr bool IsBiDir = true;
+        static constexpr bool IsBidir = true;
 
         template<typename UView>
         TReverseView(Misc::FFromViewTag, UView InView)
@@ -65,7 +66,7 @@ namespace Ur::View {
         template<typename TCursor>
         void CursorInc(TCursor& Curs) const
         {
-            ++Curs;
+            return FCursorProtocol::CursorInc(View, Curs);
         }
 
         template<typename TCursor>
@@ -77,7 +78,7 @@ namespace Ur::View {
         template<typename TCursor>
         bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
         {
-            return !(Lhs != Rhs);
+            return FCursorProtocol::CursorEq(View, Lhs, Rhs);
         }
 
     private:

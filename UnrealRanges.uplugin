@@ -19,6 +19,11 @@
 			"Name": "UnrealRanges",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "UnrealRangesTests",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }

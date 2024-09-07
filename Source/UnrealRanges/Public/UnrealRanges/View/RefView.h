@@ -13,7 +13,7 @@
 
 namespace Ur::View {
     namespace Detail {
-        template<bool IsBiDir, typename TRng>
+        template<bool IsBidir, typename TRng>
         struct TReverseCursor
         {
             using Type = void;
@@ -25,15 +25,16 @@ namespace Ur::View {
             using Type = RangeReverseIterator<TRng>;
         };
 
-        template<bool IsBiDir, typename TRng>
-        using TReverseCursorType = typename TReverseCursor<IsBiDir, TRng>::Type;
+        template<bool IsBidir, typename TRng>
+        using TReverseCursorType = typename TReverseCursor<IsBidir, TRng>::Type;
     }
 
     template<typename TRng>
     class TRefView
         : public FView
-        , public TIteratorMixin<TRefView<TRng>>
+        , public TTransformMixin<TRefView<TRng>>
         , public TToMixin<TRefView<TRng>>
+        , public TIteratorMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
     {
@@ -48,7 +49,7 @@ namespace Ur::View {
         using Cursor = RangeIterator<TRng>;
         using ReverseCursor = Detail::TReverseCursorType<BiDirRange<TRng>, TRng>;
 
-        static constexpr bool IsBiDir = BiDirRange<TRng>;
+        static constexpr bool IsBidir = BiDirRange<TRng>;
 
         template<typename URng>
         TRefView(Misc::FFromViewTag, URng& InRng)
@@ -57,10 +58,10 @@ namespace Ur::View {
         }
 
     private:
-        template<bool Direction, typename TFn>
+        template<bool IsForward, typename TFn>
         void InternalIteration(TFn Fn)
         {
-            for (auto It = Ur::BeginEx<Direction>(*Rng); It != Ur::EndEx<Direction>(*Rng); ++It)
+            for (auto It = Ur::BeginEx<IsForward>(*Rng); It != Ur::EndEx<IsForward>(*Rng); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)
                     break;
         }
@@ -75,12 +76,12 @@ namespace Ur::View {
             return Ur::End(*Rng);
         }
 
-        ReverseCursor CursorRBegin() const requires BiDirRange<TRng>
+        ReverseCursor CursorRBegin() const requires IsBidir
         {
             return Ur::RBegin(*Rng);
         }
 
-        ReverseCursor CursorREnd() const requires BiDirRange<TRng>
+        ReverseCursor CursorREnd() const requires IsBidir
         {
             return Ur::REnd(*Rng);
         }

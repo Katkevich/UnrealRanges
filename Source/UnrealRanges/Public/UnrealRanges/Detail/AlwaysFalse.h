@@ -2,7 +2,7 @@
 
 namespace Ur::Detail {
 template<typename T>
-struct FAlwaysFalse
+struct TAlwaysFalse
 {
     static constexpr bool Value = false;
 };

@@ -95,6 +95,9 @@ namespace Ur {
 
         template<bool IsForward>
         static constexpr auto Opposite = FDirection<!IsForward>{};
+
+        template<bool IsForward>
+        static constexpr auto Same = FDirection<IsForward>{};
     }
 
     template<bool IsForward>
