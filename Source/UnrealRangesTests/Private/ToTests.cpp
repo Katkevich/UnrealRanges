@@ -251,16 +251,28 @@ bool FUnrealRangesTests_IntoTDoubleLinkedList::RunTest(const FString& Parameters
     return EqualTo(Result, { 1, 2, 3 });
 }
 
-//IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IntoTStaticArray, "UnrealRanges.To.TestIntoTStaticArray", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-//bool FUnrealRangesTests_IntoTStaticArray::RunTest(const FString& Parameters)
-//{
-//    TArray<int32> From({ 1, 2, 3 });
-//
-//    // TStaticArray have NTTP parameter thus To<TStaticArray> isn't possible
-//    TStaticArray<int32, 3> Result;
-//    Ur::View::Ref(From).Into(Result);
-//
-//    return EqualTo(Result, { 1, 2, 3 });
-//}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IntoTStaticArray, "UnrealRanges.To.TestIntoTStaticArray", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_IntoTStaticArray::RunTest(const FString& Parameters)
+{
+    TArray<int32> From({ 1, 2, 3 });
+
+    // TStaticArray have NTTP parameter thus To<TStaticArray> isn't possible
+    TStaticArray<int32, 3> Result;
+    Ur::View::Ref(From).Into(Result);
+
+    return EqualTo(Result, { 1, 2, 3 });
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IntoTStaticArrayOverSize, "UnrealRanges.To.TestIntoTStaticArrayOverSize", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_IntoTStaticArrayOverSize::RunTest(const FString& Parameters)
+{
+    TArray<int32> From({ 1, 2, 3 });
+
+    // TStaticArray have NTTP parameter thus To<TStaticArray> isn't possible
+    TStaticArray<int32, 2> Result;
+    Ur::View::Ref(From).Into(Result);
+
+    return EqualTo(Result, { 1, 2 });
+}
 
 #endif

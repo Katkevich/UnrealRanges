@@ -1,6 +1,7 @@
 #pragma once
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Utility.h"
+#include "Templates/IntegralConstant.h"
 #include <concepts>
 #include <type_traits>
 
@@ -85,4 +86,15 @@ namespace Ur {
     template<typename TView>
     concept UnrealView = std::derived_from<TView, Ur::View::FView>;
 
+
+    template<template<typename...> typename T, template<typename...> typename U>
+    struct TIsSameTemplate : TIntegralConstant<bool, false>
+    {};
+
+    template<template<typename...> typename T>
+    struct TIsSameTemplate<T, T> : TIntegralConstant<bool, true>
+    {};
+
+    template<template<typename...> typename T, template<typename...> typename U>
+    static constexpr bool TIsSameTemplate_V = TIsSameTemplate<T, U>::Value;
 }

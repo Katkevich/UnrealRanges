@@ -10,12 +10,6 @@
 
 namespace Ur::View {
 
-    template<typename T>
-    struct foo;
-
-    template<typename T>
-    concept OwnedPtr = TIsTUniquePtr_V<T> || TIsOwned_V<T>;
-
     template<typename TView>
     struct TToMixin
     {
@@ -24,12 +18,21 @@ namespace Ur::View {
         {
             using ElementType = typename TView::value_type;
 
-            if constexpr (Ur::TIsMapTemplate_V<TContainer>)
+            if constexpr (TIsMapTemplate_V<TContainer>)
             {
                 using KeyType = decltype(std::declval<ElementType>().Key);
                 using ValueType = decltype(std::declval<ElementType>().Value);
 
                 TContainer<KeyType, ValueType> Target;
+                this->Into(Target);
+
+                return Target;
+            }
+            else if constexpr (TIsSameTemplate_V<TContainer, TIndirectArray> && (TIsTUniquePtr_V<ElementType> || TIsOwned_V<ElementType>))
+            {
+                using UnderlyingType = ElementType::ElementType;
+
+                TIndirectArray<UnderlyingType> Target;
                 this->Into(Target);
 
                 return Target;
@@ -40,19 +43,6 @@ namespace Ur::View {
                 this->Into(Target);
                 return Target;
             }
-        }
-
-        template<>
-        auto To<TIndirectArray>() requires OwnedPtr<typename TView::value_type>
-        {
-            using ElementType = typename TView::value_type;
-            using UnderlyingType = ElementType::ElementType;
-
-            TIndirectArray<UnderlyingType> Target;
-
-            this->Into(Target);
-
-            return Target;
         }
 
         template<typename TContainer>
@@ -69,34 +59,9 @@ namespace Ur::View {
         {
             using ElementType = typename TView::value_type;
 
-            if constexpr (TIsIndirectArray_V<TContainer>)
-            {
-                if constexpr (TIsTUniquePtr_V<ElementType>)
-                {
-                    this->IntoImpl(Target, &ElementType::Release);
-                }
-                else if constexpr (TIsOwned_V<ElementType>)
-                {
-                    this->IntoImpl(Target, &ElementType::Ptr);
-                }
-                else
-                {
-                    static_assert(Detail::TAlwaysFalse<TContainer>::Value, "sequence of [TUniquePtr<T>] or [TOwned<T>] are only supported for now as a source for TIndirectArray");
-                }
-            }
-            else
-            {
-                this->IntoImpl(Target);
-            }
-        }
-
-    private:
-        template<typename TContainer, typename TProjection = FIdentityFunctor>
-        void IntoImpl(TContainer& Target, TProjection Proj = {})
-        {
-            using ElementType = std::invoke_result_t<TProjection, typename TView::value_type>;
-
             // MSVC has a bug which forbids the usage of "requires" expression inside lambda...
+            constexpr bool IsIndirectArray = TIsIndirectArray_V<TContainer>;
+            constexpr bool IsStaticArray = TIsStaticArray_V<TContainer>;
             constexpr bool HasAddElement = requires{ Target.AddElement(std::declval<ElementType>()); };
             constexpr bool HasAdd = requires{ Target.Add(std::declval<ElementType>()); };
             constexpr bool HasAddTail = requires{ Target.AddTail(std::declval<ElementType>()); };
@@ -105,46 +70,73 @@ namespace Ur::View {
             constexpr bool HasAppendChar = requires{ Target.AppendChar(std::declval<ElementType>()); };
             constexpr bool HasAppend = requires{ Target.Append(std::declval<ElementType>()); };
 
-            static_assert(HasAdd || HasAddTail || HasPushLast || HasAppendInt || HasAppendChar || HasAppend,
+            static_assert(IsIndirectArray || IsStaticArray || HasAdd || HasAddTail || HasPushLast || HasAppendInt || HasAppendChar || HasAppend,
                 "the target container does not support adding elements in the intended way");
+
+            int32 Index = 0;
 
             FCursorProtocol::InternalIteration(Direction::Forward, *static_cast<TView*>(this), [&](auto&& Item)
                 {
-                    // TChunkedArray (Add method has different meaning for TChunkedArray)
-                    if constexpr (HasAddElement)
+                    // TIndirectArray
+                    if constexpr (IsIndirectArray)
                     {
-                        Target.AddElement(std::invoke(Proj, UR_FWD(Item)));
+                        if constexpr (TIsTUniquePtr_V<ElementType>)
+                        {
+                            Target.Add(Item.Release());
+                        }
+                        else if constexpr (TIsOwned_V<ElementType>)
+                        {
+                            Target.Add(Item.Ptr);
+                        }
+                        else
+                        {
+                            static_assert(Detail::TAlwaysFalse<TContainer>::Value, "sequence of [TUniquePtr<T>] or [TOwned<T>] are only supported for now as a source for TIndirectArray");
+                        }
+                    }
+                    // TStaticArray
+                    else if constexpr (IsStaticArray)
+                    {
+                        // make sure we do not exceed array size
+                        if (Index < Target.Num())
+                            Target[Index++] = UR_FWD(Item);
+                        else
+                            return Misc::ELoop::Break;
+                    }
+                    // TChunkedArray (Add method has different meaning for TChunkedArray)
+                    else if constexpr (HasAddElement)
+                    {
+                        Target.AddElement(UR_FWD(Item));
                     }
                     // TArray, TSet, TSparseArray
                     else if constexpr (HasAdd)
                     {
-                        Target.Add(std::invoke(Proj, UR_FWD(Item)));
+                        Target.Add(UR_FWD(Item));
                     }
                     // TDoubleLinkedList
                     else if constexpr (HasAddTail)
                     {
-                        Target.AddTail(std::invoke(Proj, UR_FWD(Item)));
+                        Target.AddTail(UR_FWD(Item));
                     }
                     // TDeque
                     else if constexpr (HasPushLast)
                     {
-                        Target.PushLast(std::invoke(Proj, UR_FWD(Item)));
+                        Target.PushLast(UR_FWD(Item));
                     }
                     // FString
                     // checking the exact type so that we do not hide AppendInt
                     else if constexpr (HasAppendChar && std::is_same_v<TCHAR, std::remove_cvref_t<ElementType>>)
                     {
-                        Target.AppendChar(std::invoke(Proj, UR_FWD(Item)));
+                        Target.AppendChar(UR_FWD(Item));
                     }
                     // FString
                     else if constexpr (HasAppendInt)
                     {
-                        Target.AppendInt(std::invoke(Proj, UR_FWD(Item)));
+                        Target.AppendInt(UR_FWD(Item));
                     }
                     // FString
                     else if constexpr (HasAppend)
                     {
-                        Target.Append(std::invoke(Proj, UR_FWD(Item)));
+                        Target.Append(UR_FWD(Item));
                     }
 
                     return Misc::ELoop::Continue;

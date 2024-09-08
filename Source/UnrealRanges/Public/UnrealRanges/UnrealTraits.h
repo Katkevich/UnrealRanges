@@ -1,6 +1,7 @@
 #pragma once
 #include "UnrealRanges/Traits.h"
 #include "Containers/IndirectArray.h"
+#include "Containers/StaticArray.h"
 #include "Containers/Map.h"
 #include "Templates/IntegralConstant.h"
 #include <type_traits>
@@ -17,6 +18,18 @@ namespace Ur {
 
     template<typename T>
     static constexpr bool TIsIndirectArray_V = TIsIndirectArray<T>::Value;
+
+
+    template<typename T>
+    struct TIsStaticArray : TIntegralConstant<bool, false>
+    {};
+
+    template<typename T, uint32 ArrSize, uint32 Alignment>
+    struct TIsStaticArray<TStaticArray<T, ArrSize, Alignment>> : TIntegralConstant<bool, true>
+    {};
+
+    template<typename T>
+    static constexpr bool TIsStaticArray_V = TIsStaticArray<T>::Value;
 
 
     template<typename T>
