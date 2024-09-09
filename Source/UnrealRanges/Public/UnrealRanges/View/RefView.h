@@ -1,5 +1,6 @@
 #pragma once
 #include "UnrealRanges/View/Mixin/Transform.h"
+#include "UnrealRanges/View/Mixin/Filter.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -11,6 +12,10 @@
 #include "UnrealRanges/Detail/EmptyBase.h"
 #include "UnrealRanges/Detail/CursorProtocol.h"
 #include <memory>
+
+#ifndef UR_DEBUG_NOINLINE
+#define UR_DEBUG_NOINLINE //FORCENOINLINE
+#endif
 
 namespace Ur::View {
     namespace Detail {
@@ -34,6 +39,7 @@ namespace Ur::View {
     class TRefView
         : public FView
         , public TTransformMixin<TRefView<TRng>>
+        , public TFilterMixin<TRefView<TRng>>
         , public TToMixin<TRefView<TRng>>
         , public TMinMaxMixin<TRefView<TRng>>
         , public TIteratorMixin<TRefView<TRng>>
@@ -61,47 +67,47 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        static void InternalIteration(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TFn Fn)
         {
             for (auto It = Ur::BeginEx<IsForward>(*Self.Rng); It != Ur::EndEx<IsForward>(*Self.Rng); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)
                     break;
         }
 
-        Cursor CursorBegin() const
+        UR_DEBUG_NOINLINE Cursor CursorBegin() const
         {
             return Ur::Begin(*Rng);
         }
 
-        Cursor CursorEnd() const
+        UR_DEBUG_NOINLINE Cursor CursorEnd() const
         {
             return Ur::End(*Rng);
         }
 
-        ReverseCursor CursorRBegin() const requires IsBidir
+        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
         {
             return Ur::RBegin(*Rng);
         }
 
-        ReverseCursor CursorREnd() const requires IsBidir
+        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
         {
             return Ur::REnd(*Rng);
         }
 
         template<typename TCursor>
-        void CursorInc(TCursor& Curs) const
+        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
         {
             ++Curs;
         }
 
         template<typename TCursor>
-        reference CursorDeref(const TCursor& Curs) const
+        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
         {
             return *Curs;
         }
 
         template<typename TCursor>
-        bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
         {
             return !(Lhs != Rhs);
         }

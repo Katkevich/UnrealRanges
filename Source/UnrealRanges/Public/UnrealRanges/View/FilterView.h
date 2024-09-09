@@ -11,27 +11,27 @@
 
 namespace Ur::View {
     template<typename TView, typename TFn>
-    class TTransformView
+    class TFilterView
         : public FView
-        , public TTransformMixin<TTransformView<TView, TFn>>
-        , public TFilterMixin<TTransformView<TView, TFn>>
-        , public TToMixin<TTransformView<TView, TFn>>
-        , public TMinMaxMixin<TTransformView<TView, TFn>>
-        , public TIteratorMixin<TTransformView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TTransformView<TView, TFn>>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TTransformView<TView, TFn>>>
+        , public TTransformMixin<TFilterView<TView, TFn>>
+        , public TFilterMixin<TFilterView<TView, TFn>>
+        , public TToMixin<TFilterView<TView, TFn>>
+        , public TMinMaxMixin<TFilterView<TView, TFn>>
+        , public TIteratorMixin<TFilterView<TView, TFn>>
+        , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TFilterView<TView, TFn>>>
+        , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TFilterView<TView, TFn>>>
     {
     public:
-        using reference = std::invoke_result_t<TFn, typename TView::reference>;
-        using const_reference = std::invoke_result_t<TFn, typename TView::const_reference>;
-        using value_type = std::remove_reference_t<reference>;
+        using reference = typename TView::reference;
+        using const_reference = typename TView::const_reference;
+        using value_type = typename TView::value_type;
         using Cursor = typename TView::Cursor;
         using ReverseCursor = typename TView::ReverseCursor;
 
         static constexpr bool IsBidir = TView::IsBidir;
 
         template<typename UView, typename UFn>
-        TTransformView(UView InView, UFn InFn)
+        TFilterView(UView InView, UFn InFn)
             : View(InView)
             , Fn(InFn)
         {
@@ -42,13 +42,20 @@ namespace Ur::View {
         {
             FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
-                    return Callback(std::invoke(Self.Fn, UR_FWD(Item)));
+                    if (std::invoke(Self.Fn, Item))
+                    {
+                        return Callback(UR_FWD(Item));
+                    }
+                    return Misc::ELoop::Continue;
                 });
         }
 
         UR_DEBUG_NOINLINE Cursor CursorBegin() const
         {
-            return FCursorProtocol::CursorBegin(View);
+            auto Curs = FCursorProtocol::CursorBegin(View);
+            this->FastForward(Curs);
+
+            return Curs;
         }
 
         UR_DEBUG_NOINLINE Cursor CursorEnd() const
@@ -58,7 +65,10 @@ namespace Ur::View {
 
         UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
         {
-            return FCursorProtocol::CursorRBegin(View);
+            auto Curs = FCursorProtocol::CursorRBegin(View);
+            this->FastForward(Curs);
+
+            return Curs;
         }
 
         UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
@@ -69,13 +79,14 @@ namespace Ur::View {
         template<typename TCursor>
         UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
         {
-            return FCursorProtocol::CursorInc(View, Curs);
+            FCursorProtocol::CursorInc(View, Curs);
+            this->FastForward(Curs);
         }
 
         template<typename TCursor>
         UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
         {
-            return std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs));
+            return FCursorProtocol::CursorDeref(View, Curs);
         }
 
         template<typename TCursor>
@@ -85,14 +96,35 @@ namespace Ur::View {
         }
 
     private:
+        template<typename TCursor>
+        void FastForward(TCursor& Curs) const
+        {
+            const auto CursEnd = this->CursorEndOfType<TCursor>();
+
+            while (!FCursorProtocol::CursorEq(View, Curs, CursEnd) && !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs)))
+            {
+                FCursorProtocol::CursorInc(View, Curs);
+            }
+        }
+
+        template<typename TCursor>
+        auto CursorEndOfType() const
+        {
+            if constexpr (std::is_same_v<TCursor, Cursor>)
+                return this->CursorEnd();
+            else
+                return this->CursorREnd();
+        }
+
+    private:
         TView View;
         TFn Fn;
     };
 
 
     template<typename TRng, typename TFn>
-    auto Transform(TRng& Rng, TFn Fn)
+    auto Filter(TRng& Rng, TFn Fn)
     {
-        return TTransformView<TRefView<TRng>, TFn>(TRefView<TRng>({}, Rng), Fn);
+        return TFilterView<TRefView<TRng>, TFn>(TRefView<TRng>({}, Rng), Fn);
     }
 }

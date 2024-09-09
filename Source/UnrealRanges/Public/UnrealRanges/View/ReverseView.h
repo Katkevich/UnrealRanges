@@ -1,5 +1,6 @@
 #pragma once
 #include "UnrealRanges/View/Mixin/Transform.h"
+#include "UnrealRanges/View/Mixin/Filter.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -14,6 +15,7 @@ namespace Ur::View {
     class TReverseView
         : public FView
         , public TTransformMixin<TReverseView<TView>>
+        , public TFilterMixin<TReverseView<TView>>
         , public TToMixin<TReverseView<TView>>
         , public TMinMaxMixin<TReverseView<TView>>
         , public TIteratorMixin<TReverseView<TView>>
@@ -40,45 +42,45 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        static void InternalIteration(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TFn Fn)
         {
             FCursorProtocol::InternalIteration(Misc::Opposite<IsForward>, Self.View, Fn);
         }
 
-        Cursor CursorBegin() const
+        UR_DEBUG_NOINLINE Cursor CursorBegin() const
         {
             return FCursorProtocol::CursorRBegin(View);
         }
 
-        Cursor CursorEnd() const
+        UR_DEBUG_NOINLINE Cursor CursorEnd() const
         {
             return FCursorProtocol::CursorREnd(View);
         }
 
-        ReverseCursor CursorRBegin() const
+        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const
         {
             return FCursorProtocol::CursorBegin(View);
         }
 
-        ReverseCursor CursorREnd() const
+        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const
         {
             return FCursorProtocol::CursorEnd(View);
         }
 
         template<typename TCursor>
-        void CursorInc(TCursor& Curs) const
+        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
         {
             return FCursorProtocol::CursorInc(View, Curs);
         }
 
         template<typename TCursor>
-        reference CursorDeref(const TCursor& Curs) const
+        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
         {
-            return *Curs;
+            return FCursorProtocol::CursorDeref(View, Curs);
         }
 
         template<typename TCursor>
-        bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
         {
             return FCursorProtocol::CursorEq(View, Lhs, Rhs);
         }
