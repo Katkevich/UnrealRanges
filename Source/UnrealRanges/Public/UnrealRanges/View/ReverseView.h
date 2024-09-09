@@ -3,6 +3,7 @@
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
+#include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -14,6 +15,7 @@ namespace Ur::View {
         : public FView
         , public TTransformMixin<TReverseView<TView>>
         , public TToMixin<TReverseView<TView>>
+        , public TMinMaxMixin<TReverseView<TView>>
         , public TIteratorMixin<TReverseView<TView>>
         , public TReverseIteratorMixin<TReverseView<TView>>
         , public TReverseMixin<TReverseView<TView>>
@@ -37,10 +39,10 @@ namespace Ur::View {
         }
 
     private:
-        template<bool IsForward, typename TFn>
-        void InternalIteration(TFn Fn)
+        template<bool IsForward, typename TSelf, typename TFn>
+        static void InternalIteration(TSelf& Self, TFn Fn)
         {
-            FCursorProtocol::InternalIteration(Direction::Opposite<IsForward>, View, Fn);
+            FCursorProtocol::InternalIteration(Misc::Opposite<IsForward>, Self.View, Fn);
         }
 
         Cursor CursorBegin() const

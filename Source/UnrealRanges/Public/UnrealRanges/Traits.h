@@ -97,4 +97,15 @@ namespace Ur {
 
     template<template<typename...> typename T, template<typename...> typename U>
     static constexpr bool TIsSameTemplate_V = TIsSameTemplate<T, U>::Value;
+
+
+    template<typename T>
+    concept LessOrdered = requires(T Val) {
+        { Val < Val } -> std::convertible_to<bool>;
+    };
+
+    template<typename T, typename TProj>
+    concept LessOrderedBy = requires(T Val, TProj Proj) {
+        { std::invoke(Proj, Val) < std::invoke(Proj, Val) } -> std::convertible_to<bool>;
+    };
 }

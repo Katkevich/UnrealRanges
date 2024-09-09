@@ -9,9 +9,9 @@ namespace Ur::View {
     struct TTransformMixin
     {
         template<typename TFn>
-        auto Transform(TFn Fn)
+        auto Transform(TFn Fn) const
         {
-            return TTransformView<TView, TFn>(static_cast<TView&>(*this), Fn);
+            return TTransformView<TView, TFn>(static_cast<const TView&>(*this), Fn);
         }
     };
 }

@@ -2,6 +2,7 @@
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
+#include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -12,6 +13,7 @@ namespace Ur::View {
         : public FView
         , public TTransformMixin<TTransformView<TView, TFn>>
         , public TToMixin<TTransformView<TView, TFn>>
+        , public TMinMaxMixin<TTransformView<TView, TFn>>
         , public TIteratorMixin<TTransformView<TView, TFn>>
         , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TTransformView<TView, TFn>>>
         , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TTransformView<TView, TFn>>>
@@ -31,12 +33,12 @@ namespace Ur::View {
         {
         }
 
-        template<bool IsForward, typename TCallback>
-        void InternalIteration(TCallback Callback)
+        template<bool IsForward, typename TSelf, typename TCallback>
+        static void InternalIteration(TSelf& Self, TCallback Callback)
         {
-            FCursorProtocol::InternalIteration(Direction::Same<IsForward>, View, [&](auto&& Item)
+            FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
-                    return Callback(std::invoke(Fn, UR_FWD(Item)));
+                    return Callback(std::invoke(Self.Fn, UR_FWD(Item)));
                 });
         }
 

@@ -75,7 +75,7 @@ namespace Ur::View {
 
             int32 Index = 0;
 
-            FCursorProtocol::InternalIteration(Direction::Forward, *static_cast<TView*>(this), [&](auto&& Item)
+            FCursorProtocol::InternalIteration(Misc::Forward, *static_cast<TView*>(this), [&](auto&& Item)
                 {
                     // TIndirectArray
                     if constexpr (IsIndirectArray)

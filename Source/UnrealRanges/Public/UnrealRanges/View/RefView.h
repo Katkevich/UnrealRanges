@@ -3,6 +3,7 @@
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
+#include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -34,6 +35,7 @@ namespace Ur::View {
         : public FView
         , public TTransformMixin<TRefView<TRng>>
         , public TToMixin<TRefView<TRng>>
+        , public TMinMaxMixin<TRefView<TRng>>
         , public TIteratorMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
@@ -58,10 +60,10 @@ namespace Ur::View {
         }
 
     private:
-        template<bool IsForward, typename TFn>
-        void InternalIteration(TFn Fn)
+        template<bool IsForward, typename TSelf, typename TFn>
+        static void InternalIteration(TSelf& Self, TFn Fn)
         {
-            for (auto It = Ur::BeginEx<IsForward>(*Rng); It != Ur::EndEx<IsForward>(*Rng); ++It)
+            for (auto It = Ur::BeginEx<IsForward>(*Self.Rng); It != Ur::EndEx<IsForward>(*Self.Rng); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)
                     break;
         }

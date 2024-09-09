@@ -1,10 +1,11 @@
 #pragma once
 
-namespace Ur::View {
-    class FView
-    {
-    };
-
+namespace Ur {
+    namespace View {
+        class FView
+        {
+        };
+    }
     namespace Misc {
         struct FFromViewTag
         {

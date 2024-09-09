@@ -8,9 +8,9 @@ namespace Ur::View {
     template<typename TView>
     struct TReverseMixin
     {
-        auto Reverse()
+        auto Reverse() const
         {
-            return TReverseView<TView>({}, static_cast<TView&>(*this));
+            return TReverseView<TView>({}, static_cast<const TView&>(*this));
         }
     };
 }

@@ -83,8 +83,8 @@ namespace Ur {
         }
     };
 
-    // iteration direction
-    namespace Direction {
+    // internal iteration
+    namespace Misc {
         template<bool IsForward>
         struct FDirection
         {

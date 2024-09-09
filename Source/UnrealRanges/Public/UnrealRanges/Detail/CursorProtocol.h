@@ -5,9 +5,9 @@ namespace Ur {
 struct FCursorProtocol
 {
     template<bool IsForward, typename TView, typename TFn>
-    static decltype(auto) InternalIteration(Direction::FDirection<IsForward>, TView& View, TFn Fn)
+    static decltype(auto) InternalIteration(Misc::FDirection<IsForward>, TView& View, TFn Fn)
     {
-        return View.InternalIteration<IsForward, TFn>(Fn);
+        return TView::InternalIteration<IsForward, TView, TFn>(View, Fn);
     }
 
     template<typename TView>
