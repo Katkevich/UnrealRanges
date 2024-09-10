@@ -10,7 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseEmpty, "UnrealRanges.MinMax.TestReverseEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseEmpty, "UnrealRanges.Reverse.TestReverseEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_ReverseEmpty::RunTest(const FString& Parameters)
 {
     TArray<int32> From;
@@ -22,7 +22,7 @@ bool FUnrealRangesTests_ReverseEmpty::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseNonEmpty, "UnrealRanges.MinMax.TestReverseNonEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseNonEmpty, "UnrealRanges.Reverse.TestReverseNonEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_ReverseNonEmpty::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };
@@ -32,7 +32,7 @@ bool FUnrealRangesTests_ReverseNonEmpty::RunTest(const FString& Parameters)
     return EqualTo(Result, { 5,4,3,2,1 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DoubleReverseChangeNothing, "UnrealRanges.MinMax.TestDoubleReverseChangeNothing", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DoubleReverseChangeNothing, "UnrealRanges.Reverse.TestDoubleReverseChangeNothing", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_DoubleReverseChangeNothing::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };
@@ -42,7 +42,7 @@ bool FUnrealRangesTests_DoubleReverseChangeNothing::RunTest(const FString& Param
     return EqualTo(Result, { 1,2,3,4,5 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DoubleReverseWithTransformInTheMiddleChangeNothing, "UnrealRanges.MinMax.TestDoubleReverseWithTransformInTheMiddleChangeNothing", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DoubleReverseWithTransformInTheMiddleChangeNothing, "UnrealRanges.Reverse.TestDoubleReverseWithTransformInTheMiddleChangeNothing", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_DoubleReverseWithTransformInTheMiddleChangeNothing::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };
@@ -55,7 +55,7 @@ bool FUnrealRangesTests_DoubleReverseWithTransformInTheMiddleChangeNothing::RunT
     return EqualTo(Result, { 1,4,9,16,25 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseAfterFilter, "UnrealRanges.MinMax.TestReverseAfterFilter", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseAfterFilter, "UnrealRanges.Reverse.TestReverseAfterFilter", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_ReverseAfterFilter::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };

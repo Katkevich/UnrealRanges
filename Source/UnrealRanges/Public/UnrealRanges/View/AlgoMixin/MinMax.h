@@ -2,6 +2,7 @@
 #include "UnrealRanges/Detail/CursorProtocol.h"
 #include "UnrealRanges/Optional.h"
 #include "UnrealRanges/Traits.h"
+#include "Templates/IdentityFunctor.h"
 
 namespace Ur {
     template<typename T>

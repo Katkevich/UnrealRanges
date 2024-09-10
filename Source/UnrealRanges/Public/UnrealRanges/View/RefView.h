@@ -5,6 +5,8 @@
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
+#include "UnrealRanges/View/AlgoMixin/Find.h"
+#include "UnrealRanges/View/AlgoMixin/FindLast.h"
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -42,6 +44,8 @@ namespace Ur::View {
         , public TFilterMixin<TRefView<TRng>>
         , public TToMixin<TRefView<TRng>>
         , public TMinMaxMixin<TRefView<TRng>>
+        , public TFindMixin<TRefView<TRng>>
+        , public TConditionalInheritance<BiDirRange<TRng>, TFindLastMixin<TRefView<TRng>>>
         , public TIteratorMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>

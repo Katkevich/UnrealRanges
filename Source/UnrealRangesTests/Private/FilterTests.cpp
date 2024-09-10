@@ -10,7 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEmptyRange, "UnrealRanges.MinMax.TestFilterEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEmptyRange, "UnrealRanges.Filter.TestFilterEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_FilterEmptyRange::RunTest(const FString& Parameters)
 {
     TArray<int32> From;
@@ -23,7 +23,7 @@ bool FUnrealRangesTests_FilterEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEven, "UnrealRanges.MinMax.TestFilterEven", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEven, "UnrealRanges.Filter.TestFilterEven", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_FilterEven::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };
@@ -33,7 +33,7 @@ bool FUnrealRangesTests_FilterEven::RunTest(const FString& Parameters)
     return EqualTo(Result, { 2,4 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterOutAll, "UnrealRanges.MinMax.TestFilterOutAll", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterOutAll, "UnrealRanges.Filter.TestFilterOutAll", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_FilterOutAll::RunTest(const FString& Parameters)
 {
     TArray<int32> From = { 1,2,3,4,5 };
