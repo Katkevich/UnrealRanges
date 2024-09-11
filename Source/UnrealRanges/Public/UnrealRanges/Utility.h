@@ -6,22 +6,22 @@
 namespace Ur {
     template<typename TRng>
     concept HasBegin = requires(TRng Rng) {
-        [](TRng& Rng) { using std::begin; begin(Rng); }(Rng);
+        requires requires { Rng.begin(); } || requires { begin(Rng); };
     };
 
     template<typename TRng>
     concept HasEnd = requires(TRng Rng) {
-        [](TRng& Rng) { using std::end; end(Rng); }(Rng);
+        requires requires { Rng.end(); } || requires { end(Rng); };
     };
 
     template<typename TRng>
     concept HasRBegin = requires(TRng Rng) {
-        [](TRng& Rng) { using std::rbegin; rbegin(Rng); }(Rng);
+        requires requires { Rng.rbegin(); } || requires { rbegin(Rng); };
     };
 
     template<typename TRng>
     concept HasREnd = requires(TRng Rng) {
-        [](TRng& Rng) { using std::rend; rend(Rng); }(Rng);
+        requires requires { Rng.rend(); } || requires { rend(Rng); };
     };
 
 

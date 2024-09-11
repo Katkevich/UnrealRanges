@@ -8,16 +8,10 @@
 namespace Ur {
 
     template<typename TRng>
-    concept Range = requires(TRng Rng) {
-        Ur::Begin(Rng);
-        Ur::End(Rng);
-    };
+    concept Range = HasBegin<TRng> && HasEnd<TRng>;
 
     template<typename TRng>
-    concept BiDirRange = Range<TRng> && requires(TRng Rng) {
-        Ur::RBegin(Rng);
-        Ur::REnd(Rng);
-    };
+    concept BiDirRange = Range<TRng> && HasRBegin<TRng> && HasREnd<TRng>;
 
     template<typename TIt>
     struct IteratorTraits
