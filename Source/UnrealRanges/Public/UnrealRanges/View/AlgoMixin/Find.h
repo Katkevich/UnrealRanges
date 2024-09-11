@@ -23,6 +23,18 @@ namespace Ur::View {
             return TFindMixin::FindImpl(std::type_identity<typename TView::const_reference>{}, UR_FWD(Value), static_cast<const TView*>(this), Proj);
         }
 
+        template<typename TValue, typename TProj = FIdentityFunctor>
+        bool Contains(TValue&& Value, TProj Proj = {})
+        {
+            return TFindMixin::ContainsImpl(std::type_identity<typename TView::reference>{}, UR_FWD(Value), static_cast<TView*>(this), Proj);
+        }
+
+        template<typename TValue, typename TProj = FIdentityFunctor>
+        bool Contains(TValue&& Value, TProj Proj = {}) const
+        {
+            return TFindMixin::ContainsImpl(std::type_identity<typename TView::const_reference>{}, UR_FWD(Value), static_cast<const TView*>(this), Proj);
+        }
+
         template<typename TPred>
         auto FindBy(TPred Pred)
         {
@@ -33,6 +45,18 @@ namespace Ur::View {
         auto FindBy(TPred Pred) const
         {
             return TFindMixin::FindByImpl(std::type_identity<typename TView::const_reference>{}, static_cast<const TView*>(this), Pred);
+        }
+
+        template<typename TPred>
+        auto ContainsBy(TPred Pred)
+        {
+            return TFindMixin::ContainsByImpl(std::type_identity<typename TView::reference>{}, static_cast<TView*>(this), Pred);
+        }
+
+        template<typename TPred>
+        auto ContainsBy(TPred Pred) const
+        {
+            return TFindMixin::ContainsByImpl(std::type_identity<typename TView::const_reference>{}, static_cast<const TView*>(this), Pred);
         }
 
         template<typename TValuesRng, typename TProj = FIdentityFunctor>
@@ -68,6 +92,26 @@ namespace Ur::View {
             return Found;
         }
 
+        template<typename TRef, typename TValue, typename TSelf, typename TProj>
+        static bool ContainsImpl(std::type_identity<TRef>, TValue&& Value, TSelf Self, TProj Proj)
+        {
+            static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
+
+            bool Found = false;
+            FCursorProtocol::InternalIteration(Misc::Forward, *Self, [&](auto&& Item)
+                {
+                    if (std::invoke(Proj, UR_FWD(Item)) == Value)
+                    {
+                        Found = true;
+
+                        return Misc::ELoop::Break;
+                    }
+                    return Misc::ELoop::Continue;
+                });
+
+            return Found;
+        }
+
         template<typename TRef, typename TSelf, typename TPred>
         static auto FindByImpl(std::type_identity<TRef>, TSelf Self, TPred Pred)
         {
@@ -79,6 +123,26 @@ namespace Ur::View {
                     if (std::invoke(Pred, Item))
                     {
                         Found = UR_FWD(Item);
+
+                        return Misc::ELoop::Break;
+                    }
+                    return Misc::ELoop::Continue;
+                });
+
+            return Found;
+        }
+
+        template<typename TRef, typename TSelf, typename TPred>
+        static bool ContainsByImpl(std::type_identity<TRef>, TSelf Self, TPred Pred)
+        {
+            static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
+
+            bool Found = false;
+            FCursorProtocol::InternalIteration(Misc::Forward, *Self, [&](auto&& Item)
+                {
+                    if (std::invoke(Pred, UR_FWD(Item)))
+                    {
+                        Found = true;
 
                         return Misc::ELoop::Break;
                     }

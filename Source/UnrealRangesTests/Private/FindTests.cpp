@@ -87,4 +87,25 @@ bool FUnrealRangesTests_FindCalledOnConstRangeReturnsConstResult::RunTest(const 
     return Result0.GetPtrOrNull() == std::addressof(From[2]) && Result1.GetPtrOrNull() == std::addressof(From[2]) && Result2.GetPtrOrNull() == std::addressof(From[1]);
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ContainsEmptyRange, "UnrealRanges.Find.TestContainsEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_ContainsEmptyRange::RunTest(const FString& Parameters)
+{
+    TArray<FString> From = { FString(TEXT("1")), FString(TEXT("23")), FString(TEXT("233")), FString(TEXT("2335")), FString(TEXT("2334")) };
+    const TRefView<TArray<FString>> RefView = Ref(From);
+    TRefView<TArray<FString>> ConstRefView = Ref(From);
+
+    bool Result0 = RefView.Contains(TEXT("233"));
+    bool Result1 = ConstRefView.Contains(TEXT("233"));
+    bool Result2 = RefView.Contains(3, &FString::Len);
+    bool Result3 = ConstRefView.ContainsBy([](const FString& Str) { return Str == TEXT("23"); });
+
+    bool Result4 = RefView.Contains(TEXT("_233"));
+    bool Result5 = ConstRefView.Contains(TEXT("_233"));
+    bool Result6 = RefView.Contains(10, &FString::Len);
+    bool Result7 = ConstRefView.ContainsBy([](const FString& Str) { return Str == TEXT("_23"); });
+
+
+    return Result0 && Result1 && Result2 && Result3 && !Result4 && !Result5 && !Result6 && !Result7;
+}
+
 #endif
