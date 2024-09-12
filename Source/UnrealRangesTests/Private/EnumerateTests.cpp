@@ -94,5 +94,75 @@ bool FUnrealRangesTests_EnumeratedInternalIteration::RunTest(const FString& Para
     return EqualTo(Result, { FIndexed<int32&>(From[0], 2), FIndexed<int32&>(From[2], 8) });
 }
 
+template<typename T>
+struct foo;
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateStructuredBinding, "UnrealRanges.Filter.TestEnumerateStructuredBinding", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_EnumerateStructuredBinding::RunTest(const FString& Parameters)
+{
+    FString Str;
+
+    FIndexed<FString> Indexed;
+    const FIndexed<FString> ConstIndexed;
+
+    FIndexed<FString&> IndexedRef(Str, 0);
+    const FIndexed<FString&> ConstIndexedRef(Str, 0);
+
+    FIndexed<const FString&> DeepConstIndexedRef(Str, 0);
+    const FIndexed<const FString&> ConstDeepConstIndexedRef(Str, 0);
+
+    static_assert(std::is_same_v<decltype(Indexed.get<0>()), FString&>);
+    static_assert(std::is_same_v<decltype(ConstIndexed.get<0>()), const FString&>);
+
+    static_assert(std::is_same_v<decltype(IndexedRef.get<0>()), FString&>);
+    static_assert(std::is_same_v<decltype(ConstIndexedRef.get<0>()), FString&>); // no deep const
+
+    static_assert(std::is_same_v<decltype(DeepConstIndexedRef.get<0>()), const FString&>);
+    static_assert(std::is_same_v<decltype(ConstDeepConstIndexedRef.get<0>()), const FString&>);
+
+    static_assert(std::is_same_v<decltype(FIndexed<FString>{}.get<0>()), FString&&>);
+    static_assert(std::is_same_v<decltype(FIndexed<FString&>{Str, 0}.get<0>()), FString&>);
+
+    static_assert(std::is_same_v<decltype(FIndexed<const FString>{}.get<0>()), const FString&&>);
+    static_assert(std::is_same_v<decltype(FIndexed<const FString&>{Str, 0}.get<0>()), const FString&>);
+
+    static_assert(std::is_same_v<decltype(TTuple<FString>{}.Get<0>()), FString&&>);
+    static_assert(std::is_same_v<decltype(TTuple<FString&>{}.Get<0>()), FString&>);
+
+    static_assert(std::is_same_v<decltype(TTuple<const FString>{}.Get<0>()), const FString&&>);
+    static_assert(std::is_same_v<decltype(TTuple<const FString&>{}.Get<0>()), const FString&>);
+
+
+    TArray<FString> From = { FString(TEXT("a")), FString(TEXT("b")), FString(TEXT("c")) };
+
+    for (const auto& [Value, Index] : Enumerate(From, 2, 3)) // *Iter -> FIndexed<FString&> + lifetime extension
+    {
+        static_assert(std::is_same_v<decltype(Value), FString&>); // no deep const
+    }
+
+    for (auto [Value, Index] : Transform(From, [](FString& Str) { return Str; }).Enumerate()) // *Iter -> FIndexed<FString>
+    {
+        static_assert(std::is_same_v<decltype(Value), FString>);
+    }
+
+    for (const auto& [Value, Index] : Transform(From, [](FString& Str) { return Str; }).Enumerate()) // *Iter -> FIndexed<FString> + lifetime extension
+    {
+        // not exactly sure why we have const FString (and no FString) here but TTuple and std::tuple has the same bahavior...
+        // structured binding is a weird creature so just keep it like that
+        static_assert(std::is_same_v<decltype(Value), const FString>);
+    }
+
+    for (const auto& [Value] : Transform(From, [](FString& Str) { return TTuple<FString>(Str); })) // *Iter -> FIndexed<FString> + lifetime extension
+    {
+        static_assert(std::is_same_v<decltype(Value), const FString>);
+    }
+
+    for (const auto& [Value] : Transform(From, [](FString& Str) { return std::tuple<FString>(Str); })) // *Iter -> FIndexed<FString> + lifetime extension
+    {
+        static_assert(std::is_same_v<decltype(Value), const FString>);
+    }
+
+    return true;
+}
 
 #endif

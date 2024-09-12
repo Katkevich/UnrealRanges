@@ -53,7 +53,7 @@ namespace Ur::View {
             if constexpr (I == 0)
                 return (Value);
             else if constexpr (I == 1)
-                return Index;
+                return (Index);
         }
 
         template <std::size_t I>
@@ -62,20 +62,48 @@ namespace Ur::View {
             if constexpr (I == 0)
                 return (Value);
             else if constexpr (I == 1)
-                return Index;
+                return (Index);
         }
 
+        // repeating TTuple interface "tuple" protocol
+        // see EnumerateTests.cpp|TestEnumerateStructuredBinding for details
         template <std::size_t I>
         decltype(auto) get() &&
         {
             if constexpr (I == 0)
-                return MoveTemp(Value);
+            {
+                if constexpr (std::is_reference_v<T>)
+                    return (Value);
+                else
+                    return static_cast<T&&>(Value);
+            }
             else if constexpr (I == 1)
-                return Index;
+            {
+                if constexpr (std::is_reference_v<TIndex>)
+                    return (Index);
+                else
+                    return static_cast<TIndex&&>(Index);
+            }
         }
 
         template <std::size_t I>
-        decltype(auto) get() const&& = delete;
+        decltype(auto) get() const&&
+        {
+            if constexpr (I == 0)
+            {
+                if constexpr (std::is_reference_v<T>)
+                    return (Value);
+                else
+                    return static_cast<T&&>(Value);
+            }
+            else if constexpr (I == 1)
+            {
+                if constexpr (std::is_reference_v<TIndex>)
+                    return (Index);
+                else
+                    return static_cast<TIndex&&>(Index);
+            }
+        }
 
         T Value{};
         TIndex Index{};

@@ -29,8 +29,13 @@ namespace Ur::View {
     {
     public:
         using reference = std::invoke_result_t<TFn, typename TView::reference>;
-        using const_reference = std::invoke_result_t<TFn, typename TView::const_reference>;
-        using value_type = std::remove_reference_t<reference>;
+        using value_type = std::remove_cvref_t<reference>;
+        using const_reference = std::conditional_t<
+            std::is_lvalue_reference_v<reference>,
+            std::add_lvalue_reference_t<std::add_const_t<value_type>>,
+            value_type
+        >;
+
         using Cursor = typename TView::Cursor;
         using ReverseCursor = typename TView::ReverseCursor;
 
