@@ -43,4 +43,15 @@ bool FUnrealRangesTests_FilterOutAll::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterInternalIteration, "UnrealRanges.Filter.TestFilterInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_FilterInternalIteration::RunTest(const FString& Parameters)
+{
+    TArray<int32> From = { 1,2,3,4,5, 6 };
+
+    auto Result = Ref(From).Filter([](int32 i) { return i % 2 == 0; }).To<TArray>();
+
+    return EqualTo(Result, { 2, 4, 6 });
+}
+
+
 #endif

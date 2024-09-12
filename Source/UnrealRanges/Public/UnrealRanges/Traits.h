@@ -103,6 +103,11 @@ namespace Ur {
         { std::invoke(Proj, Val) < std::invoke(Proj, Val) } -> std::convertible_to<bool>;
     };
 
+    template<typename TLhs, typename TRhs>
+    concept EqComparable = requires(TLhs Lhs, TRhs Rhs) {
+        { Lhs == Rhs } -> std::convertible_to<bool>;
+    };
+
     template<typename TLhs, typename TProj, typename TRhs>
     concept EqComparableByWith = requires(TLhs Lhs, TProj Proj, TRhs Rhs) {
         { std::invoke(Proj, Lhs) == Rhs } -> std::convertible_to<bool>;

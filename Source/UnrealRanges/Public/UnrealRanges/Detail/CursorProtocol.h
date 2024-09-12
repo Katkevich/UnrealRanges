@@ -51,5 +51,11 @@ struct FCursorProtocol
     {
         return View.CursorEq(Lhs, Rhs);
     }
+
+    template<typename TView, typename TCursor>
+    static bool IsEnd(TView& View, const TCursor& Curs)
+    {
+        return View.CursorEq(Curs, View.CursorEnd());
+    }
 };
 }

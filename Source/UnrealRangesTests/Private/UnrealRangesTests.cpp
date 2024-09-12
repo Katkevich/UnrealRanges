@@ -1,4 +1,5 @@
 #include "UnrealRangesTests.h"
+#include "UnrealRanges/View/All.h"
 
 void FUnrealRangesTestsModule::StartupModule()
 {
