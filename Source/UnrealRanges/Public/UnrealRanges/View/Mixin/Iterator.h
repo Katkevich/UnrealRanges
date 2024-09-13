@@ -22,6 +22,7 @@ namespace Ur::View {
             std::add_pointer_t<std::remove_reference_t<reference>>,
             void
         >;
+        using difference_type = std::ptrdiff_t;
 
         // some UE iterators aren't semiregular (TDoubleLinkedList iterator has no default ctor for instance)
         TIterator() requires std::semiregular<CursorType> = default;

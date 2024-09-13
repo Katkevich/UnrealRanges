@@ -15,18 +15,18 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<typename TView, typename TAmount>
-    class TTakeView
+    template<typename TView, typename TFn>
+    class TTakeWhileView
         : public FView
-        , public TTransformMixin<TTakeView<TView, TAmount>>
-        , public TFilterMixin<TTakeView<TView, TAmount>>
-        , public TEnumerateMixin<TTakeView<TView, TAmount>>
-        , public TTakeMixin<TTakeView<TView, TAmount>>
-        , public TTakeWhileMixin<TTakeView<TView, TAmount>>
-        , public TToMixin<TTakeView<TView, TAmount>>
-        , public TMinMaxMixin<TTakeView<TView, TAmount>>
-        , public TFindMixin<TTakeView<TView, TAmount>>
-        , public TIteratorMixin<TTakeView<TView, TAmount>>
+        , public TTransformMixin<TTakeWhileView<TView, TFn>>
+        , public TFilterMixin<TTakeWhileView<TView, TFn>>
+        , public TEnumerateMixin<TTakeWhileView<TView, TFn>>
+        , public TTakeMixin<TTakeWhileView<TView, TFn>>
+        , public TTakeWhileMixin<TTakeWhileView<TView, TFn>>
+        , public TToMixin<TTakeWhileView<TView, TFn>>
+        , public TMinMaxMixin<TTakeWhileView<TView, TFn>>
+        , public TFindMixin<TTakeWhileView<TView, TFn>>
+        , public TIteratorMixin<TTakeWhileView<TView, TFn>>
     {
     public:
         using reference = typename TView::reference;
@@ -35,29 +35,27 @@ namespace Ur::View {
 
         struct Cursor
         {
-            typename TView::Cursor Nested{};
-            TAmount Index{};
+            typename TView::Cursor Nested;
+            bool bIsEnd = false;
         };
         using ReverseCursor = void;
 
         static constexpr bool IsBidir = false;
 
-        template<typename UView, typename UAmount>
-        TTakeView(UView InView, UAmount InAmount)
+        template<typename UView, typename UFn>
+        TTakeWhileView(UView InView, UFn InFn)
             : View(InView)
-            , Amount(InAmount)
+            , Fn(InFn)
         {
         }
 
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
         {
-            TAmount Counter = { 0 };
             FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
-                    if (Counter < Self.Amount)
+                    if (std::invoke(Self.Fn, Item))
                     {
-                        ++Counter;
                         return Callback(UR_FWD(Item));
                     }
                     else
@@ -69,19 +67,23 @@ namespace Ur::View {
 
         UR_DEBUG_NOINLINE Cursor CursorBegin() const
         {
-            return Cursor{ FCursorProtocol::CursorBegin(View), TAmount{ 0 } };
+            auto NestedCursor = FCursorProtocol::CursorBegin(View);
+            const auto bIsEnd = FCursorProtocol::IsEnd(View, NestedCursor) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, NestedCursor));
+
+            return Cursor{ MoveTemp(NestedCursor), bIsEnd };
         }
 
         UR_DEBUG_NOINLINE Cursor CursorEnd() const
         {
-            return Cursor{ FCursorProtocol::CursorEnd(View), Amount };
+            return Cursor{ FCursorProtocol::CursorEnd(View), true };
         }
 
         template<typename TCursor>
         UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
         {
-            ++Curs.Index;
-            return FCursorProtocol::CursorInc(View, Curs.Nested);
+            FCursorProtocol::CursorInc(View, Curs.Nested);
+
+            Curs.bIsEnd = FCursorProtocol::IsEnd(View, Curs.Nested) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs.Nested));
         }
 
         template<typename TCursor>
@@ -93,25 +95,18 @@ namespace Ur::View {
         template<typename TCursor>
         UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
         {
-            return
-                // either all equal
-                (Lhs.Index == Rhs.Index && FCursorProtocol::CursorEq(View, Lhs.Nested, Rhs.Nested)) ||
-                // or both are End cursor (either Index reached Amount or nested cursor reached End)
-                (
-                    (Lhs.Index == Amount || FCursorProtocol::IsEnd(View, Lhs.Nested)) &&
-                    (Rhs.Index == Amount || FCursorProtocol::IsEnd(View, Rhs.Nested))
-                );
+            return Lhs.bIsEnd == Rhs.bIsEnd && (Lhs.bIsEnd || FCursorProtocol::CursorEq(View, Lhs.Nested, Rhs.Nested));
         }
 
     private:
         TView View;
-        TAmount Amount;
+        TFn Fn;
     };
 
 
-    template<typename TRng, typename TAmount = int32>
-    auto Take(TRng& Rng, TAmount Amount)
+    template<typename TRng, typename TFn = FIdentityFunctor>
+    auto TakeWhile(TRng& Rng, TFn Fn = {})
     {
-        return TTakeView<TRefView<TRng>, TAmount>(TRefView<TRng>({}, Rng), Amount);
+        return TTakeWhileView<TRefView<TRng>, TFn>(TRefView<TRng>({}, Rng), Fn);
     }
 }
