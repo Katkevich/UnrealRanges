@@ -3,6 +3,7 @@
 #include "UnrealRanges/View/Mixin/Transform.h"
 #include "UnrealRanges/View/Mixin/Filter.h"
 #include "UnrealRanges/View/Mixin/Enumerate.h"
+#include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
@@ -20,6 +21,7 @@ namespace Ur::View {
         , public TTransformMixin<TEnumerateView<TView, TIndex>>
         , public TFilterMixin<TEnumerateView<TView, TIndex>>
         , public TEnumerateMixin<TEnumerateView<TView, TIndex>>
+        , public TTakeMixin<TEnumerateView<TView, TIndex>>
         , public TToMixin<TEnumerateView<TView, TIndex>>
         , public TMinMaxMixin<TEnumerateView<TView, TIndex>>
         , public TFindMixin<TEnumerateView<TView, TIndex>>

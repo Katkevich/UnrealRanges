@@ -4,3 +4,4 @@
 #include "UnrealRanges/View/TransformView.h"
 #include "UnrealRanges/View/FilterView.h"
 #include "UnrealRanges/View/EnumerateView.h"
+#include "UnrealRanges/View/TakeView.h"
