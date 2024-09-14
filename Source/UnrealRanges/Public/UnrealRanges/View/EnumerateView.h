@@ -9,7 +9,6 @@
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/FindLast.h"
 #include "UnrealRanges/View/AlgoMixin/Size.h"
 #include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
@@ -29,7 +28,7 @@ namespace Ur::View {
         , public TTakeWhileMixin<TEnumerateView<TView, TIndex>>
         , public TToMixin<TEnumerateView<TView, TIndex>>
         , public TMinMaxMixin<TEnumerateView<TView, TIndex>>
-        , public TFindMixin<TEnumerateView<TView, TIndex>>
+        , public TFindFirstMixin<TEnumerateView<TView, TIndex>>
         , public TCountMixin<TEnumerateView<TView, TIndex>>
         , public TFoldLeftMixin<TEnumerateView<TView, TIndex>>
         , public TConditionalInheritance<TView::IsSized, TSizeMixin<TEnumerateView<TView, TIndex>>>

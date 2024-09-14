@@ -9,7 +9,6 @@
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/FindLast.h"
 #include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
 #include "UnrealRanges/View/RefView.h"
@@ -27,7 +26,7 @@ namespace Ur::View {
         , public TTakeWhileMixin<TFilterView<TView, TFn>>
         , public TToMixin<TFilterView<TView, TFn>>
         , public TMinMaxMixin<TFilterView<TView, TFn>>
-        , public TFindMixin<TFilterView<TView, TFn>>
+        , public TFindFirstMixin<TFilterView<TView, TFn>>
         , public TConditionalInheritance<TView::IsBidir, TFindLastMixin<TFilterView<TView, TFn>>>
         , public TCountMixin<TFilterView<TView, TFn>>
         , public TFoldLeftMixin<TFilterView<TView, TFn>>

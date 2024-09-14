@@ -7,12 +7,12 @@ namespace Ur::View {
 
     namespace Detail
     {
-        template<typename TView>
+        template<typename TView, auto Direction>
         struct TFoldMixin
         {
         protected:
-            template<typename TRef, typename TInit, typename TFn, typename TSelf, bool IsForward>
-            static auto Fold(std::type_identity<TRef>, TInit&& Init, TFn Fn, TSelf& Self, Misc::FDirection<IsForward> Direction)
+            template<typename TRef, typename TInit, typename TFn, typename TSelf>
+            static auto FoldLeftImpl(std::type_identity<TRef>, TInit&& Init, TFn Fn, TSelf& Self)
             {
                 static_assert(std::is_invocable_v<TFn, TInit, TRef>, "Fn should be invokable over 'Init <-> Item'");
 
@@ -39,8 +39,8 @@ namespace Ur::View {
                     return ResultType(UR_FWD(Init));
             }
 
-            template<typename TRef, typename TFn, typename TSelf, bool IsForward>
-            static auto Fold(std::type_identity<TRef>, TFn Fn, TSelf& Self, Misc::FDirection<IsForward> Direction)
+            template<typename TRef, typename TFn, typename TSelf>
+            static auto FoldLeftImpl(std::type_identity<TRef>, TFn Fn, TSelf& Self)
             {
                 static_assert(std::is_invocable_v<TFn, TRef, TRef>, "Fn should be invokable over 'Item <-> Item'");
                 using ResultType = std::invoke_result_t<TFn, TRef, TRef>;
@@ -83,62 +83,66 @@ namespace Ur::View {
     }
 
     template<typename TView>
-    struct TFoldLeftMixin : Detail::TFoldMixin<TView>
+    struct TFoldLeftMixin : Detail::TFoldMixin<TView, Misc::Forward>
     {
-        using TFoldMixin = Detail::TFoldMixin<TView>;
+    private:
+        using TFoldMixin = Detail::TFoldMixin<TView, Misc::Forward>;
 
+    public:
         template<typename TInit, typename TFn>
         auto FoldLeft(TInit&& Init, TFn Fn)
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::reference>{}, UR_FWD(Init), Fn, * static_cast<TView*>(this), Misc::Forward);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::reference>{}, UR_FWD(Init), Fn, * static_cast<TView*>(this));
         }
 
         template<typename TInit, typename TFn>
         auto FoldLeft(TInit&& Init, TFn Fn) const
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::const_reference>{}, UR_FWD(Init), Fn, * static_cast<const TView*>(this), Misc::Forward);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::const_reference>{}, UR_FWD(Init), Fn, * static_cast<const TView*>(this));
         }
 
         template<typename TFn>
         auto FoldLeft(TFn Fn)
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::reference>{}, Fn, *static_cast<TView*>(this), Misc::Forward);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::reference>{}, Fn, * static_cast<TView*>(this));
         }
 
         template<typename TFn>
         auto FoldLeft(TFn Fn) const
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::const_reference>{}, Fn, *static_cast<const TView*>(this), Misc::Forward);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::const_reference>{}, Fn, * static_cast<const TView*>(this));
         }
     };
 
     template<typename TView>
-    struct TFoldRightMixin : Detail::TFoldMixin<TView>
+    struct TFoldRightMixin : Detail::TFoldMixin<TView, Misc::Reverse>
     {
-        using TFoldMixin = Detail::TFoldMixin<TView>;
+    private:
+        using TFoldMixin = Detail::TFoldMixin<TView, Misc::Reverse>;
 
+    public:
         template<typename TInit, typename TFn>
         auto FoldRight(TInit&& Init, TFn Fn)
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::reference>{}, UR_FWD(Init), Fn, * static_cast<TView*>(this), Misc::Reverse);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::reference>{}, UR_FWD(Init), Fn, * static_cast<TView*>(this));
         }
 
         template<typename TInit, typename TFn>
         auto FoldRight(TInit&& Init, TFn Fn) const
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::const_reference>{}, UR_FWD(Init), Fn, * static_cast<const TView*>(this), Misc::Reverse);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::const_reference>{}, UR_FWD(Init), Fn, * static_cast<const TView*>(this));
         }
 
         template<typename TFn>
         auto FoldRight(TFn Fn)
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::reference>{}, Fn, * static_cast<TView*>(this), Misc::Reverse);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::reference>{}, Fn, * static_cast<TView*>(this));
         }
 
         template<typename TFn>
         auto FoldRight(TFn Fn) const
         {
-            return TFoldMixin::Fold(std::type_identity<typename TView::const_reference>{}, Fn, * static_cast<const TView*>(this), Misc::Reverse);
+            return TFoldMixin::FoldLeftImpl(std::type_identity<typename TView::const_reference>{}, Fn, * static_cast<const TView*>(this));
         }
     };
 }
