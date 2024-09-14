@@ -57,5 +57,11 @@ struct FCursorProtocol
     {
         return View.CursorEq(Curs, View.CursorEnd());
     }
+
+    template<typename TView>
+    static auto BaseViewNum(const TView& View)
+    {
+        return Ur::Size(View.View);
+    }
 };
 }

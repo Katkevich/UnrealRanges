@@ -10,6 +10,7 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -52,6 +53,7 @@ namespace Ur::View {
         , public TMinMaxMixin<TRefView<TRng>>
         , public TFindMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TFindLastMixin<TRefView<TRng>>>
+        , public TCountMixin<TRefView<TRng>>
         , public TIteratorMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
@@ -68,11 +70,17 @@ namespace Ur::View {
         using ReverseCursor = Detail::TReverseCursorType<BiDirRange<TRng>, TRng>;
 
         static constexpr bool IsBidir = BiDirRange<TRng>;
+        static constexpr bool IsSized = SizedRange<TRng>;
 
         template<typename URng>
         TRefView(Misc::FFromViewTag, URng& InRng)
             : Rng(std::addressof(InRng))
         {
+        }
+
+        auto Num() const requires IsSized
+        {
+            return Ur::Size(*Rng);
         }
 
     private:

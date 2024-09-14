@@ -13,6 +13,8 @@
 #include "Containers/ArrayView.h"
 #include "Containers/StringView.h"
 
+using namespace Ur::View;
+
 namespace Ur::View::Test {
 
     template<typename TContainer, typename TExpectedReference, typename TExpectedConstReference>
@@ -114,4 +116,5 @@ namespace Ur::View::Test {
             (void)Str;
         }
     }
+
 }

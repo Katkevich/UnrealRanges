@@ -10,6 +10,8 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Size.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -28,6 +30,8 @@ namespace Ur::View {
         , public TMinMaxMixin<TReverseView<TView>>
         , public TFindMixin<TReverseView<TView>>
         , public TFindLastMixin<TReverseView<TView>>
+        , public TCountMixin<TReverseView<TView>>
+        , public TConditionalInheritance<TView::IsSized, TSizeMixin<TReverseView<TView>>>
         , public TIteratorMixin<TReverseView<TView>>
         , public TReverseIteratorMixin<TReverseView<TView>>
         , public TReverseMixin<TReverseView<TView>>
@@ -43,6 +47,7 @@ namespace Ur::View {
         using ReverseCursor = typename TView::Cursor;
 
         static constexpr bool IsBidir = true;
+        static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView>
         TReverseView(Misc::FFromViewTag, UView InView)

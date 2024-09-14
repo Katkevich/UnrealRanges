@@ -10,6 +10,7 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -26,8 +27,11 @@ namespace Ur::View {
         , public TToMixin<TTakeView<TView, TAmount>>
         , public TMinMaxMixin<TTakeView<TView, TAmount>>
         , public TFindMixin<TTakeView<TView, TAmount>>
+        , public TCountMixin<TTakeView<TView, TAmount>>
         , public TIteratorMixin<TTakeView<TView, TAmount>>
     {
+        friend struct FCursorProtocol;
+
     public:
         using reference = typename TView::reference;
         using const_reference = typename TView::const_reference;
@@ -41,6 +45,7 @@ namespace Ur::View {
         using ReverseCursor = void;
 
         static constexpr bool IsBidir = false;
+        static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView, typename UAmount>
         TTakeView(UView InView, UAmount InAmount)
@@ -49,6 +54,15 @@ namespace Ur::View {
         {
         }
 
+        auto Num() const requires IsSized
+        {
+            // we don't want to have dependency on <algorithm> coz it is too heavy to bring in for such simple algorithm
+            return [](auto&& Lhs, auto&& Rhs) {
+                return (Lhs < Rhs) ? Lhs : Rhs;
+            }(Ur::Size(View), Amount);
+        }
+
+    private:
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
         {

@@ -130,26 +130,65 @@ bool FUnrealRangesTests_TakeInternalIterationEmptySource::RunTest(const FString&
     return Result.Num() == 0;
 }
 
-//IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWhileOnDifferentViews, "UnrealRanges.TakeWhile.TestTakeWhileOnDifferentViews", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-//bool FUnrealRangesTests_TakeWhileOnDifferentViews::RunTest(const FString& Parameters)
-//{
-//    TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
-//
-//    bool bResult = true;
-//    {
-//        auto Result = Ref(From)
-//            .TakeWhile([](const FString& Str) { return Str.Len() == 1; });
-//
-//        bResult &= std::distance(Result.begin(), Result.end()) == 2;
-//    }
-//    {
-//        auto Result = Ref(From)
-//            .Filter([](const FString& Str) { return Str.Len() == 1; })
-//            .TakeWhile([](const FString& Str) { return Str.Len() == 3; });
-//
-//        bResult &= std::distance(Result.begin(), Result.end()) == 2;
-//    }
-//
-//}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWhileOnDifferentViews, "UnrealRanges.TakeWhile.TestTakeWhileOnDifferentViews", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_TakeWhileOnDifferentViews::RunTest(const FString& Parameters)
+{
+    TArray<FString> From = { FString(TEXT("00")), FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("33")), FString(TEXT("4")) };
+
+    bool bResult = true;
+    {
+        auto Result = Ref(From)
+            .TakeWhile([](const FString& Str) { return Str.Len() == 2; });
+
+        bResult &= Result.Count() == 1;
+    }
+    {
+        auto Result = Ref(From)
+            .Filter([](const FString& Str) { return Str.Len() == 1; })
+            .TakeWhile([](const FString& Str) { return Str.Len() == 1; });
+
+        bResult &= EqualTo(Result, { FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("4")) });
+    }
+    {
+        auto Result = Ref(From)
+            .Transform([](const FString& Str) { return Str + Str; })
+            .TakeWhile([](const FString& Str) { return Str.Len() == 4; });
+
+        bResult &= EqualTo(Result, { FString(TEXT("0000")) });
+    }
+    {
+        auto Result = Ref(From)
+            .Reverse()
+            .TakeWhile([](const FString& Str) { return Str.Len() == 1; });
+
+        bResult &= EqualTo(Result, { FString(TEXT("4")) });
+    }
+    {
+        auto Result = Ref(From)
+            .Reverse()
+            .Enumerate()
+            .TakeWhile([](FIndexed<FString&> Str) { return Str.Value.Len() == 1; });
+
+        bResult &= EqualTo(Result, { FIndexed<FString&>(From[4], 0) });
+    }
+    {
+        auto Result = Ref(From)
+            .Filter([](const FString& Str) { return Str.Len() == 1; })
+            .Take(10)
+            .TakeWhile([](const FString& Str) { return Str.Len() == 1; });
+
+        bResult &= EqualTo(Result, { FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("4")) });
+    }
+    {
+        auto Result = Ref(From)
+            .Filter([](const FString& Str) { return Str.Len() == 1; })
+            .TakeWhile([](const FString& Str) { return Str.Len() == 1; })
+            .TakeWhile([](const FString& Str) { return Str[0] == TEXT('1'); });
+
+        bResult &= EqualTo(Result, { FString(TEXT("1")) });
+    }
+
+    return bResult;
+}
 
 #endif

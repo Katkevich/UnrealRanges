@@ -10,6 +10,7 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -26,8 +27,11 @@ namespace Ur::View {
         , public TToMixin<TTakeWhileView<TView, TFn>>
         , public TMinMaxMixin<TTakeWhileView<TView, TFn>>
         , public TFindMixin<TTakeWhileView<TView, TFn>>
+        , public TCountMixin<TTakeWhileView<TView, TFn>>
         , public TIteratorMixin<TTakeWhileView<TView, TFn>>
     {
+        friend struct FCursorProtocol;
+
     public:
         using reference = typename TView::reference;
         using const_reference = typename TView::const_reference;
@@ -41,6 +45,7 @@ namespace Ur::View {
         using ReverseCursor = void;
 
         static constexpr bool IsBidir = false;
+        static constexpr bool IsSized = false;
 
         template<typename UView, typename UFn>
         TTakeWhileView(UView InView, UFn InFn)
@@ -49,6 +54,7 @@ namespace Ur::View {
         {
         }
 
+    private:
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
         {

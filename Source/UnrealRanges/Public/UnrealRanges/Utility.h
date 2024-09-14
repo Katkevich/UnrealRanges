@@ -1,6 +1,7 @@
 #pragma once
 #include "UnrealRanges/Detail/AlwaysFalse.h"
 #include "UnrealRanges/Detail/ForwardMacro.h"
+#include "Templates/UnrealTemplate.h"
 #include <concepts>
 
 namespace Ur {
@@ -22,6 +23,11 @@ namespace Ur {
     template<typename TRng>
     concept HasREnd = requires(TRng Rng) {
         requires requires { Rng.rend(); } || requires { rend(Rng); };
+    };
+
+    template<typename TRng>
+    concept HasSize = requires(TRng Rng) {
+        requires requires { Rng.Num(); } || requires { Rng.Len(); };
     };
 
 
@@ -67,10 +73,15 @@ namespace Ur {
 
     struct FSizeCpo
     {
-        template<typename TRng>
+        template<HasSize TRng>
         auto operator()(TRng&& Rng) const
         {
-            return GetNum(UR_FWD(Rng));
+            if constexpr (requires { Rng.Num(); })
+                return Rng.Num();
+            else if constexpr (requires { Rng.Len(); })
+                return Rng.Len();
+            else
+                return GetNum(UR_FWD(Rng));
         }
     };
 

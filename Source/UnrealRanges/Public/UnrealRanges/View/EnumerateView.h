@@ -10,6 +10,8 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Size.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -27,8 +29,12 @@ namespace Ur::View {
         , public TToMixin<TEnumerateView<TView, TIndex>>
         , public TMinMaxMixin<TEnumerateView<TView, TIndex>>
         , public TFindMixin<TEnumerateView<TView, TIndex>>
+        , public TCountMixin<TEnumerateView<TView, TIndex>>
+        , public TConditionalInheritance<TView::IsSized, TSizeMixin<TEnumerateView<TView, TIndex>>>
         , public TIteratorMixin<TEnumerateView<TView, TIndex>>
     {
+        friend struct FCursorProtocol;
+
     public:
         using reference = FIndexed<typename TView::reference, TIndex>;
         using const_reference = FIndexed<typename TView::const_reference, TIndex>;
@@ -42,6 +48,7 @@ namespace Ur::View {
         using ReverseCursor = void;
 
         static constexpr bool IsBidir = false;
+        static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView, typename UIndex>
         TEnumerateView(UView InView, UIndex InIndexFrom, UIndex InStep)
@@ -51,6 +58,7 @@ namespace Ur::View {
         {
         }
 
+    private:
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
         {

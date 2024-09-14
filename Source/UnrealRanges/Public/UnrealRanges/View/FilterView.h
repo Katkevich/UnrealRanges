@@ -10,6 +10,7 @@
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/FindLast.h"
+#include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -27,10 +28,13 @@ namespace Ur::View {
         , public TMinMaxMixin<TFilterView<TView, TFn>>
         , public TFindMixin<TFilterView<TView, TFn>>
         , public TConditionalInheritance<TView::IsBidir, TFindLastMixin<TFilterView<TView, TFn>>>
+        , public TCountMixin<TFilterView<TView, TFn>>
         , public TIteratorMixin<TFilterView<TView, TFn>>
         , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TFilterView<TView, TFn>>>
         , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TFilterView<TView, TFn>>>
     {
+        friend struct FCursorProtocol;
+
     public:
         using reference = typename TView::reference;
         using const_reference = typename TView::const_reference;
@@ -39,6 +43,7 @@ namespace Ur::View {
         using ReverseCursor = typename TView::ReverseCursor;
 
         static constexpr bool IsBidir = TView::IsBidir;
+        static constexpr bool IsSized = false;
 
         template<typename UView, typename UFn>
         TFilterView(UView InView, UFn InFn)
@@ -47,6 +52,7 @@ namespace Ur::View {
         {
         }
 
+    private:
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
         {

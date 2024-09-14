@@ -63,7 +63,7 @@ namespace Ur {
 
     template<typename TRng>
     concept SizedRange = Range<TRng> && requires(TRng Rng) {
-        { Ur::Size(Rng) } -> std::same_as<int32>;
+        { Ur::Size(Rng) } -> std::convertible_to<int32>;
     };
 
     // UE random "accessness" is very limited (basically the only facility that is available is operator[])
