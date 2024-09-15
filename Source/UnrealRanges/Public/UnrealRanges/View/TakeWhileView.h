@@ -11,6 +11,7 @@
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
+#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -29,6 +30,7 @@ namespace Ur::View {
         , public TFindFirstMixin<TTakeWhileView<TView, TFn>>
         , public TCountMixin<TTakeWhileView<TView, TFn>>
         , public TFoldLeftMixin<TTakeWhileView<TView, TFn>>
+        , public TSumMixin<TTakeWhileView<TView, TFn>>
         , public TIteratorMixin<TTakeWhileView<TView, TFn>>
     {
         friend struct FCursorProtocol;

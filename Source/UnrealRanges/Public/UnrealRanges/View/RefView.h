@@ -11,6 +11,7 @@
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
+#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -56,6 +57,7 @@ namespace Ur::View {
         , public TCountMixin<TRefView<TRng>>
         , public TFoldLeftMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TFoldRightMixin<TRefView<TRng>>>
+        , public TSumMixin<TRefView<TRng>>
         , public TIteratorMixin<TRefView<TRng>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
