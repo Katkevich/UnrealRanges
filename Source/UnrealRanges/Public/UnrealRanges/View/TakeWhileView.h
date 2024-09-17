@@ -5,6 +5,7 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
@@ -25,6 +26,7 @@ namespace Ur::View {
         , public TEnumerateMixin<TTakeWhileView<TView, TFn>>
         , public TTakeMixin<TTakeWhileView<TView, TFn>>
         , public TTakeWhileMixin<TTakeWhileView<TView, TFn>>
+        , public TConcatMixin<TTakeWhileView<TView, TFn>>
         , public TToMixin<TTakeWhileView<TView, TFn>>
         , public TMinMaxMixin<TTakeWhileView<TView, TFn>>
         , public TFindFirstMixin<TTakeWhileView<TView, TFn>>
@@ -59,9 +61,9 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
-            FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
                     if (std::invoke(Self.Fn, Item))
                     {
@@ -77,7 +79,7 @@ namespace Ur::View {
         UR_DEBUG_NOINLINE Cursor CursorBegin() const
         {
             auto NestedCursor = FCursorProtocol::CursorBegin(View);
-            const auto bIsEnd = FCursorProtocol::IsEnd(View, NestedCursor) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, NestedCursor));
+            const auto bIsEnd = FCursorProtocol::IsEnd(Misc::Forward, View, NestedCursor) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, NestedCursor));
 
             return Cursor{ MoveTemp(NestedCursor), bIsEnd };
         }
@@ -92,7 +94,7 @@ namespace Ur::View {
         {
             FCursorProtocol::CursorInc(View, Curs.Nested);
 
-            Curs.bIsEnd = FCursorProtocol::IsEnd(View, Curs.Nested) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs.Nested));
+            Curs.bIsEnd = FCursorProtocol::IsEnd(Misc::Forward, View, Curs.Nested) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs.Nested));
         }
 
         template<typename TCursor>

@@ -4,6 +4,7 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -50,6 +51,7 @@ namespace Ur::View {
         , public TEnumerateMixin<TRefView<TRng>>
         , public TTakeMixin<TRefView<TRng>>
         , public TTakeWhileMixin<TRefView<TRng>>
+        , public TConcatMixin<TRefView<TRng>>
         , public TToMixin<TRefView<TRng>>
         , public TMinMaxMixin<TRefView<TRng>>
         , public TFindFirstMixin<TRefView<TRng>>
@@ -89,11 +91,13 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TFn Fn)
         {
             for (auto It = Ur::BeginEx<IsForward>(*Self.Rng); It != Ur::EndEx<IsForward>(*Self.Rng); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)
-                    break;
+                    return Misc::ELoop::Break;
+
+            return Misc::ELoop::Continue;
         }
 
         UR_DEBUG_NOINLINE Cursor CursorBegin() const

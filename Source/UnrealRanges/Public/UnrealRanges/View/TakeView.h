@@ -5,6 +5,7 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
@@ -25,6 +26,7 @@ namespace Ur::View {
         , public TEnumerateMixin<TTakeView<TView, TAmount>>
         , public TTakeMixin<TTakeView<TView, TAmount>>
         , public TTakeWhileMixin<TTakeView<TView, TAmount>>
+        , public TConcatMixin<TTakeView<TView, TAmount>>
         , public TToMixin<TTakeView<TView, TAmount>>
         , public TMinMaxMixin<TTakeView<TView, TAmount>>
         , public TFindFirstMixin<TTakeView<TView, TAmount>>
@@ -67,10 +69,10 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
             TAmount Counter = { 0 };
-            FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
                     if (Counter < Self.Amount)
                     {
@@ -115,8 +117,8 @@ namespace Ur::View {
                 (Lhs.Index == Rhs.Index && FCursorProtocol::CursorEq(View, Lhs.Nested, Rhs.Nested)) ||
                 // or both are End cursor (either Index reached Amount or nested cursor reached End)
                 (
-                    (Lhs.Index == Amount || FCursorProtocol::IsEnd(View, Lhs.Nested)) &&
-                    (Rhs.Index == Amount || FCursorProtocol::IsEnd(View, Rhs.Nested))
+                    (Lhs.Index == Amount || FCursorProtocol::IsEnd(Misc::Forward, View, Lhs.Nested)) &&
+                    (Rhs.Index == Amount || FCursorProtocol::IsEnd(Misc::Forward, View, Rhs.Nested))
                 );
         }
 

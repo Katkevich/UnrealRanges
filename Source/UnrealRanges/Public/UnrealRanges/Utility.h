@@ -97,18 +97,18 @@ namespace Ur {
     // internal iteration
     namespace Misc {
         template<bool IsForward>
-        struct FDirection
+        struct TDirection
         {
         };
 
-        static constexpr auto Forward = FDirection<true>{};
-        static constexpr auto Reverse = FDirection<false>{};
+        static constexpr auto Forward = TDirection<true>{};
+        static constexpr auto Reverse = TDirection<false>{};
 
         template<bool IsForward>
-        static constexpr auto Opposite = FDirection<!IsForward>{};
+        static constexpr auto Opposite = TDirection<!IsForward>{};
 
         template<bool IsForward>
-        static constexpr auto Same = FDirection<IsForward>{};
+        static constexpr auto Same = TDirection<IsForward>{};
     }
 
     template<bool IsForward>

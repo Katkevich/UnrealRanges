@@ -5,6 +5,7 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
@@ -26,6 +27,7 @@ namespace Ur::View {
         , public TEnumerateMixin<TTransformView<TView, TFn>>
         , public TTakeMixin<TTransformView<TView, TFn>>
         , public TTakeWhileMixin<TTransformView<TView, TFn>>
+        , public TConcatMixin<TTransformView<TView, TFn>>
         , public TToMixin<TTransformView<TView, TFn>>
         , public TMinMaxMixin<TTransformView<TView, TFn>>
         , public TFindFirstMixin<TTransformView<TView, TFn>>
@@ -65,9 +67,9 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
-            FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
                     return Callback(std::invoke(Self.Fn, UR_FWD(Item)));
                 });

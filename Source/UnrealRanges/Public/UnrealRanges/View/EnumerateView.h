@@ -5,6 +5,7 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
 #include "UnrealRanges/View/AlgoMixin/MinMax.h"
@@ -27,6 +28,7 @@ namespace Ur::View {
         , public TEnumerateMixin<TEnumerateView<TView, TIndex>>
         , public TTakeMixin<TEnumerateView<TView, TIndex>>
         , public TTakeWhileMixin<TEnumerateView<TView, TIndex>>
+        , public TConcatMixin<TEnumerateView<TView, TIndex>>
         , public TToMixin<TEnumerateView<TView, TIndex>>
         , public TMinMaxMixin<TEnumerateView<TView, TIndex>>
         , public TFindFirstMixin<TEnumerateView<TView, TIndex>>
@@ -63,11 +65,11 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static void InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
             TIndex Index = Self.IndexFrom;
 
-            FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
                 {
                     Misc::ELoop Result = Callback(reference{ UR_FWD(Item), Index });
                     Index += Self.Step;
@@ -104,7 +106,7 @@ namespace Ur::View {
         {
             return
                 FCursorProtocol::CursorEq(View, Lhs.Nested, Rhs.Nested) &&
-                (Lhs.Index == Rhs.Index || FCursorProtocol::IsEnd(View, Lhs.Nested));
+                (Lhs.Index == Rhs.Index || FCursorProtocol::IsEnd(Misc::Forward, View, Lhs.Nested));
         }
 
     private:

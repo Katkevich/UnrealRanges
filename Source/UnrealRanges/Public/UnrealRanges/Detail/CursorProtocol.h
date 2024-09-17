@@ -5,7 +5,7 @@ namespace Ur {
 struct FCursorProtocol
 {
     template<bool IsForward, typename TView, typename TFn>
-    static decltype(auto) InternalIteration(Misc::FDirection<IsForward>, TView& View, TFn Fn)
+    static decltype(auto) InternalIteration(Misc::TDirection<IsForward>, TView& View, TFn Fn)
     {
         return TView::InternalIteration<IsForward, TView, TFn>(View, Fn);
     }
@@ -52,10 +52,13 @@ struct FCursorProtocol
         return View.CursorEq(Lhs, Rhs);
     }
 
-    template<typename TView, typename TCursor>
-    static bool IsEnd(TView& View, const TCursor& Curs)
+    template<bool IsForward, typename TView, typename TCursor>
+    static bool IsEnd(Misc::TDirection<IsForward>, TView& View, const TCursor& Curs)
     {
-        return View.CursorEq(Curs, View.CursorEnd());
+        if constexpr (IsForward)
+            return View.CursorEq(Curs, View.CursorEnd());
+        else
+            return View.CursorEq(Curs, View.CursorREnd());
     }
 
     template<typename TView>
