@@ -93,6 +93,26 @@ namespace Ur {
     static constexpr bool TIsSameTemplate_V = TIsSameTemplate<T, U>::Value;
 
 
+    namespace Detail
+    {
+        template<typename T, template<typename...> typename Tmpl>
+        struct THasTemplate : TIntegralConstant<bool, false>
+        {};
+
+        template<template<typename...> typename Tmpl, typename... Ts>
+        struct THasTemplate<Tmpl<Ts...>, Tmpl> : TIntegralConstant<bool, true>
+        {};
+    }
+
+    template<typename T, template<typename...> typename Tmpl>
+    struct THasTemplate : Detail::THasTemplate<std::remove_cvref_t<T>, Tmpl>
+    {};
+
+    template<typename T, template<typename...> typename Tmpl>
+    static constexpr bool THasTemplate_V = THasTemplate<T, Tmpl>::Value;
+
+
+
     template<typename T>
     concept LessOrdered = requires(T Val) {
         { Val < Val } -> std::convertible_to<bool>;
