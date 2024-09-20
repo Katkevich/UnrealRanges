@@ -47,7 +47,13 @@ namespace Ur::View {
             typename TView::Cursor Nested;
             bool bIsEnd = false;
         };
+        struct ConstCursor
+        {
+            typename TView::ConstCursor Nested;
+            bool bIsEnd = false;
+        };
         using ReverseCursor = void;
+        using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = false;
@@ -63,7 +69,7 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
-            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration<IsForward>(Self.View, [&](auto&& Item)
                 {
                     if (std::invoke(Self.Fn, Item))
                     {
@@ -76,37 +82,39 @@ namespace Ur::View {
                 });
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorBegin() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            auto NestedCursor = FCursorProtocol::CursorBegin(View);
-            const auto bIsEnd = FCursorProtocol::IsEnd(Misc::Forward, View, NestedCursor) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, NestedCursor));
+            auto NestedCursor = FCursorProtocol::CursorBegin<IsForward>(Self.View);
+            const auto bIsEnd = FCursorProtocol::IsEnd(Self.View, NestedCursor) || !std::invoke(Self.Fn, FCursorProtocol::CursorDeref(Self.View, NestedCursor));
 
-            return Cursor{ MoveTemp(NestedCursor), bIsEnd };
+            return TCursor<TSelf, IsForward>{ MoveTemp(NestedCursor), bIsEnd };
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorEnd() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return Cursor{ FCursorProtocol::CursorEnd(View), true };
+            return TCursor<TSelf, IsForward>{ FCursorProtocol::CursorEnd<IsForward>(Self.View), true };
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            FCursorProtocol::CursorInc(View, Curs.Nested);
+            FCursorProtocol::CursorInc(Self.View, Curs.Nested);
 
-            Curs.bIsEnd = FCursorProtocol::IsEnd(Misc::Forward, View, Curs.Nested) || !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs.Nested));
+            Curs.bIsEnd = FCursorProtocol::IsEnd(Self.View, Curs.Nested) || !std::invoke(Self.Fn, FCursorProtocol::CursorDeref(Self.View, Curs.Nested));
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return FCursorProtocol::CursorDeref(View, Curs.Nested);
+            return FCursorProtocol::CursorDeref(Self.View, Curs.Nested);
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
-            return Lhs.bIsEnd == Rhs.bIsEnd && (Lhs.bIsEnd || FCursorProtocol::CursorEq(View, Lhs.Nested, Rhs.Nested));
+            return Lhs.bIsEnd == Rhs.bIsEnd && (Lhs.bIsEnd || FCursorProtocol::CursorEq(Self.View, Lhs.Nested, Rhs.Nested));
         }
 
     private:

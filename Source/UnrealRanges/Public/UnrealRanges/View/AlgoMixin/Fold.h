@@ -7,7 +7,7 @@ namespace Ur::View {
 
     namespace Detail
     {
-        template<typename TView, auto Direction>
+        template<typename TView, bool IsForward>
         struct TFoldMixin
         {
         protected:
@@ -23,7 +23,7 @@ namespace Ur::View {
 
                 TOptional<ResultType> Result;
 
-                FCursorProtocol::InternalIteration(Direction, Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(Self, [&](auto&& Item)
                     {
                         if (Result)
                             Result.Emplace(std::invoke(Fn, MoveTemp(*Result), UR_FWD(Item)));
@@ -56,7 +56,7 @@ namespace Ur::View {
 
                 // even tho we are going through all these hoops using TOptional it is still better than 
                 // multiple invocation of TransformView predicate while using iterators
-                FCursorProtocol::InternalIteration(Direction, Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(Self, [&](auto&& Item)
                     {
                         if (Result)
                         {

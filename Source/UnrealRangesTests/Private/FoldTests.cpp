@@ -111,6 +111,17 @@ bool FUnrealRangesTests_LValueItemIntoConstLValueRValueArgumentMix::RunTest(cons
     return Ref(Array).FoldLeft([](const FString& Lhs, FString Rhs) { return Lhs + Rhs; }).GetValue() == FString(TEXT("123"));
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FoldRValueItemIntoRValueArg, "UnrealRanges.FoldLeft.NoInit.TestRValueItemIntoRValueArg", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_FoldRValueItemIntoRValueArg::RunTest(const FString& Parameters)
+{
+    TArray<FString> Array = { FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("3")) };
+
+    // compiles coz FString can be bound to const lvalue reference
+    return Ref(Array)
+        .Transform([](const FString& Str) { return Str; })
+        .FoldLeft([](FString&& Lhs, FString&& Rhs) { return Lhs + Rhs; }).GetValue() == FString(TEXT("123"));
+}
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ToLittleElements, "UnrealRanges.FoldLeft.NoInit.TestToLittleElements", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_ToLittleElements::RunTest(const FString& Parameters)
 {

@@ -10,7 +10,7 @@ namespace Ur::View {
 
     namespace Detail
     {
-        template<typename TView, auto Direction>
+        template<typename TView, bool IsForward>
         struct TFindMixin
         {
         protected:
@@ -20,7 +20,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration(Direction, *Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Proj, Item) == Value)
                         {
@@ -40,7 +40,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
                 bool Found = false;
-                FCursorProtocol::InternalIteration(Direction, *Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Proj, UR_FWD(Item)) == Value)
                         {
@@ -60,7 +60,7 @@ namespace Ur::View {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration(Direction, *Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Pred, Item))
                         {
@@ -80,7 +80,7 @@ namespace Ur::View {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
                 bool Found = false;
-                FCursorProtocol::InternalIteration(Direction, *Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Pred, UR_FWD(Item)))
                         {
@@ -100,7 +100,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, RangeValue<TValuesRng>>, "values (or projected value if projection is used) should be comparable with value using operator==");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration(Direction, *Self, [&](auto&& Item)
+                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (Algo::Find(Values, std::invoke(Proj, Item)))
                         {

@@ -24,7 +24,7 @@ namespace Ur::View {
 
             ResultType Result{};
 
-            FCursorProtocol::InternalIteration(Misc::Forward, *static_cast<const TView*>(this), [&](auto&& Item)
+            FCursorProtocol::InternalIteration<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
                 {
                     Result = Result + std::invoke(Proj, UR_FWD(Item));
 

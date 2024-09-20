@@ -96,19 +96,12 @@ namespace Ur {
 
     // internal iteration
     namespace Misc {
-        template<bool IsForward>
-        struct TDirection
-        {
-        };
 
-        static constexpr auto Forward = TDirection<true>{};
-        static constexpr auto Reverse = TDirection<false>{};
+        static constexpr bool Forward = true;
+        static constexpr bool Reverse = false;
 
-        template<bool IsForward>
-        static constexpr auto Opposite = TDirection<!IsForward>{};
-
-        template<bool IsForward>
-        static constexpr auto Same = TDirection<IsForward>{};
+        template<bool Direction>
+        static constexpr bool Opposite = !Direction;
     }
 
     template<bool IsForward>
@@ -126,4 +119,14 @@ namespace Ur {
 
     static constexpr FSizeCpo Size{};
     static constexpr FDataCpo Data{};
+
+
+    template <typename TLike, typename T>
+    constexpr decltype(auto) AsConstLike(T& Value) noexcept
+    {
+        if constexpr (std::is_const_v<TLike>)
+            return std::as_const(Value);
+        else
+            return (Value);
+    }
 }

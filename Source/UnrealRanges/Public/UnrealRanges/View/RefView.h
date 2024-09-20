@@ -27,20 +27,26 @@
 
 namespace Ur::View {
     namespace Detail {
-        template<bool IsBidir, typename TRng>
+        template<bool IsBidir, bool IsConst, typename TRng>
         struct TReverseCursor
         {
             using Type = void;
         };
 
         template<typename TRng>
-        struct TReverseCursor<true, TRng>
+        struct TReverseCursor<true, false, TRng>
         {
             using Type = RangeReverseIterator<TRng>;
         };
 
-        template<bool IsBidir, typename TRng>
-        using TReverseCursorType = typename TReverseCursor<IsBidir, TRng>::Type;
+        template<typename TRng>
+        struct TReverseCursor<true, true, TRng>
+        {
+            using Type = RangeReverseConstIterator<TRng>;
+        };
+
+        template<bool IsBidir, bool IsConst, typename TRng>
+        using TReverseCursorType = typename TReverseCursor<IsBidir, IsConst, TRng>::Type;
     }
 
     template<typename TRng>
@@ -71,9 +77,10 @@ namespace Ur::View {
         using reference = RangeReference<TRng>;
         using const_reference = RangeConstReference<TRng>;
 
-        using BaseRange = TRng;
         using Cursor = RangeIterator<TRng>;
-        using ReverseCursor = Detail::TReverseCursorType<BiDirRange<TRng>, TRng>;
+        using ConstCursor = RangeConstIterator<TRng>;
+        using ReverseCursor = Detail::TReverseCursorType<BiDirRange<TRng>, false, TRng>;
+        using ReverseConstCursor = Detail::TReverseCursorType<BiDirRange<TRng>, true, TRng>;
 
         static constexpr bool IsBidir = BiDirRange<TRng>;
         static constexpr bool IsSized = SizedRange<TRng>;
@@ -93,47 +100,39 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf, typename TFn>
         UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TFn Fn)
         {
-            for (auto It = Ur::BeginEx<IsForward>(*Self.Rng); It != Ur::EndEx<IsForward>(*Self.Rng); ++It)
+            for (auto It = CursorBegin<IsForward>(Self); It != CursorEnd<IsForward>(Self); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)
                     return Misc::ELoop::Break;
 
             return Misc::ELoop::Continue;
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorBegin() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            return Ur::Begin(*Rng);
+            return Ur::BeginEx<IsForward>(AsConstLike<TSelf>(*Self.Rng));
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorEnd() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return Ur::End(*Rng);
+            return Ur::EndEx<IsForward>(AsConstLike<TSelf>(*Self.Rng));
         }
 
-        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
-        {
-            return Ur::RBegin(*Rng);
-        }
-
-        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
-        {
-            return Ur::REnd(*Rng);
-        }
-
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
             ++Curs;
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
             return *Curs;
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
             return !(Lhs != Rhs);
         }

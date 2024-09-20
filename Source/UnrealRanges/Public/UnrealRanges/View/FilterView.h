@@ -46,7 +46,9 @@ namespace Ur::View {
         using const_reference = typename TView::const_reference;
         using value_type = typename TView::value_type;
         using Cursor = typename TView::Cursor;
+        using ConstCursor = typename TView::ConstCursor;
         using ReverseCursor = typename TView::ReverseCursor;
+        using ReverseConstCursor = typename TView::ReverseConstCursor;
 
         static constexpr bool IsBidir = TView::IsBidir;
         static constexpr bool IsSized = false;
@@ -62,7 +64,7 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
         {
-            return FCursorProtocol::InternalIteration(Misc::Same<IsForward>, Self.View, [&](auto&& Item)
+            return FCursorProtocol::InternalIteration<IsForward>(Self.View, [&](auto&& Item)
                 {
                     if (std::invoke(Self.Fn, Item))
                     {
@@ -72,70 +74,48 @@ namespace Ur::View {
                 });
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorBegin() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            auto Curs = FCursorProtocol::CursorBegin(View);
-            this->FastForward(Curs);
+            auto Curs = FCursorProtocol::CursorBegin<IsForward>(Self.View);
+            FastForward(Self, Curs);
 
             return Curs;
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorEnd() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return FCursorProtocol::CursorEnd(View);
+            return FCursorProtocol::CursorEnd<IsForward>(Self.View);
         }
 
-        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            auto Curs = FCursorProtocol::CursorRBegin(View);
-            this->FastForward(Curs);
-
-            return Curs;
+            FCursorProtocol::CursorInc(Self.View, Curs);
+            FastForward(Self, Curs);
         }
 
-        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return FCursorProtocol::CursorREnd(View);
+            return FCursorProtocol::CursorDeref(Self.View, Curs);
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
-            FCursorProtocol::CursorInc(View, Curs);
-            this->FastForward(Curs);
-        }
-
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
-        {
-            return FCursorProtocol::CursorDeref(View, Curs);
-        }
-
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
-        {
-            return FCursorProtocol::CursorEq(View, Lhs, Rhs);
+            return FCursorProtocol::CursorEq(Self.View, Lhs, Rhs);
         }
 
     private:
-        template<typename TCursor>
-        void FastForward(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        static void FastForward(TSelf& Self, TCursor& Curs)
         {
-            const auto CursEnd = this->CursorEndOfType<TCursor>();
-
-            while (!FCursorProtocol::CursorEq(View, Curs, CursEnd) && !std::invoke(Fn, FCursorProtocol::CursorDeref(View, Curs)))
+            while (!FCursorProtocol::IsEnd(Self.View, Curs) && !std::invoke(Self.Fn, FCursorProtocol::CursorDeref(Self.View, Curs)))
             {
-                FCursorProtocol::CursorInc(View, Curs);
+                FCursorProtocol::CursorInc(Self.View, Curs);
             }
-        }
-
-        template<typename TCursor>
-        auto CursorEndOfType() const
-        {
-            if constexpr (std::is_same_v<TCursor, Cursor>)
-                return this->CursorEnd();
-            else
-                return this->CursorREnd();
         }
 
     private:

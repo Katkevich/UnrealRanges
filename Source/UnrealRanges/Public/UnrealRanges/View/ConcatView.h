@@ -43,10 +43,6 @@ namespace Ur::View {
     {
         friend struct FCursorProtocol;
 
-        template<size_t Index>
-        struct FIndex
-        {};
-
     public:
         using reference = std::common_reference_t<typename TViews::reference...>;
         using const_reference = std::common_reference_t<typename TViews::const_reference...>;
@@ -61,19 +57,31 @@ namespace Ur::View {
             TTuple<typename TViews::Cursor...> NestedCursors;
             int32 RngIndex = 0;
         };
-    private:
-        template<typename TCursor>
-        using TDirection = Misc::TDirection<std::is_same_v<TCursor, Cursor>>;
 
-        struct ReverseCursorImpl
+        struct ConstCursor
+        {
+            TTuple<typename TViews::ConstCursor...> NestedCursors;
+            int32 RngIndex = 0;
+        };
+
+        struct ReverseCursor
         {
             TTuple<typename TViews::ReverseCursor...> NestedCursors;
             int32 RngIndex = 0;
         };
 
-    public:
-        using ReverseCursor = std::conditional_t<IsBidir, ReverseCursorImpl, void>;
+        struct ReverseConstCursor
+        {
+            TTuple<typename TViews::ReverseConstCursor...> NestedCursors;
+            int32 RngIndex = 0;
+        };
 
+    private:
+        template<size_t Index>
+        struct FIndex
+        {};
+
+    public:
         static_assert((!std::is_rvalue_reference_v<typename TViews::reference> && ...), "only lvalue references and values are supported (rvalues are messing common_reference)");
         static_assert((!std::is_rvalue_reference_v<typename TViews::const_reference> && ...), "only lvalue references and values are supported (rvalues are messing common_reference)");
 
@@ -94,9 +102,9 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, size_t Index, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterationSubview(Misc::TDirection<IsForward> Direction, FIndex<Index>, TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterationSubview(FIndex<Index>, TSelf& Self, TCallback Callback)
         {
-            return FCursorProtocol::InternalIteration(Direction, At<Index, IsForward>(Self.Views), [&](auto&& Item)
+            return FCursorProtocol::InternalIteration<IsForward>(At<Index, IsForward>(Self.Views), [&](auto&& Item)
                 {
                     return Callback(UR_FWD(Item));
                 });
@@ -107,7 +115,7 @@ namespace Ur::View {
         {
             return[&]<size_t... Indices>(std::index_sequence<Indices...>) {
 
-                const bool bContinue = ((InternalIterationSubview(Misc::Same<IsForward>, FIndex<Indices>{}, Self, Callback) == Misc::ELoop::Continue) && ...);
+                const bool bContinue = ((InternalIterationSubview<IsForward>(FIndex<Indices>{}, Self, Callback) == Misc::ELoop::Continue) && ...);
                 return bContinue
                     ? Misc::ELoop::Continue
                     : Misc::ELoop::Break;
@@ -115,115 +123,91 @@ namespace Ur::View {
             }(std::index_sequence_for<TViews...>{});
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorBegin() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            Cursor Curs = {
-                .NestedCursors = this->ApplyTransform([](auto& View) { return FCursorProtocol::CursorBegin(View); }, Views),
+            TCursor<TSelf, IsForward> Curs = {
+                .NestedCursors = ApplyTransform([](auto& View) { return FCursorProtocol::CursorBegin<IsForward>(View); }, Self.Views),
                 .RngIndex = 0
             };
 
-            this->FastForward(Curs);
+            FastForward(Self, Curs);
 
             return Curs;
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorEnd() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            Cursor Curs = {
-                .NestedCursors = this->ApplyTransform([](auto& View) { return FCursorProtocol::CursorEnd(View); }, Views),
+            TCursor<TSelf, IsForward> Curs = {
+                .NestedCursors = ApplyTransform([](auto& View) { return FCursorProtocol::CursorEnd<IsForward>(View); }, Self.Views),
                 .RngIndex = ViewsCount
             };
 
             return Curs;
         }
 
-        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            ReverseCursor Curs = {
-                .NestedCursors = this->ApplyTransform([](auto& View) { return FCursorProtocol::CursorRBegin(View); }, Views),
-                .RngIndex = 0
-            };
-
-            this->FastForward(Curs);
-
-            return Curs;
-        }
-
-        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
-        {
-            ReverseCursor Curs = {
-                .NestedCursors = this->ApplyTransform([](auto& View) { return FCursorProtocol::CursorREnd(View); }, Views),
-                .RngIndex = ViewsCount
-            };
-
-            return Curs;
-        }
-
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
-        {
-            this->ApplyAt(
+            ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) {
                     FCursorProtocol::CursorInc(View, NestedCursor);
                 },
-                TDirection<TCursor>{},
                 ToCompTimeIndex(Curs.RngIndex),
-                Views,
+                Self.Views,
                 Curs.NestedCursors);
 
-            this->FastForward(Curs);
+            FastForward(Self, Curs);
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return this->ApplyAt(
+            return ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) -> reference {
                     return FCursorProtocol::CursorDeref(View, NestedCursor);
                 },
-                TDirection<TCursor>{},
                 ToCompTimeIndex(Curs.RngIndex),
-                Views,
+                Self.Views,
                 Curs.NestedCursors);
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
             return
                 Lhs.RngIndex == Rhs.RngIndex &&
                 (
                     Lhs.RngIndex == ViewsCount ||
-                    this->ApplyAt(
+                    ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
                         [](auto& View, auto& LhsNested, auto& RhsNested) {
                             return FCursorProtocol::CursorEq(View, LhsNested, RhsNested);
                         },
-                        TDirection<TCursor>{},
                         ToCompTimeIndex(Lhs.RngIndex),
-                        Views,
+                        Self.Views,
                         Lhs.NestedCursors,
                         Rhs.NestedCursors)
-                    );
+                );
         }
 
     private:
-        template<typename TCursor>
-        void FastForward(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        static void FastForward(TSelf& Self, TCursor& Curs)
         {
             if (Curs.RngIndex == ViewsCount)
                 return;
 
-            this->ApplyAt(
+            ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) {
-                    if (FCursorProtocol::IsEnd(TDirection<TCursor>{}, View, NestedCursor))
+                    if (FCursorProtocol::IsEnd(View, NestedCursor))
                     {
                         ++Curs.RngIndex;
-                        this->FastForward(Curs);
+                        FastForward(Self, Curs);
                     }
                 },
-                TDirection<TCursor>{},
                 ToCompTimeIndex(Curs.RngIndex),
-                Views,
+                Self.Views,
                 Curs.NestedCursors);
         }
 
@@ -236,7 +220,7 @@ namespace Ur::View {
         }
 
         template<bool IsForward, typename TIndex, typename... TTuples>
-        static decltype(auto) ApplyAt(auto Callback, Misc::TDirection<IsForward>, TIndex CompTimeIndex, TTuples&... Tuples)
+        static decltype(auto) ApplyAt(auto Callback, TIndex CompTimeIndex, TTuples&... Tuples)
         {
             return std::visit([&]<size_t Index>(FIndex<Index>) -> decltype(auto) {
                 return Callback(At<Index, IsForward>(Tuples)...);

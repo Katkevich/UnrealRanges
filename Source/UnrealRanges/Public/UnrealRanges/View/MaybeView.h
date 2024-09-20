@@ -52,7 +52,9 @@ namespace Ur::View {
         using const_pointer = std::add_pointer_t<const_reference>;
 
         using Cursor = pointer;
+        using ConstCursor = const_pointer;
         using ReverseCursor = pointer;
+        using ReverseConstCursor = const_pointer;
 
         static constexpr bool IsBidir = true;
         static constexpr bool IsSized = true;
@@ -89,42 +91,32 @@ namespace Ur::View {
                 return Misc::ELoop::Continue;
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorBegin() const
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            //TODO: get rid of c-style cast
-            return (Cursor)Value.GetPtrOrNull();
+            return Self.Value.GetPtrOrNull();
         }
 
-        UR_DEBUG_NOINLINE Cursor CursorEnd() const
-        {
-            return nullptr;
-        }
-
-        UR_DEBUG_NOINLINE ReverseCursor CursorRBegin() const requires IsBidir
-        {
-            //TODO: get rid of c-style cast
-            return (ReverseCursor)Value.GetPtrOrNull();
-        }
-
-        UR_DEBUG_NOINLINE ReverseCursor CursorREnd() const requires IsBidir
+        template<bool IsForward, typename TSelf>
+        UR_DEBUG_NOINLINE static auto CursorEnd(TSelf&)
         {
             return nullptr;
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE void CursorInc(TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
             Curs = nullptr;
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE reference CursorDeref(const TCursor& Curs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
             return *Curs;
         }
 
-        template<typename TCursor>
-        UR_DEBUG_NOINLINE bool CursorEq(const TCursor& Lhs, const TCursor& Rhs) const
+        template<typename TSelf, typename TCursor>
+        UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
             return Lhs == Rhs;
         }
