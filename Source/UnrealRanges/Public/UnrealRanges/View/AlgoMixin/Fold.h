@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Detail/EmptyBase.h"
 #include "UnrealRanges/Optional.h"
 
@@ -23,7 +23,7 @@ namespace Ur::View {
 
                 TOptional<ResultType> Result;
 
-                FCursorProtocol::InternalIteration<IsForward>(Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(Self, [&](auto&& Item)
                     {
                         if (Result)
                             Result.Emplace(std::invoke(Fn, MoveTemp(*Result), UR_FWD(Item)));
@@ -56,7 +56,7 @@ namespace Ur::View {
 
                 // even tho we are going through all these hoops using TOptional it is still better than 
                 // multiple invocation of TransformView predicate while using iterators
-                FCursorProtocol::InternalIteration<IsForward>(Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(Self, [&](auto&& Item)
                     {
                         if (Result)
                         {

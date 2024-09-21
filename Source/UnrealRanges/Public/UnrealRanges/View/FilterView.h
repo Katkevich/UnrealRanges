@@ -39,7 +39,7 @@ namespace Ur::View {
         , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TFilterView<TView, TFn>>>
         , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TFilterView<TView, TFn>>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using reference = typename TView::reference;
@@ -62,9 +62,9 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
-            return FCursorProtocol::InternalIteration<IsForward>(Self.View, [&](auto&& Item)
+            return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
                 {
                     if (std::invoke(Self.Fn, Item))
                     {
@@ -77,7 +77,7 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            auto Curs = FCursorProtocol::CursorBegin<IsForward>(Self.View);
+            auto Curs = Ur::Cursor::Begin<IsForward>(Self.View);
             FastForward(Self, Curs);
 
             return Curs;
@@ -86,35 +86,35 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return FCursorProtocol::CursorEnd<IsForward>(Self.View);
+            return Ur::Cursor::End<IsForward>(Self.View);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            FCursorProtocol::CursorInc(Self.View, Curs);
+            Ur::Cursor::Inc(Self.View, Curs);
             FastForward(Self, Curs);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return FCursorProtocol::CursorDeref(Self.View, Curs);
+            return Ur::Cursor::Deref(Self.View, Curs);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
-            return FCursorProtocol::CursorEq(Self.View, Lhs, Rhs);
+            return Ur::Cursor::Eq(Self.View, Lhs, Rhs);
         }
 
     private:
         template<typename TSelf, typename TCursor>
         static void FastForward(TSelf& Self, TCursor& Curs)
         {
-            while (!FCursorProtocol::IsEnd(Self.View, Curs) && !std::invoke(Self.Fn, FCursorProtocol::CursorDeref(Self.View, Curs)))
+            while (!Ur::Cursor::IsEnd(Self.View, Curs) && !std::invoke(Self.Fn, Ur::Cursor::Deref(Self.View, Curs)))
             {
-                FCursorProtocol::CursorInc(Self.View, Curs);
+                Ur::Cursor::Inc(Self.View, Curs);
             }
         }
 

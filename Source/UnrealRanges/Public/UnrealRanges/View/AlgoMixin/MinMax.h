@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Optional.h"
 #include "UnrealRanges/Traits.h"
 #include "Templates/IdentityFunctor.h"
@@ -60,7 +60,7 @@ namespace Ur::View {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 
             TOptional<TRef> MinItem{};
-            FCursorProtocol::InternalIteration<Misc::Forward>(*Self, [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*Self, [&](auto&& Item)
                 {
                     if (!MinItem || std::invoke(Proj, Item) < std::invoke(Proj, *MinItem))
                     {
@@ -78,7 +78,7 @@ namespace Ur::View {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 
             TOptional<TRef> MaxItem{};
-            FCursorProtocol::InternalIteration<Misc::Forward>(*Self, [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*Self, [&](auto&& Item)
                 {
                     if (!MaxItem || std::invoke(Proj, *MaxItem) < std::invoke(Proj, Item))
                     {
@@ -96,7 +96,7 @@ namespace Ur::View {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 
             TMinMax<TRef> MinMaxPair{};
-            FCursorProtocol::InternalIteration<Misc::Forward>(*Self, [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*Self, [&](auto&& Item)
                 {
                     if (!MinMaxPair.Max)
                     {

@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include <type_traits>
 #include <concepts>
 
@@ -31,19 +31,19 @@ namespace Ur::View {
 
         reference operator*() const
         {
-            return FCursorProtocol::CursorDeref(*View, Curs);
+            return Ur::Cursor::Deref(*View, Curs);
         }
 
         TIterator& operator++()
         {
-            FCursorProtocol::CursorInc(*View, Curs);
+            Ur::Cursor::Inc(*View, Curs);
             return *this;
         }
 
         bool operator==(const TIterator& That) const
         {
             // default iterator is equivalent to end() iterator
-            return View == That.View && (View == nullptr || FCursorProtocol::CursorEq(*View, Curs, That.Curs));
+            return View == That.View && (View == nullptr || Ur::Cursor::Eq(*View, Curs, That.Curs));
         }
 
         bool operator!=(const TIterator& That) const
@@ -64,42 +64,42 @@ namespace Ur::View {
 
         auto begin()
         {
-            return iterator{ FCursorProtocol::CursorBegin<Misc::Forward>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
+            return iterator{ Ur::Cursor::Begin<Misc::Forward>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
         }
 
         auto end()
         {
-            return iterator{ FCursorProtocol::CursorEnd<Misc::Forward>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
+            return iterator{ Ur::Cursor::End<Misc::Forward>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
         }
 
         auto begin() const
         {
-            return const_iterator{ FCursorProtocol::CursorBegin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::Begin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto end() const
         {
-            return const_iterator{ FCursorProtocol::CursorEnd<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::End<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cbegin()
         {
-            return const_iterator{ FCursorProtocol::CursorBegin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::Begin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cend()
         {
-            return const_iterator{ FCursorProtocol::CursorEnd<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::End<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cbegin() const
         {
-            return const_iterator{ FCursorProtocol::CursorBegin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::Begin<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto cend() const
         {
-            return const_iterator{ FCursorProtocol::CursorEnd<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_iterator{ Ur::Cursor::End<Misc::Forward>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
     };
 
@@ -111,42 +111,42 @@ namespace Ur::View {
 
         auto rbegin()
         {
-            return reverse_iterator{ FCursorProtocol::CursorBegin<Misc::Reverse>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
+            return reverse_iterator{ Ur::Cursor::Begin<Misc::Reverse>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
         }
 
         auto rend()
         {
-            return reverse_iterator{ FCursorProtocol::CursorEnd<Misc::Reverse>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
+            return reverse_iterator{ Ur::Cursor::End<Misc::Reverse>(*static_cast<TView*>(this)), *static_cast<TView*>(this) };
         }
 
         auto rbegin() const
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorBegin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::Begin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto rend() const
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorEnd<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::End<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto crbegin()
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorBegin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::Begin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto crend()
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorEnd<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::End<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto crbegin() const
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorBegin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::Begin<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
 
         auto crend() const
         {
-            return const_reverse_iterator{ FCursorProtocol::CursorEnd<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
+            return const_reverse_iterator{ Ur::Cursor::End<Misc::Reverse>(*static_cast<const TView*>(this)), *static_cast<const TView*>(this) };
         }
     };
 }

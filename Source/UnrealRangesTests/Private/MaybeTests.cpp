@@ -215,7 +215,7 @@ bool FUnrealRangesTests_MaybeConstness::RunTest(const FString& Parameters)
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeInternalIteration, "UnrealRanges.Maybe.InternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeInternalIteration, "UnrealRanges.Maybe.InternalIterate", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_MaybeInternalIteration::RunTest(const FString& Parameters)
 {
     auto View = Ur::View::MaybeVal(FString(TEXT("1"))).To<TArray>();

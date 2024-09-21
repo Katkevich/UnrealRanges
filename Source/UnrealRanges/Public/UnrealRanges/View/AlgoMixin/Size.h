@@ -8,7 +8,7 @@ namespace Ur::View {
     {
         auto Num() const
         {
-            return FCursorProtocol::BaseViewNum(*static_cast<const TView*>(this));
+            return Ur::Cursor::BaseViewNum(*static_cast<const TView*>(this));
         }
     };
 }

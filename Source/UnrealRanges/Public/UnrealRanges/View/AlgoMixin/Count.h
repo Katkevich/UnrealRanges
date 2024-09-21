@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Traits.h"
 #include "Templates/IdentityFunctor.h"
 
@@ -19,7 +19,7 @@ namespace Ur::View {
             else
             {
                 TCount ItemsCount{};
-                FCursorProtocol::InternalIteration<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
+                Ur::Cursor::Iterate<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
                     {
                         ++ItemsCount;
                         return Misc::ELoop::Continue;
@@ -34,7 +34,7 @@ namespace Ur::View {
         TCount CountIf(TPred Pred = {}) const
         {
             TCount ItemsCount{};
-            FCursorProtocol::InternalIteration<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
                 {
                     if (std::invoke(Pred, UR_FWD(Item)))
                     {

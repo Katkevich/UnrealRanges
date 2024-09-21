@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Optional.h"
 #include "UnrealRanges/Traits.h"
 #include "Templates/UnrealTemplate.h"
@@ -20,7 +20,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Proj, Item) == Value)
                         {
@@ -40,7 +40,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
                 bool Found = false;
-                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Proj, UR_FWD(Item)) == Value)
                         {
@@ -60,7 +60,7 @@ namespace Ur::View {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Pred, Item))
                         {
@@ -80,7 +80,7 @@ namespace Ur::View {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
                 bool Found = false;
-                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (std::invoke(Pred, UR_FWD(Item)))
                         {
@@ -100,7 +100,7 @@ namespace Ur::View {
                 static_assert(EqComparableByWith<TRef, TProj, RangeValue<TValuesRng>>, "values (or projected value if projection is used) should be comparable with value using operator==");
 
                 TOptional<TRef> Found{};
-                FCursorProtocol::InternalIteration<IsForward>(*Self, [&](auto&& Item)
+                Ur::Cursor::Iterate<IsForward>(*Self, [&](auto&& Item)
                     {
                         if (Algo::Find(Values, std::invoke(Proj, Item)))
                         {

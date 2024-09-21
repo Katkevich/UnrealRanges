@@ -42,7 +42,7 @@ namespace Ur::View {
         , public TReverseIteratorMixin<TMaybeView<TValue>>
         , public TReverseMixin<TMaybeView<TValue>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using reference = std::add_lvalue_reference_t<TValue>;
@@ -83,7 +83,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             if (Self.Value)
                 return Callback(*Self.Value);

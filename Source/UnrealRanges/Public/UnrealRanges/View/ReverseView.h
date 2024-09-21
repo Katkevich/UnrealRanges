@@ -42,7 +42,7 @@ namespace Ur::View {
         , public TReverseIteratorMixin<TReverseView<TView>>
         , public TReverseMixin<TReverseView<TView>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using value_type = typename TView::value_type;
@@ -65,39 +65,39 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TFn Fn)
         {
-            return FCursorProtocol::InternalIteration<Misc::Opposite<IsForward>>(Self.View, Fn);
+            return Ur::Cursor::Iterate<Misc::Opposite<IsForward>>(Self.View, Fn);
         }
 
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            return FCursorProtocol::CursorBegin<Misc::Opposite<IsForward>>(Self.View);
+            return Ur::Cursor::Begin<Misc::Opposite<IsForward>>(Self.View);
         }
 
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return FCursorProtocol::CursorEnd<Misc::Opposite<IsForward>>(Self.View);
+            return Ur::Cursor::End<Misc::Opposite<IsForward>>(Self.View);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            return FCursorProtocol::CursorInc(Self.View, Curs);
+            return Ur::Cursor::Inc(Self.View, Curs);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return FCursorProtocol::CursorDeref(Self.View, Curs);
+            return Ur::Cursor::Deref(Self.View, Curs);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static bool CursorEq(TSelf& Self, const TCursor& Lhs, const TCursor& Rhs)
         {
-            return FCursorProtocol::CursorEq(Self.View, Lhs, Rhs);
+            return Ur::Cursor::Eq(Self.View, Lhs, Rhs);
         }
 
     private:

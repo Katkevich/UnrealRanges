@@ -35,7 +35,7 @@ namespace Ur::View {
         , public TSumMixin<TTakeView<TView, TAmount>>
         , public TIteratorMixin<TTakeView<TView, TAmount>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using reference = typename TView::reference;
@@ -75,10 +75,10 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             TAmount Counter = { 0 };
-            return FCursorProtocol::InternalIteration<IsForward>(Self.View, [&](auto&& Item)
+            return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
                 {
                     if (Counter < Self.Amount)
                     {
@@ -95,26 +95,26 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            return TCursor<TSelf, IsForward>{ FCursorProtocol::CursorBegin<IsForward>(Self.View), TAmount{ 0 } };
+            return TCursor<TSelf, IsForward>{ Ur::Cursor::Begin<IsForward>(Self.View), TAmount{ 0 } };
         }
 
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return TCursor<TSelf, IsForward>{ FCursorProtocol::CursorEnd<IsForward>(Self.View), Self.Amount };
+            return TCursor<TSelf, IsForward>{ Ur::Cursor::End<IsForward>(Self.View), Self.Amount };
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
             ++Curs.Index;
-            return FCursorProtocol::CursorInc(Self.View, Curs.Nested);
+            return Ur::Cursor::Inc(Self.View, Curs.Nested);
         }
 
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return FCursorProtocol::CursorDeref(Self.View, Curs.Nested);
+            return Ur::Cursor::Deref(Self.View, Curs.Nested);
         }
 
         template<typename TSelf, typename TCursor>
@@ -122,11 +122,11 @@ namespace Ur::View {
         {
             return
                 // either all equal
-                (Lhs.Index == Rhs.Index && FCursorProtocol::CursorEq(Self.View, Lhs.Nested, Rhs.Nested)) ||
+                (Lhs.Index == Rhs.Index && Ur::Cursor::Eq(Self.View, Lhs.Nested, Rhs.Nested)) ||
                 // or both are End cursor (either Index reached Amount or nested cursor reached End)
                 (
-                    (Lhs.Index == Self.Amount || FCursorProtocol::IsEnd(Self.View, Lhs.Nested)) &&
-                    (Rhs.Index == Self.Amount || FCursorProtocol::IsEnd(Self.View, Rhs.Nested))
+                    (Lhs.Index == Self.Amount || Ur::Cursor::IsEnd(Self.View, Lhs.Nested)) &&
+                    (Rhs.Index == Self.Amount || Ur::Cursor::IsEnd(Self.View, Rhs.Nested))
                 );
         }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Fn/Math.h"
 #include "Templates/IdentityFunctor.h"
 
@@ -24,7 +24,7 @@ namespace Ur::View {
 
             ResultType Result{};
 
-            FCursorProtocol::InternalIteration<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
                 {
                     Result = Result + std::invoke(Proj, UR_FWD(Item));
 

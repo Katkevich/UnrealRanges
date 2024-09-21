@@ -1,5 +1,5 @@
 #pragma once
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Detail/AlwaysFalse.h"
 #include "UnrealRanges/UnrealTraits.h"
 #include "UnrealRanges/Traits.h"
@@ -75,7 +75,7 @@ namespace Ur::View {
 
             int32 Index = 0;
 
-            FCursorProtocol::InternalIteration<Misc::Forward>(*static_cast<TView*>(this), [&](auto&& Item)
+            Ur::Cursor::Iterate<Misc::Forward>(*static_cast<TView*>(this), [&](auto&& Item)
                 {
                     // TIndirectArray
                     if constexpr (IsIndirectArray)

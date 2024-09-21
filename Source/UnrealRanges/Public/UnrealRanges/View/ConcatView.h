@@ -41,7 +41,7 @@ namespace Ur::View {
         , public TConditionalInheritance<(TViews::IsBidir && ...), TReverseIteratorMixin<TConcatView<TViews...>>>
         , public TConditionalInheritance<(TViews::IsBidir && ...), TReverseMixin<TConcatView<TViews...>>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using reference = std::common_reference_t<typename TViews::reference...>;
@@ -104,14 +104,14 @@ namespace Ur::View {
         template<bool IsForward, size_t Index, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static Misc::ELoop InternalIterationSubview(FIndex<Index>, TSelf& Self, TCallback Callback)
         {
-            return FCursorProtocol::InternalIteration<IsForward>(At<Index, IsForward>(Self.Views), [&](auto&& Item)
+            return Ur::Cursor::Iterate<IsForward>(At<Index, IsForward>(Self.Views), [&](auto&& Item)
                 {
                     return Callback(UR_FWD(Item));
                 });
         }
 
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             return[&]<size_t... Indices>(std::index_sequence<Indices...>) {
 
@@ -127,7 +127,7 @@ namespace Ur::View {
         UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
             TCursor<TSelf, IsForward> Curs = {
-                .NestedCursors = ApplyTransform([](auto& View) { return FCursorProtocol::CursorBegin<IsForward>(View); }, Self.Views),
+                .NestedCursors = ApplyTransform([](auto& View) { return Ur::Cursor::Begin<IsForward>(View); }, Self.Views),
                 .RngIndex = 0
             };
 
@@ -140,7 +140,7 @@ namespace Ur::View {
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
             TCursor<TSelf, IsForward> Curs = {
-                .NestedCursors = ApplyTransform([](auto& View) { return FCursorProtocol::CursorEnd<IsForward>(View); }, Self.Views),
+                .NestedCursors = ApplyTransform([](auto& View) { return Ur::Cursor::End<IsForward>(View); }, Self.Views),
                 .RngIndex = ViewsCount
             };
 
@@ -150,9 +150,9 @@ namespace Ur::View {
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static void CursorInc(TSelf& Self, TCursor& Curs)
         {
-            ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
+            ApplyAt<Ur::Cursor::IsForward<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) {
-                    FCursorProtocol::CursorInc(View, NestedCursor);
+                    Ur::Cursor::Inc(View, NestedCursor);
                 },
                 ToCompTimeIndex(Curs.RngIndex),
                 Self.Views,
@@ -164,9 +164,9 @@ namespace Ur::View {
         template<typename TSelf, typename TCursor>
         UR_DEBUG_NOINLINE static decltype(auto) CursorDeref(TSelf& Self, const TCursor& Curs)
         {
-            return ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
+            return ApplyAt<Ur::Cursor::IsForward<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) -> reference {
-                    return FCursorProtocol::CursorDeref(View, NestedCursor);
+                    return Ur::Cursor::Deref(View, NestedCursor);
                 },
                 ToCompTimeIndex(Curs.RngIndex),
                 Self.Views,
@@ -180,9 +180,9 @@ namespace Ur::View {
                 Lhs.RngIndex == Rhs.RngIndex &&
                 (
                     Lhs.RngIndex == ViewsCount ||
-                    ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
+                    ApplyAt<Ur::Cursor::IsForward<TSelf, TCursor>>(
                         [](auto& View, auto& LhsNested, auto& RhsNested) {
-                            return FCursorProtocol::CursorEq(View, LhsNested, RhsNested);
+                            return Ur::Cursor::Eq(View, LhsNested, RhsNested);
                         },
                         ToCompTimeIndex(Lhs.RngIndex),
                         Self.Views,
@@ -198,9 +198,9 @@ namespace Ur::View {
             if (Curs.RngIndex == ViewsCount)
                 return;
 
-            ApplyAt<FCursorProtocol::IsForwardCursor<TSelf, TCursor>>(
+            ApplyAt<Ur::Cursor::IsForward<TSelf, TCursor>>(
                 [&](auto& View, auto& NestedCursor) {
-                    if (FCursorProtocol::IsEnd(View, NestedCursor))
+                    if (Ur::Cursor::IsEnd(View, NestedCursor))
                     {
                         ++Curs.RngIndex;
                         FastForward(Self, Curs);

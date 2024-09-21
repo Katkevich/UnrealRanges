@@ -18,7 +18,7 @@
 #include "UnrealRanges/Utility.h"
 #include "UnrealRanges/Detail/ForwardMacro.h"
 #include "UnrealRanges/Detail/EmptyBase.h"
-#include "UnrealRanges/Detail/CursorProtocol.h"
+#include "UnrealRanges/View/Cursor.h"
 #include <memory>
 
 #ifndef UR_DEBUG_NOINLINE
@@ -70,7 +70,7 @@ namespace Ur::View {
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
         , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
     {
-        friend struct FCursorProtocol;
+        friend struct Ur::Cursor;
 
     public:
         using value_type = RangeValue<TRng>;
@@ -98,7 +98,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIteration(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TFn Fn)
         {
             for (auto It = CursorBegin<IsForward>(Self); It != CursorEnd<IsForward>(Self); ++It)
                 if (Fn(*It) == Misc::ELoop::Break)

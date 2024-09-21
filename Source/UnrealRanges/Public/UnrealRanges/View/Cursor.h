@@ -52,54 +52,54 @@ namespace Ur {
         using TReference = typename TViewReference<TView>::Type;
     }
 
-    struct FCursorProtocol
+    struct Cursor
     {
-        template<bool IsForward, typename TView, typename TFn>
-        static decltype(auto) InternalIteration(TView& View, TFn Fn)
+        template<bool IsForward = true, typename TView, typename TFn>
+        static decltype(auto) Iterate(TView& View, TFn Fn)
         {
-            return TView::InternalIteration<IsForward>(View, Fn);
+            return TView::InternalIterate<IsForward>(View, Fn);
         }
 
-        template<bool IsForward, typename TView>
-        static decltype(auto) CursorBegin(TView& View)
+        template<bool IsForward = true, typename TView>
+        static decltype(auto) Begin(TView& View)
         {
             return TView::CursorBegin<IsForward>(View);
         }
 
-        template<bool IsForward, typename TView>
-        static decltype(auto) CursorEnd(TView& View)
+        template<bool IsForward = true, typename TView>
+        static decltype(auto) End(TView& View)
         {
             return TView::CursorEnd<IsForward>(View);
         }
 
         template<typename TView, typename TCursor>
-        static decltype(auto) CursorInc(TView& View, TCursor& Curs)
+        static decltype(auto) Inc(TView& View, TCursor& Curs)
         {
             return TView::CursorInc(View, Curs);
         }
 
         template<typename TView, typename TCursor>
-        static decltype(auto) CursorDeref(TView& View, const TCursor& Curs)
+        static decltype(auto) Deref(TView& View, const TCursor& Curs)
         {
             return TView::CursorDeref(View, Curs);
         }
 
         template<typename TView, typename TCursor>
-        static bool CursorEq(TView& View, const TCursor& Lhs, const TCursor& Rhs)
+        static bool Eq(TView& View, const TCursor& Lhs, const TCursor& Rhs)
         {
             return TView::CursorEq(View, Lhs, Rhs);
         }
 
 
         template<typename TView, typename TCursor>
-        static constexpr bool IsForwardCursor =
+        static constexpr bool IsForward =
             std::is_same_v<TCursor, typename TView::Cursor> ||
             std::is_same_v<TCursor, typename TView::ConstCursor>;
 
         template<typename TView, typename TCursor>
         static bool IsEnd(TView& View, const TCursor& Curs)
         {
-            return TView::CursorEq(View, Curs, TView::CursorEnd<IsForwardCursor<TView, TCursor>>(View));
+            return TView::CursorEq(View, Curs, TView::CursorEnd<IsForward<TView, TCursor>>(View));
         }
 
         template<typename TView>
