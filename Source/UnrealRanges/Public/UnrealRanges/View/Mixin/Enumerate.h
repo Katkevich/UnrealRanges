@@ -124,9 +124,15 @@ namespace Ur::View {
     struct TEnumerateMixin
     {
         template<typename TIndex = int32>
-        auto Enumerate(TIndex StartFrom = { 0 }, TIndex Step = { 1 }) const
+        auto Enumerate(TIndex StartFrom = { 0 }, TIndex Step = { 1 }) const&
         {
             return TEnumerateView<TView, TIndex>(static_cast<const TView&>(*this), StartFrom, Step);
+        }
+
+        template<typename TIndex = int32>
+        auto Enumerate(TIndex StartFrom = { 0 }, TIndex Step = { 1 }) &&
+        {
+            return TEnumerateView<TView, TIndex>(static_cast<TView&&>(*this), StartFrom, Step);
         }
     };
 }

@@ -9,9 +9,15 @@ namespace Ur::View {
     struct TTakeMixin
     {
         template<typename TAmount = int32>
-        auto Take(TAmount Amount) const
+        auto Take(TAmount Amount) const&
         {
             return TTakeView<TView, TAmount>(static_cast<const TView&>(*this), Amount);
+        }
+
+        template<typename TAmount = int32>
+        auto Take(TAmount Amount) &&
+        {
+            return TTakeView<TView, TAmount>(static_cast<TView&&>(*this), Amount);
         }
     };
 }

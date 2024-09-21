@@ -15,16 +15,22 @@ namespace Ur::View {
     struct TConcatMixin
     {
         template<typename... TRngs>
-        auto ConcatWith(TRngs&&... Rngs) const
+        auto ConcatWith(TRngs&&... Rngs) const&
         {
-            return this->ConcatAll(static_cast<const TView&>(*this), this->IntoView(UR_FWD(Rngs))...);
+            return ConcatAll(static_cast<const TView&>(*this), this->IntoView(UR_FWD(Rngs))...);
+        }
+
+        template<typename... TRngs>
+        auto ConcatWith(TRngs&&... Rngs) &&
+        {
+            return ConcatAll(static_cast<TView&&>(*this), this->IntoView(UR_FWD(Rngs))...);
         }
 
     private:
         template<typename... TViews>
-        auto ConcatAll(TViews... Views) const
+        static auto ConcatAll(TViews&&... Views)
         {
-            return TConcatView<TViews...>(Views...);
+            return TConcatView<std::remove_cvref_t<TViews>...>(UR_FWD(Views)...);
         }
 
         template<typename TRng>

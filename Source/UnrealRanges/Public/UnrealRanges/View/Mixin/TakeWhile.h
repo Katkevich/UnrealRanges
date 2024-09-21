@@ -1,5 +1,7 @@
 #pragma once
+#include "UnrealRanges/Detail/ForwardMacro.h"
 #include "Templates/IdentityFunctor.h"
+#include <type_traits>
 
 namespace Ur::View {
 
@@ -10,9 +12,15 @@ namespace Ur::View {
     struct TTakeWhileMixin
     {
         template<typename TFn = FIdentityFunctor>
-        auto TakeWhile(TFn Fn = {}) const
+        auto TakeWhile(TFn&& Fn = {}) const&
         {
-            return TTakeWhileView<TView, TFn>(static_cast<const TView&>(*this), Fn);
+            return TTakeWhileView<TView, std::decay_t<TFn>>(static_cast<const TView&>(*this), UR_FWD(Fn));
+        }
+
+        template<typename TFn = FIdentityFunctor>
+        auto TakeWhile(TFn&& Fn = {}) &&
+        {
+            return TTakeWhileView<TView, std::decay_t<TFn>>(static_cast<TView&&>(*this), UR_FWD(Fn));
         }
     };
 }

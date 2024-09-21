@@ -61,9 +61,9 @@ namespace Ur::View {
         static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView, typename UFn>
-        TTransformView(UView InView, UFn InFn)
-            : View(InView)
-            , Fn(InFn)
+        TTransformView(UView&& InView, UFn&& InFn)
+            : View(UR_FWD(InView))
+            , Fn(UR_FWD(InFn))
         {
         }
 
@@ -114,8 +114,9 @@ namespace Ur::View {
 
 
     template<typename TRng, typename TFn>
-    auto Transform(TRng& Rng, TFn Fn)
+    auto Transform(TRng& Rng, TFn&& Fn)
     {
-        return TTransformView<TRefView<TRng>, TFn>(TRefView<TRng>({}, Rng), Fn);
+        //TODO: own view & view in support
+        return TTransformView<TRefView<TRng>, std::decay_t<TFn>>(TRefView<TRng>({}, Rng), UR_FWD(Fn));
     }
 }

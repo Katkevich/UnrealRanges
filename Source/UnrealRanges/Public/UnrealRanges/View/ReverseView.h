@@ -58,8 +58,8 @@ namespace Ur::View {
         static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView>
-        TReverseView(Misc::FFromViewTag, UView InView)
-            : View(InView)
+        TReverseView(Misc::FFromViewTag, UView&& InView)
+            : View(UR_FWD(InView))
         {
         }
 
@@ -108,6 +108,7 @@ namespace Ur::View {
     template<typename TRng>
     auto Reverse(TRng& Rng)
     {
+        //TODO: own view & view in support
         return TReverseView<TRefView<TRng>>({}, TRefView<TRng>({}, Rng));
     }
 }

@@ -197,7 +197,7 @@ namespace Ur::View {
 
         static_assert(!std::is_rvalue_reference_v<TValue>, "cannot be rvalue reference");
 
-        return TMaybeView<TValue>({}, TOpt(UR_FWD(InValue)));
+        return TMaybeView<TValue>({}, UR_FWD(InValue));
     }
 
     // store reference to value if not nullptr

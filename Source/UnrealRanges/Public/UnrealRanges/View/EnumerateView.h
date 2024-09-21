@@ -62,8 +62,8 @@ namespace Ur::View {
         static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView, typename UIndex>
-        TEnumerateView(UView InView, UIndex InIndexFrom, UIndex InStep)
-            : View(InView)
+        TEnumerateView(UView&& InView, UIndex InIndexFrom, UIndex InStep)
+            : View(UR_FWD(InView))
             , IndexFrom(InIndexFrom)
             , Step(InStep)
         {
@@ -127,6 +127,7 @@ namespace Ur::View {
     template<typename TRng, typename TIndex = int32>
     auto Enumerate(TRng& Rng, TIndex IndexFrom = { 0 }, TIndex Step = TIndex{ 1 })
     {
+        //TODO: own view & view in support
         return TEnumerateView<TRefView<TRng>, TIndex>(TRefView<TRng>({}, Rng), IndexFrom, Step);
     }
 }

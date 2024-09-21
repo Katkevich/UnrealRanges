@@ -15,7 +15,7 @@ namespace Ur::View {
         {
         protected:
             template<typename TRef, typename TValue, typename TSelf, typename TProj>
-            static auto FindImpl(std::type_identity<TRef>, TValue&& Value, TSelf Self, TProj Proj)
+            static auto FindImpl(std::type_identity<TRef>, TValue&& Value, TSelf Self, TProj& Proj)
             {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
@@ -35,7 +35,7 @@ namespace Ur::View {
             }
 
             template<typename TRef, typename TValue, typename TSelf, typename TProj>
-            static bool ContainsImpl(std::type_identity<TRef>, TValue&& Value, TSelf Self, TProj Proj)
+            static bool ContainsImpl(std::type_identity<TRef>, TValue&& Value, TSelf Self, TProj& Proj)
             {
                 static_assert(EqComparableByWith<TRef, TProj, TValue&&>, "value (or projected value if projection is used) should be comparable with value using operator==");
 
@@ -55,7 +55,7 @@ namespace Ur::View {
             }
 
             template<typename TRef, typename TSelf, typename TPred>
-            static auto FindByImpl(std::type_identity<TRef>, TSelf Self, TPred Pred)
+            static auto FindByImpl(std::type_identity<TRef>, TSelf Self, TPred& Pred)
             {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
@@ -75,7 +75,7 @@ namespace Ur::View {
             }
 
             template<typename TRef, typename TSelf, typename TPred>
-            static bool ContainsByImpl(std::type_identity<TRef>, TSelf Self, TPred Pred)
+            static bool ContainsByImpl(std::type_identity<TRef>, TSelf Self, TPred& Pred)
             {
                 static_assert(std::is_invocable_r_v<bool, TPred, TRef>, "TProj hould be invokable over range items");
 
@@ -95,7 +95,7 @@ namespace Ur::View {
             }
 
             template<typename TRef, typename TValuesRng, typename TSelf, typename TProj>
-            static auto FindFirstOfImpl(std::type_identity<TRef>, TValuesRng&& Values, TSelf Self, TProj Proj)
+            static auto FindFirstOfImpl(std::type_identity<TRef>, TValuesRng&& Values, TSelf Self, TProj& Proj)
             {
                 static_assert(EqComparableByWith<TRef, TProj, RangeValue<TValuesRng>>, "values (or projected value if projection is used) should be comparable with value using operator==");
 

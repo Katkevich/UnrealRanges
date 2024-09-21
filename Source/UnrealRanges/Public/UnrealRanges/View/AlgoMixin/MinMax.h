@@ -55,7 +55,7 @@ namespace Ur::View {
 
     private:
         template<typename TRef, typename TSelf, typename TProj>
-        static auto MinImpl(std::type_identity<TRef>, TSelf Self, TProj Proj)
+        static auto MinImpl(std::type_identity<TRef>, TSelf Self, TProj& Proj)
         {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 
@@ -73,7 +73,7 @@ namespace Ur::View {
         }
 
         template<typename TRef, typename TSelf, typename TProj>
-        static auto MaxImpl(std::type_identity<TRef>, TSelf Self, TProj Proj)
+        static auto MaxImpl(std::type_identity<TRef>, TSelf Self, TProj& Proj)
         {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 
@@ -91,7 +91,7 @@ namespace Ur::View {
         }
 
         template<typename TRef, typename TSelf, typename TProj>
-        static auto MinMaxImpl(std::type_identity<TRef>, TSelf Self, TProj Proj)
+        static auto MinMaxImpl(std::type_identity<TRef>, TSelf Self, TProj& Proj)
         {
             static_assert(LessOrderedBy<TRef, TProj>, "items (of projected items if projection is used) should be comparable using operator<");
 

@@ -59,8 +59,8 @@ namespace Ur::View {
         static constexpr bool IsSized = TView::IsSized;
 
         template<typename UView, typename UAmount>
-        TTakeView(UView InView, UAmount InAmount)
-            : View(InView)
+        TTakeView(UView&& InView, UAmount InAmount)
+            : View(UR_FWD(InView))
             , Amount(InAmount)
         {
         }
@@ -139,6 +139,7 @@ namespace Ur::View {
     template<typename TRng, typename TAmount = int32>
     auto Take(TRng& Rng, TAmount Amount)
     {
+        //TODO: own view & view in support
         return TTakeView<TRefView<TRng>, TAmount>(TRefView<TRng>({}, Rng), Amount);
     }
 }

@@ -54,9 +54,9 @@ namespace Ur::View {
         static constexpr bool IsSized = false;
 
         template<typename UView, typename UFn>
-        TFilterView(UView InView, UFn InFn)
-            : View(InView)
-            , Fn(InFn)
+        TFilterView(UView&& InView, UFn&& InFn)
+            : View(UR_FWD(InView))
+            , Fn(UR_FWD(InFn))
         {
         }
 
@@ -125,8 +125,9 @@ namespace Ur::View {
 
 
     template<typename TRng, typename TFn>
-    auto Filter(TRng& Rng, TFn Fn)
+    auto Filter(TRng& Rng, TFn&& Fn)
     {
-        return TFilterView<TRefView<TRng>, TFn>(TRefView<TRng>({}, Rng), Fn);
+        //TODO: own view & view in support
+        return TFilterView<TRefView<TRng>, std::decay_t<TFn>>(TRefView<TRng>({}, Rng), UR_FWD(Fn));
     }
 }
