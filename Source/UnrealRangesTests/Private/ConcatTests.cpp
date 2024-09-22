@@ -177,4 +177,33 @@ bool FUnrealRangesTests_ConcatOnReverseView::RunTest(const FString& Parameters)
     return Result.Count() == 7 && ResultArray.Num() == 7 && EqualTo(Result, {3,2,1,5,9,8,7});
 }
 
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatDifferentValueTypesImplicitlyConvertible, "UnrealRanges.Concat.TestDifferentValueTypesImplicitlyConvertible", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_ConcatDifferentValueTypesImplicitlyConvertible::RunTest(const FString& Parameters)
+{
+    {
+        TArray<FString> Array;
+
+        auto MixedConcat = Ref(Array)
+            .ConcatWith(Single(TEXT("1")));
+        static_assert(std::is_same_v<decltype(*MixedConcat.begin()), FString>);
+    }
+    {
+        TArray<FString> Array;
+
+        auto MixedConcat = Ref(Array)
+            .ConcatWith(SingleRef(TEXT("1")));
+        static_assert(std::is_same_v<decltype(*MixedConcat.begin()), FString>);
+    }
+    {
+        TArray<int32> Array;
+
+        auto MixedConcat = Ref(Array)
+            .ConcatWith(Single(int64(1)));
+        static_assert(std::is_same_v<decltype(*MixedConcat.begin()), int64>);
+    }
+    return true;
+}
+
+
 #endif
