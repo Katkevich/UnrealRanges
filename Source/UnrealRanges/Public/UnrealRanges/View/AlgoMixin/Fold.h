@@ -1,6 +1,5 @@
 #pragma once
 #include "UnrealRanges/View/Cursor.h"
-#include "UnrealRanges/Detail/EmptyBase.h"
 #include "UnrealRanges/Optional.h"
 
 namespace Ur::View {

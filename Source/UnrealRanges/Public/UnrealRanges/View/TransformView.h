@@ -1,19 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Size.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -22,24 +7,9 @@ namespace Ur::View {
     template<typename TView, typename TFn>
     class TTransformView
         : public FView
-        , public TTransformMixin<TTransformView<TView, TFn>>
-        , public TFilterMixin<TTransformView<TView, TFn>>
-        , public TEnumerateMixin<TTransformView<TView, TFn>>
-        , public TTakeMixin<TTransformView<TView, TFn>>
-        , public TTakeWhileMixin<TTransformView<TView, TFn>>
-        , public TConcatMixin<TTransformView<TView, TFn>>
-        , public TToMixin<TTransformView<TView, TFn>>
-        , public TMinMaxMixin<TTransformView<TView, TFn>>
-        , public TFindFirstMixin<TTransformView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TFindLastMixin<TTransformView<TView, TFn>>>
-        , public TCountMixin<TTransformView<TView, TFn>>
-        , public TFoldLeftMixin<TTransformView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TFoldRightMixin<TTransformView<TView, TFn>>>
-        , public TConditionalInheritance<TView::IsSized, TSizeMixin<TTransformView<TView, TFn>>>
-        , public TSumMixin<TTransformView<TView, TFn>>
-        , public TIteratorMixin<TTransformView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TTransformView<TView, TFn>>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TTransformView<TView, TFn>>>
+        , public Detail::TMixins<TTransformView<TView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TView::IsBidir, TTransformView<TView, TFn>, TBidirMixins>
+        , public Detail::TConditionalMixins<TView::IsSized, TTransformView<TView, TFn>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 

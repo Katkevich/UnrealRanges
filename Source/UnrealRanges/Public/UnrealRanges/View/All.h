@@ -8,3 +8,4 @@
 #include "UnrealRanges/View/TakeWhileView.h"
 #include "UnrealRanges/View/ConcatView.h"
 #include "UnrealRanges/View/MaybeView.h"
+#include "UnrealRanges/View/SingleView.h"

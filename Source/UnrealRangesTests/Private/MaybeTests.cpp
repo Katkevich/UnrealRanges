@@ -240,8 +240,8 @@ bool FUnrealRangesTests_MaybeInternalIterationNullPtr::RunTest(const FString& Pa
     return View.Num() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeMixWithOtherMixins, "UnrealRanges.Maybe.MixWithOtherMixins", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeMixWithOtherMixins::RunTest(const FString& Parameters)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeMixWithOtherMixinsInternalIteration, "UnrealRanges.Maybe.MixWithOtherMixinsInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_MaybeMixWithOtherMixinsInternalIteration::RunTest(const FString& Parameters)
 {
     TOptional<FString> Str(FString(TEXT("abba")));
     auto View = Ur::View::Maybe(Str)
@@ -249,6 +249,19 @@ bool FUnrealRangesTests_MaybeMixWithOtherMixins::RunTest(const FString& Paramete
         .To<TArray>();
 
     return View[0] == 4;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeMixWithConcat, "UnrealRanges.Maybe.MixWithConcat", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_MaybeMixWithConcat::RunTest(const FString& Parameters)
+{
+    TArray<FString> Array = { TEXT("1"), TEXT("abba1") , TEXT("abba2"), TEXT("2") };
+
+    auto Result = Ref(Array)
+        .Filter([](const FString& Str) { return Str.Len() > 1; })
+        .ConcatWith(MaybeVal(FString(TEXT("single1"))), Maybe(TOptional<FString&>()), MaybeVal(FString(TEXT("single2"))))
+        .Transform([](FString& Str) { return Str.RightChop(1); });
+
+    return EqualTo(Result, { TEXT("bba1") , TEXT("bba2"), TEXT("ingle1"), TEXT("ingle2") });
 }
 
 #endif

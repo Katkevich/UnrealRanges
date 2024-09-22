@@ -1,19 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Size.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -23,24 +8,9 @@ namespace Ur::View {
     template<typename TView>
     class TReverseView
         : public FView
-        , public TTransformMixin<TReverseView<TView>>
-        , public TFilterMixin<TReverseView<TView>>
-        , public TEnumerateMixin<TReverseView<TView>>
-        , public TTakeMixin<TReverseView<TView>>
-        , public TTakeWhileMixin<TReverseView<TView>>
-        , public TConcatMixin<TReverseView<TView>>
-        , public TToMixin<TReverseView<TView>>
-        , public TMinMaxMixin<TReverseView<TView>>
-        , public TFindFirstMixin<TReverseView<TView>>
-        , public TFindLastMixin<TReverseView<TView>>
-        , public TCountMixin<TReverseView<TView>>
-        , public TFoldLeftMixin<TReverseView<TView>>
-        , public TFoldRightMixin<TReverseView<TView>>
-        , public TSumMixin<TReverseView<TView>>
-        , public TConditionalInheritance<TView::IsSized, TSizeMixin<TReverseView<TView>>>
-        , public TIteratorMixin<TReverseView<TView>>
-        , public TReverseIteratorMixin<TReverseView<TView>>
-        , public TReverseMixin<TReverseView<TView>>
+        , public Detail::TMixins<TReverseView<TView>, TDefaultMixins>
+        , public Detail::TMixins<TReverseView<TView>, TBidirMixins>
+        , public Detail::TConditionalMixins<TView::IsSized, TReverseView<TView>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 

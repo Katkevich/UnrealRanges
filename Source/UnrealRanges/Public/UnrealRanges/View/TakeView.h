@@ -1,18 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -21,19 +7,7 @@ namespace Ur::View {
     template<typename TView, typename TAmount>
     class TTakeView
         : public FView
-        , public TTransformMixin<TTakeView<TView, TAmount>>
-        , public TFilterMixin<TTakeView<TView, TAmount>>
-        , public TEnumerateMixin<TTakeView<TView, TAmount>>
-        , public TTakeMixin<TTakeView<TView, TAmount>>
-        , public TTakeWhileMixin<TTakeView<TView, TAmount>>
-        , public TConcatMixin<TTakeView<TView, TAmount>>
-        , public TToMixin<TTakeView<TView, TAmount>>
-        , public TMinMaxMixin<TTakeView<TView, TAmount>>
-        , public TFindFirstMixin<TTakeView<TView, TAmount>>
-        , public TCountMixin<TTakeView<TView, TAmount>>
-        , public TFoldLeftMixin<TTakeView<TView, TAmount>>
-        , public TSumMixin<TTakeView<TView, TAmount>>
-        , public TIteratorMixin<TTakeView<TView, TAmount>>
+        , public Detail::TMixins<TTakeView<TView, TAmount>, TDefaultMixins>
     {
         friend struct Ur::Cursor;
 

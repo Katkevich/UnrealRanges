@@ -1,18 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -23,23 +9,8 @@ namespace Ur::View {
     template<typename... TViews>
     class TConcatView
         : public FView
-        , public TTransformMixin<TConcatView<TViews...>>
-        , public TFilterMixin<TConcatView<TViews...>>
-        , public TEnumerateMixin<TConcatView<TViews...>>
-        , public TTakeMixin<TConcatView<TViews...>>
-        , public TTakeWhileMixin<TConcatView<TViews...>>
-        , public TConcatMixin<TConcatView<TViews...>>
-        , public TToMixin<TConcatView<TViews...>>
-        , public TMinMaxMixin<TConcatView<TViews...>>
-        , public TFindFirstMixin<TConcatView<TViews...>>
-        , public TConditionalInheritance<(TViews::IsBidir && ...), TFindLastMixin<TConcatView<TViews...>>>
-        , public TCountMixin<TConcatView<TViews...>>
-        , public TFoldLeftMixin<TConcatView<TViews...>>
-        , public TConditionalInheritance<(TViews::IsBidir && ...), TFoldRightMixin<TConcatView<TViews...>>>
-        , public TSumMixin<TConcatView<TViews...>>
-        , public TIteratorMixin<TConcatView<TViews...>>
-        , public TConditionalInheritance<(TViews::IsBidir && ...), TReverseIteratorMixin<TConcatView<TViews...>>>
-        , public TConditionalInheritance<(TViews::IsBidir && ...), TReverseMixin<TConcatView<TViews...>>>
+        , public Detail::TMixins<TConcatView<TViews...>, TDefaultMixins>
+        , public Detail::TConditionalMixins<(TViews::IsBidir && ...), TConcatView<TViews...>, TBidirMixins>
     {
         friend struct Ur::Cursor;
 

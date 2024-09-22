@@ -1,18 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -21,23 +7,8 @@ namespace Ur::View {
     template<typename TView, typename TFn>
     class TFilterView
         : public FView
-        , public TTransformMixin<TFilterView<TView, TFn>>
-        , public TFilterMixin<TFilterView<TView, TFn>>
-        , public TEnumerateMixin<TFilterView<TView, TFn>>
-        , public TTakeMixin<TFilterView<TView, TFn>>
-        , public TTakeWhileMixin<TFilterView<TView, TFn>>
-        , public TConcatMixin<TFilterView<TView, TFn>>
-        , public TToMixin<TFilterView<TView, TFn>>
-        , public TMinMaxMixin<TFilterView<TView, TFn>>
-        , public TFindFirstMixin<TFilterView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TFindLastMixin<TFilterView<TView, TFn>>>
-        , public TCountMixin<TFilterView<TView, TFn>>
-        , public TFoldLeftMixin<TFilterView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TFoldRightMixin<TFilterView<TView, TFn>>>
-        , public TSumMixin<TFilterView<TView, TFn>>
-        , public TIteratorMixin<TFilterView<TView, TFn>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseIteratorMixin<TFilterView<TView, TFn>>>
-        , public TConditionalInheritance<TView::IsBidir, TReverseMixin<TFilterView<TView, TFn>>>
+        , public Detail::TMixins<TFilterView<TView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TView::IsBidir, TFilterView<TView, TFn>, TBidirMixins>
     {
         friend struct Ur::Cursor;
 

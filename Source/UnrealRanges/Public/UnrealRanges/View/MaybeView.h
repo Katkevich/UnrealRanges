@@ -1,19 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Size.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -23,24 +8,9 @@ namespace Ur::View {
     template<typename TValue>
     class TMaybeView
         : public FView
-        , public TTransformMixin<TMaybeView<TValue>>
-        , public TFilterMixin<TMaybeView<TValue>>
-        , public TEnumerateMixin<TMaybeView<TValue>>
-        , public TTakeMixin<TMaybeView<TValue>>
-        , public TTakeWhileMixin<TMaybeView<TValue>>
-        , public TConcatMixin<TMaybeView<TValue>>
-        , public TToMixin<TMaybeView<TValue>>
-        , public TMinMaxMixin<TMaybeView<TValue>>
-        , public TFindFirstMixin<TMaybeView<TValue>>
-        , public TFindLastMixin<TMaybeView<TValue>>
-        , public TCountMixin<TMaybeView<TValue>>
-        , public TFoldLeftMixin<TMaybeView<TValue>>
-        , public TFoldRightMixin<TMaybeView<TValue>>
-        , public TSizeMixin<TMaybeView<TValue>>
-        , public TSumMixin<TMaybeView<TValue>>
-        , public TIteratorMixin<TMaybeView<TValue>>
-        , public TReverseIteratorMixin<TMaybeView<TValue>>
-        , public TReverseMixin<TMaybeView<TValue>>
+        , public Detail::TMixins<TMaybeView<TValue>, TDefaultMixins>
+        , public Detail::TMixins<TMaybeView<TValue>, TBidirMixins>
+        , public Detail::TMixins<TMaybeView<TValue>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 
@@ -100,7 +70,7 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf&)
         {
-            return nullptr;
+            return static_cast<View::TCursor<TSelf, IsForward>>(nullptr);
         }
 
         template<typename TSelf, typename TCursor>
@@ -138,7 +108,7 @@ namespace Ur::View {
     template<typename T>
     auto MaybeVal(T&& Value, bool bCondition)
     {
-        using TValue = std::remove_cvref_t<T>;
+        using TValue = std::decay_t<T>;
         return TMaybeView<TValue>({}, bCondition ? TOptional<TValue>(UR_FWD(Value)) : TOptional<TValue>(NullOpt));
     }
 
@@ -153,16 +123,16 @@ namespace Ur::View {
     template<typename T>
     auto MaybeRef(const TOptional<T>& Value)
     {
-        using TValue = std::add_lvalue_reference_t<T>;
-        return TMaybeView<TValue>({}, Value ? TOptional<TValue>(Value.GetValue()) : TOptional<TValue>(NullOpt));
+        using TRef = std::add_lvalue_reference_t<T>;
+        return TMaybeView<TRef>({}, Value ? TOptional<TRef>(Value.GetValue()) : TOptional<TRef>(NullOpt));
     }
 
     // store reference to optional's inner-value
     template<typename T>
     auto MaybeRef(TOptional<T>& Value)
     {
-        using TValue = std::add_lvalue_reference_t<T>;
-        return TMaybeView<TValue>({}, Value ? TOptional<TValue>(Value.GetValue()) : TOptional<TValue>(NullOpt));
+        using TRef = std::add_lvalue_reference_t<T>;
+        return TMaybeView<TRef>({}, Value ? TOptional<TRef>(Value.GetValue()) : TOptional<TRef>(NullOpt));
     }
 
     // store reference to value if True
@@ -200,13 +170,6 @@ namespace Ur::View {
         return TMaybeView<TValue>({}, UR_FWD(InValue));
     }
 
-    // store reference to value if not nullptr
-    template<typename T>
-    auto Maybe(T* InValue)
-    {
-        return TMaybeView<T&>({}, InValue ? TOptional<T&>(*InValue) : TOptional<T&>(NullOpt));
-    }
-
     // store optional as-is (reference or value) if True otherwise empty
     template<typename TOptionalIn>
     auto Maybe(TOptionalIn&& InValue, bool bCondition) requires THasTemplate_V<TOptionalIn, TOptional> // has to be optional
@@ -218,4 +181,12 @@ namespace Ur::View {
 
         return TMaybeView<TValue>({}, bCondition ? TOpt(UR_FWD(InValue)) : TOpt(NullOpt));
     }
+
+    // store reference to value if not nullptr otherwise empty
+    template<typename T>
+    auto Maybe(T* InValue)
+    {
+        return TMaybeView<T&>({}, InValue ? TOptional<T&>(*InValue) : TOptional<T&>(NullOpt));
+    }
+
 }

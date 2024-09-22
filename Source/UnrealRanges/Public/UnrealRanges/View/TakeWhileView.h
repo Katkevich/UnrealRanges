@@ -1,18 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -21,19 +7,7 @@ namespace Ur::View {
     template<typename TView, typename TFn>
     class TTakeWhileView
         : public FView
-        , public TTransformMixin<TTakeWhileView<TView, TFn>>
-        , public TFilterMixin<TTakeWhileView<TView, TFn>>
-        , public TEnumerateMixin<TTakeWhileView<TView, TFn>>
-        , public TTakeMixin<TTakeWhileView<TView, TFn>>
-        , public TTakeWhileMixin<TTakeWhileView<TView, TFn>>
-        , public TConcatMixin<TTakeWhileView<TView, TFn>>
-        , public TToMixin<TTakeWhileView<TView, TFn>>
-        , public TMinMaxMixin<TTakeWhileView<TView, TFn>>
-        , public TFindFirstMixin<TTakeWhileView<TView, TFn>>
-        , public TCountMixin<TTakeWhileView<TView, TFn>>
-        , public TFoldLeftMixin<TTakeWhileView<TView, TFn>>
-        , public TSumMixin<TTakeWhileView<TView, TFn>>
-        , public TIteratorMixin<TTakeWhileView<TView, TFn>>
+        , public Detail::TMixins<TTakeWhileView<TView, TFn>, TDefaultMixins>
     {
         friend struct Ur::Cursor;
 

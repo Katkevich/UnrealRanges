@@ -1,19 +1,4 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Size.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/RefView.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
@@ -23,20 +8,8 @@ namespace Ur::View {
     template<typename TView, typename TIndex>
     class TEnumerateView
         : public FView
-        , public TTransformMixin<TEnumerateView<TView, TIndex>>
-        , public TFilterMixin<TEnumerateView<TView, TIndex>>
-        , public TEnumerateMixin<TEnumerateView<TView, TIndex>>
-        , public TTakeMixin<TEnumerateView<TView, TIndex>>
-        , public TTakeWhileMixin<TEnumerateView<TView, TIndex>>
-        , public TConcatMixin<TEnumerateView<TView, TIndex>>
-        , public TToMixin<TEnumerateView<TView, TIndex>>
-        , public TMinMaxMixin<TEnumerateView<TView, TIndex>>
-        , public TFindFirstMixin<TEnumerateView<TView, TIndex>>
-        , public TCountMixin<TEnumerateView<TView, TIndex>>
-        , public TFoldLeftMixin<TEnumerateView<TView, TIndex>>
-        , public TSumMixin<TEnumerateView<TView, TIndex>>
-        , public TConditionalInheritance<TView::IsSized, TSizeMixin<TEnumerateView<TView, TIndex>>>
-        , public TIteratorMixin<TEnumerateView<TView, TIndex>>
+        , public Detail::TMixins<TEnumerateView<TView, TIndex>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TView::IsSized, TEnumerateView<TView, TIndex>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 

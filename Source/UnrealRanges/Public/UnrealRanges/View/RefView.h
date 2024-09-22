@@ -1,24 +1,10 @@
 #pragma once
-#include "UnrealRanges/View/Mixin/Transform.h"
-#include "UnrealRanges/View/Mixin/Filter.h"
-#include "UnrealRanges/View/Mixin/Enumerate.h"
-#include "UnrealRanges/View/Mixin/Take.h"
-#include "UnrealRanges/View/Mixin/TakeWhile.h"
-#include "UnrealRanges/View/Mixin/Concat.h"
-#include "UnrealRanges/View/Mixin/Reverse.h"
-#include "UnrealRanges/View/Mixin/Iterator.h"
-#include "UnrealRanges/View/AlgoMixin/To.h"
-#include "UnrealRanges/View/AlgoMixin/MinMax.h"
-#include "UnrealRanges/View/AlgoMixin/Find.h"
-#include "UnrealRanges/View/AlgoMixin/Count.h"
-#include "UnrealRanges/View/AlgoMixin/Fold.h"
-#include "UnrealRanges/View/AlgoMixin/Sum.h"
+#include "UnrealRanges/View/Mixin/Mixin.h"
 #include "UnrealRanges/View/View.h"
+#include "UnrealRanges/View/Cursor.h"
 #include "UnrealRanges/Traits.h"
 #include "UnrealRanges/Utility.h"
 #include "UnrealRanges/Detail/ForwardMacro.h"
-#include "UnrealRanges/Detail/EmptyBase.h"
-#include "UnrealRanges/View/Cursor.h"
 #include <memory>
 
 #ifndef UR_DEBUG_NOINLINE
@@ -52,23 +38,8 @@ namespace Ur::View {
     template<typename TRng>
     class TRefView
         : public FView
-        , public TTransformMixin<TRefView<TRng>>
-        , public TFilterMixin<TRefView<TRng>>
-        , public TEnumerateMixin<TRefView<TRng>>
-        , public TTakeMixin<TRefView<TRng>>
-        , public TTakeWhileMixin<TRefView<TRng>>
-        , public TConcatMixin<TRefView<TRng>>
-        , public TToMixin<TRefView<TRng>>
-        , public TMinMaxMixin<TRefView<TRng>>
-        , public TFindFirstMixin<TRefView<TRng>>
-        , public TConditionalInheritance<BiDirRange<TRng>, TFindLastMixin<TRefView<TRng>>>
-        , public TCountMixin<TRefView<TRng>>
-        , public TFoldLeftMixin<TRefView<TRng>>
-        , public TConditionalInheritance<BiDirRange<TRng>, TFoldRightMixin<TRefView<TRng>>>
-        , public TSumMixin<TRefView<TRng>>
-        , public TIteratorMixin<TRefView<TRng>>
-        , public TConditionalInheritance<BiDirRange<TRng>, TReverseMixin<TRefView<TRng>>>
-        , public TConditionalInheritance<BiDirRange<TRng>, TReverseIteratorMixin<TRefView<TRng>>>
+        , public Detail::TMixins<TRefView<TRng>, TDefaultMixins>
+        , public Detail::TConditionalMixins<BiDirRange<TRng>, TRefView<TRng>, TBidirMixins>
     {
         friend struct Ur::Cursor;
 
