@@ -40,6 +40,7 @@ namespace Ur::View {
         : public FView
         , public Detail::TMixins<TRefView<TRng>, TDefaultMixins>
         , public Detail::TConditionalMixins<BiDirRange<TRng>, TRefView<TRng>, TBidirMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<RangeValue<TRng>>, TRefView<TRng>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -55,6 +56,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = BiDirRange<TRng>;
         static constexpr bool IsSized = SizedRange<TRng>;
+        static constexpr bool LikeMap = TIsPair_V<value_type>;
 
         template<typename URng>
         TRefView(Misc::FFromViewTag, URng& InRng)

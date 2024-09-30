@@ -113,9 +113,9 @@ namespace Ur {
 
 
 
-    template<typename T>
-    concept LessOrdered = requires(T Val) {
-        { Val < Val } -> std::convertible_to<bool>;
+    template<typename TLhs, typename TRhs = TLhs>
+    concept LessOrdered = requires(TLhs Lhs, TRhs Rhs) {
+        { Lhs < Rhs } -> std::convertible_to<bool>;
     };
 
     template<typename T, typename TProj>
@@ -123,7 +123,7 @@ namespace Ur {
         { std::invoke(Proj, Val) < std::invoke(Proj, Val) } -> std::convertible_to<bool>;
     };
 
-    template<typename TLhs, typename TRhs>
+    template<typename TLhs, typename TRhs = TLhs>
     concept EqComparable = requires(TLhs Lhs, TRhs Rhs) {
         { Lhs == Rhs } -> std::convertible_to<bool>;
     };

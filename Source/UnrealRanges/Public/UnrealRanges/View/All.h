@@ -9,3 +9,6 @@
 #include "UnrealRanges/View/ConcatView.h"
 #include "UnrealRanges/View/MaybeView.h"
 #include "UnrealRanges/View/SingleView.h"
+#include "UnrealRanges/View/GroupByView.h"
+#include "UnrealRanges/View/KeysView.h"
+#include "UnrealRanges/View/ValuesView.h"

@@ -11,6 +11,7 @@ namespace Ur::View {
         , public Detail::TMixins<TMaybeView<TValue>, TDefaultMixins>
         , public Detail::TMixins<TMaybeView<TValue>, TBidirMixins>
         , public Detail::TMixins<TMaybeView<TValue>, TSizedMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<std::remove_cvref_t<TValue>>, TMaybeView<TValue>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -28,6 +29,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = true;
         static constexpr bool IsSized = true;
+        static constexpr bool LikeMap = TIsPair_V<value_type>;
 
         template<typename UValue>
         TMaybeView(Misc::FFromViewTag, const TOptional<UValue>& InValue)

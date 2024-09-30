@@ -10,6 +10,7 @@ namespace Ur::View {
         , public Detail::TMixins<TTransformView<TView, TFn>, TDefaultMixins>
         , public Detail::TConditionalMixins<TView::IsBidir, TTransformView<TView, TFn>, TBidirMixins>
         , public Detail::TConditionalMixins<TView::IsSized, TTransformView<TView, TFn>, TSizedMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<std::invoke_result_t<TFn, typename TView::reference>>, TTransformView<TView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -29,6 +30,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = TView::IsBidir;
         static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool LikeMap = TIsPair_V<value_type>;
 
         template<typename UView, typename UFn>
         TTransformView(UView&& InView, UFn&& InFn)

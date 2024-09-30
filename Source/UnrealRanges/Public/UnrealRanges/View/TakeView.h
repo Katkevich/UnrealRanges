@@ -8,6 +8,7 @@ namespace Ur::View {
     class TTakeView
         : public FView
         , public Detail::TMixins<TTakeView<TView, TAmount>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TView::LikeMap, TTakeView<TView, TAmount>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -31,6 +32,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool LikeMap = TView::LikeMap;
 
         template<typename UView, typename UAmount>
         TTakeView(UView&& InView, UAmount InAmount)

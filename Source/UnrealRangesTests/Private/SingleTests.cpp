@@ -129,4 +129,13 @@ bool FUnrealRangesTests_SingleRefMixWithConcat::RunTest(const FString& Parameter
     return EqualTo(Result, { TEXT("bba1") , TEXT("bba2"), TEXT("ingle1"), TEXT("ingle2") });
 }
 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleViewInternalIteration, "UnrealRanges.Single.SingleViewInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FUnrealRangesTests_SingleViewInternalIteration::RunTest(const FString& Parameters)
+{
+    auto Result = Single(FString(TEXT("abba")))
+        .To<TArray>();
+
+    return EqualTo(Result, { FString(TEXT("abba")) });
+}
+
 #endif

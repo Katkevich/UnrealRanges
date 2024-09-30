@@ -4,7 +4,10 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/GroupBy.h"
 #include "UnrealRanges/View/Mixin/Concat.h"
+#include "UnrealRanges/View/Mixin/Keys.h"
+#include "UnrealRanges/View/Mixin/Values.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -53,6 +56,7 @@ namespace Ur::View {
         TEnumerateMixin,
         TTakeMixin,
         TTakeWhileMixin,
+        TGroupByMixin,
         TConcatMixin,
         TToMixin,
         TMinMaxMixin,
@@ -72,6 +76,11 @@ namespace Ur::View {
 
     using TSizedMixins = Detail::TMixinList<
         TSizeMixin
+    >;
+
+    using TMapMixins = Detail::TMixinList<
+        TKeysMixin,
+        TValuesMixin
     >;
 
 }

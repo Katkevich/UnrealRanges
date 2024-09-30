@@ -11,6 +11,7 @@ namespace Ur::View {
         , public Detail::TMixins<TReverseView<TView>, TDefaultMixins>
         , public Detail::TMixins<TReverseView<TView>, TBidirMixins>
         , public Detail::TConditionalMixins<TView::IsSized, TReverseView<TView>, TSizedMixins>
+        , public Detail::TConditionalMixins<TView::LikeMap, TReverseView<TView>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -26,6 +27,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = true;
         static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool LikeMap = TView::LikeMap;
 
         template<typename UView>
         TReverseView(Misc::FFromViewTag, UView&& InView)

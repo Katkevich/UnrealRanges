@@ -8,6 +8,7 @@ namespace Ur::View {
     class TTakeWhileView
         : public FView
         , public Detail::TMixins<TTakeWhileView<TView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TView::LikeMap, TTakeWhileView<TView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -31,6 +32,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = false;
+        static constexpr bool LikeMap = TView::LikeMap;
 
         template<typename UView, typename UFn>
         TTakeWhileView(UView&& InView, UFn&& InFn)

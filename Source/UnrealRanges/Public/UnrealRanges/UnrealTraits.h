@@ -65,4 +65,29 @@ namespace Ur {
 
     template<template<typename, typename, typename... Ts> typename T>
     static constexpr bool TIsMapTemplate_V = TMapTraits<T>::IsMap;
+
+    namespace Detail {
+        template<typename T>
+        struct TIsPair : TIntegralConstant<bool, false>
+        {};
+
+        template<typename T1, typename T2>
+        struct TIsPair<TTuple<T1, T2>> : TIntegralConstant<bool, true>
+        {};
+
+        template<typename T1, typename T2>
+        struct TIsPair<std::tuple<T1, T2>> : TIntegralConstant<bool, true>
+        {};
+
+        template<typename T1, typename T2>
+        struct TIsPair<std::pair<T1, T2>> : TIntegralConstant<bool, true>
+        {};
+    }
+
+    template<typename T>
+    struct TIsPair : Detail::TIsPair<std::remove_cvref_t<T>>
+    {};
+
+    template<typename T>
+    static constexpr bool TIsPair_V = TIsPair<T>::Value;
 }

@@ -11,6 +11,7 @@ namespace Ur::View {
         , public Detail::TMixins<TSingleView<TValue>, TDefaultMixins>
         , public Detail::TMixins<TSingleView<TValue>, TBidirMixins>
         , public Detail::TMixins<TSingleView<TValue>, TSizedMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<std::remove_cvref_t<TValue>>, TSingleView<TValue>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -28,6 +29,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = true;
         static constexpr bool IsSized = true;
+        static constexpr bool LikeMap = TIsPair_V<value_type>;
 
         template<typename UValue>
         TSingleView(Misc::FFromViewTag, UValue&& InValue)
@@ -89,6 +91,7 @@ namespace Ur::View {
         , public Detail::TMixins<TSingleView<TValue&>, TDefaultMixins>
         , public Detail::TMixins<TSingleView<TValue&>, TBidirMixins>
         , public Detail::TMixins<TSingleView<TValue&>, TSizedMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<std::remove_cvref_t<TValue>>, TSingleView<TValue&>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -106,6 +109,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = true;
         static constexpr bool IsSized = true;
+        static constexpr bool LikeMap = TIsPair_V<value_type>;
 
         template<typename UValue>
         TSingleView(Misc::FFromViewTag, UValue& InValue)

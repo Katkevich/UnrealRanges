@@ -11,6 +11,7 @@ namespace Ur::View {
         : public FView
         , public Detail::TMixins<TConcatView<TViews...>, TDefaultMixins>
         , public Detail::TConditionalMixins<(TViews::IsBidir && ...), TConcatView<TViews...>, TBidirMixins>
+        , public Detail::TConditionalMixins<(TViews::LikeMap && ...), TConcatView<TViews...>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -22,6 +23,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = (TViews::IsBidir && ...);
         static constexpr bool IsSized = (TViews::IsSized && ...);
+        static constexpr bool LikeMap = (TViews::LikeMap && ...);
 
         struct Cursor
         {

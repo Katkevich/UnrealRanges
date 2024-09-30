@@ -33,6 +33,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool LikeMap = false;
 
         template<typename UView, typename UIndex>
         TEnumerateView(UView&& InView, UIndex InIndexFrom, UIndex InStep)

@@ -9,6 +9,7 @@ namespace Ur::View {
         : public FView
         , public Detail::TMixins<TFilterView<TView, TFn>, TDefaultMixins>
         , public Detail::TConditionalMixins<TView::IsBidir, TFilterView<TView, TFn>, TBidirMixins>
+        , public Detail::TConditionalMixins<TView::LikeMap, TFilterView<TView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
@@ -23,6 +24,7 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = TView::IsBidir;
         static constexpr bool IsSized = false;
+        static constexpr bool LikeMap = TView::LikeMap;
 
         template<typename UView, typename UFn>
         TFilterView(UView&& InView, UFn&& InFn)
