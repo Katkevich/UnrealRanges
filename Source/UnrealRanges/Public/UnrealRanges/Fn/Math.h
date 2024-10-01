@@ -19,6 +19,33 @@ namespace Ur::Fn
         }
     };
 
+    struct FEven
+    {
+        template<typename T>
+        auto operator()(T&& Lhs) const requires requires { UR_FWD(Lhs) % 2; }
+        {
+            if constexpr (std::is_integral_v<T>)
+                return (Lhs & 1) == 0;
+
+            return Lhs % 2 == 0;
+        }
+    };
+
+    struct FOdd
+    {
+        template<typename T>
+        auto operator()(T&& Lhs) const requires requires { UR_FWD(Lhs) % 2; }
+        {
+            if constexpr (std::is_integral_v<T>)
+                return (Lhs & 1) == 1;
+
+            return Lhs % 2 == 1;
+        }
+    };
+
     static constexpr FPlus Plus{};
     static constexpr FMul Mul{};
+    static constexpr FEven Even{};
+    static constexpr FOdd Odd{};
+
 }

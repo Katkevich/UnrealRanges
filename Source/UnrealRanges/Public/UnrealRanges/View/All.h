@@ -6,6 +6,8 @@
 #include "UnrealRanges/View/EnumerateView.h"
 #include "UnrealRanges/View/TakeView.h"
 #include "UnrealRanges/View/TakeWhileView.h"
+#include "UnrealRanges/View/DropView.h"
+#include "UnrealRanges/View/DropWhileView.h"
 #include "UnrealRanges/View/ConcatView.h"
 #include "UnrealRanges/View/MaybeView.h"
 #include "UnrealRanges/View/SingleView.h"

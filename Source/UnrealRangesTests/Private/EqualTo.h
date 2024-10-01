@@ -12,7 +12,7 @@ bool EqualTo(TRng&& Actual, std::initializer_list<TExpectedValue> Expected)
         bAllEqual &= Item == *ExpectedIt++;
     }
 
-    return bAllEqual;
+    return bAllEqual && ExpectedIt == Expected.end();
 }
 
 template<typename TRng>
@@ -26,5 +26,5 @@ bool EqualTo(TRng&& Actual, FString Expected)
         bAllEqual &= Item == *ExpectedIt++;
     }
 
-    return bAllEqual;
+    return bAllEqual && ExpectedIt == Expected.end();
 }

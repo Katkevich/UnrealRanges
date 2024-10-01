@@ -4,6 +4,8 @@
 #include "UnrealRanges/View/Mixin/Enumerate.h"
 #include "UnrealRanges/View/Mixin/Take.h"
 #include "UnrealRanges/View/Mixin/TakeWhile.h"
+#include "UnrealRanges/View/Mixin/Drop.h"
+#include "UnrealRanges/View/Mixin/DropWhile.h"
 #include "UnrealRanges/View/Mixin/GroupBy.h"
 #include "UnrealRanges/View/Mixin/Concat.h"
 #include "UnrealRanges/View/Mixin/Keys.h"
@@ -56,6 +58,8 @@ namespace Ur::View {
         TEnumerateMixin,
         TTakeMixin,
         TTakeWhileMixin,
+        TDropMixin,
+        TDropWhileMixin,
         TGroupByMixin,
         TConcatMixin,
         TToMixin,

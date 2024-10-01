@@ -75,35 +75,35 @@ bool FUnrealRangesTests_TakeLValue::RunTest(const FString& Parameters)
 
     static_assert(std::is_same_v<decltype(*Result.begin()), const FString&>);
 
-    return EqualTo(Result, { FString(TEXT("1")), FString(TEXT("2")) });
+    return EqualTo(Result, std::initializer_list<FString>{ });
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeLValueAfterReverse, "UnrealRanges.TakeWhile.TestTakeLValueAfterReverse", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_TakeLValueAfterReverse::RunTest(const FString& Parameters)
 {
-    TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
+    TArray<FString> From = { TEXT("1"), TEXT("2"), TEXT("33") };
 
     const auto Result = Ref(From)
         .Filter([](const FString& Str) { return Str.Len() == 1; })
         .Reverse()
-        .TakeWhile([](const FString& Str) { return Str.Len() == 2; });
+        .TakeWhile([](const FString& Str) { return Str.Len() == 1; });
 
     static_assert(std::is_same_v<decltype(*Result.begin()), const FString&>);
 
-    return EqualTo(Result, { FString(TEXT("33")) });
+    return EqualTo(Result, { TEXT("2"), TEXT("1")});
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeInternalIteration, "UnrealRanges.TakeWhile.TestTakeInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FUnrealRangesTests_TakeInternalIteration::RunTest(const FString& Parameters)
 {
-    TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
+    TArray<FString> From = { FString(TEXT("11")), FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
 
     auto Result = Ref(From)
         .Filter([](const FString& Str) { return Str.Len() == 1; })
-        .TakeWhile([](const FString& Str) { return Str.Len() == 2; })
+        .TakeWhile([](const FString& Str) { return Str == TEXT("1"); })
         .To<TArray>();
 
-    return EqualTo(Result, { FString(TEXT("1")), FString(TEXT("2")) });
+    return EqualTo(Result, { TEXT("1") });
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeInternalIterationEmptyResult, "UnrealRanges.TakeWhile.TestTakeInternalIterationEmptyResult", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
