@@ -27,7 +27,7 @@ namespace Ur::View {
                     {
                         Result = Result + std::invoke(Proj, UR_FWD(Item));
 
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Result;

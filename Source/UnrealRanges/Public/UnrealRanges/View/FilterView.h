@@ -35,7 +35,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
                 {
@@ -43,7 +43,7 @@ namespace Ur::View {
                     {
                         return Callback(UR_FWD(Item));
                     }
-                    return Misc::ELoop::Continue;
+                    return Ur::ELoop::Continue;
                 });
         }
 

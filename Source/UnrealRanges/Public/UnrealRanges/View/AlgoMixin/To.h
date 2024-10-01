@@ -100,7 +100,7 @@ namespace Ur::View {
                         if (Index < Target.Num())
                             Target[Index++] = UR_FWD(Item);
                         else
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                     }
                     // TChunkedArray (Add method has different meaning for TChunkedArray)
                     else if constexpr (HasAddElement)
@@ -139,7 +139,7 @@ namespace Ur::View {
                         Target.Append(UR_FWD(Item));
                     }
 
-                    return Misc::ELoop::Continue;
+                    return Ur::ELoop::Continue;
                 });
         }
     };

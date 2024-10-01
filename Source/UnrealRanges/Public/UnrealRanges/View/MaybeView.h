@@ -55,12 +55,12 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             if (Self.Value)
                 return Callback(*Self.Value);
             else
-                return Misc::ELoop::Continue;
+                return Ur::ELoop::Continue;
         }
 
         template<bool IsForward, typename TSelf>

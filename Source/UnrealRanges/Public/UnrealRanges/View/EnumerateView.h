@@ -45,13 +45,13 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             TIndex Index = Self.IndexFrom;
 
             return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
                 {
-                    Misc::ELoop Result = Callback(TReference<TSelf>{ UR_FWD(Item), Index });
+                    Ur::ELoop Result = Callback(TReference<TSelf>{ UR_FWD(Item), Index });
                     Index += Self.Step;
 
                     return Result;

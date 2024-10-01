@@ -37,7 +37,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TFn Fn)
         {
             return Ur::Cursor::Iterate<Misc::Opposite<IsForward>>(Self.View, Fn);
         }

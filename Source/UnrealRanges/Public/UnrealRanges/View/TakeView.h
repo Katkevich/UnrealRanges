@@ -51,7 +51,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             TAmount Counter = { 0 };
             return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
@@ -63,7 +63,7 @@ namespace Ur::View {
                     }
                     else
                     {
-                        return Misc::ELoop::Break;
+                        return Ur::ELoop::Break;
                     }
                 });
         }

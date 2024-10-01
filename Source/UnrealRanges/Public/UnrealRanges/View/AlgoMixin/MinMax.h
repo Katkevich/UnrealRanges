@@ -66,7 +66,7 @@ namespace Ur::View {
                     {
                         MinItem = UR_FWD(Item);
                     }
-                    return Misc::ELoop::Continue;
+                    return Ur::ELoop::Continue;
                 });
 
             return MinItem;
@@ -84,7 +84,7 @@ namespace Ur::View {
                     {
                         MaxItem = UR_FWD(Item);
                     }
-                    return Misc::ELoop::Continue;
+                    return Ur::ELoop::Continue;
                 });
 
             return MaxItem;
@@ -111,7 +111,7 @@ namespace Ur::View {
                     {
                         MinMaxPair.Max = UR_FWD(Item);
                     }
-                    return Misc::ELoop::Continue;
+                    return Ur::ELoop::Continue;
                 });
 
             return MinMaxPair;

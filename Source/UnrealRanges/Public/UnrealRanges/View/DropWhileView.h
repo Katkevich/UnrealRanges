@@ -35,7 +35,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             bool bKeepSkipping = true;
 
@@ -43,7 +43,7 @@ namespace Ur::View {
                 {
                     if (bKeepSkipping && std::invoke(Self.Fn, Item))
                     {
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     }
                     else
                     {

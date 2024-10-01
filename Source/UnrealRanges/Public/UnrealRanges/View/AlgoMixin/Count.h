@@ -21,7 +21,7 @@ namespace Ur::View {
                         {
                             ++ItemsCount;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return ItemsCount;
@@ -47,7 +47,7 @@ namespace Ur::View {
                 Ur::Cursor::Iterate<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
                     {
                         ++ItemsCount;
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return ItemsCount;

@@ -71,13 +71,13 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TFn>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TFn Fn)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TFn Fn)
         {
             for (auto It = CursorBegin<IsForward>(Self); It != CursorEnd<IsForward>(Self); ++It)
-                if (Fn(*It) == Misc::ELoop::Break)
-                    return Misc::ELoop::Break;
+                if (Fn(*It) == Ur::ELoop::Break)
+                    return Ur::ELoop::Break;
 
-            return Misc::ELoop::Continue;
+            return Ur::ELoop::Continue;
         }
 
         template<bool IsForward, typename TSelf>

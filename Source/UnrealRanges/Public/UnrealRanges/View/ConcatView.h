@@ -75,7 +75,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, size_t Index, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterationSubview(FIndex<Index>, TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterationSubview(FIndex<Index>, TSelf& Self, TCallback Callback)
         {
             return Ur::Cursor::Iterate<IsForward>(At<Index, IsForward>(Self.Views), [&](auto&& Item)
                 {
@@ -84,14 +84,14 @@ namespace Ur::View {
         }
 
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             return[&]<size_t... Indices>(std::index_sequence<Indices...>) {
 
-                const bool bContinue = ((InternalIterationSubview<IsForward>(FIndex<Indices>{}, Self, Callback) == Misc::ELoop::Continue) && ...);
+                const bool bContinue = ((InternalIterationSubview<IsForward>(FIndex<Indices>{}, Self, Callback) == Ur::ELoop::Continue) && ...);
                 return bContinue
-                    ? Misc::ELoop::Continue
-                    : Misc::ELoop::Break;
+                    ? Ur::ELoop::Continue
+                    : Ur::ELoop::Break;
 
             }(std::index_sequence_for<TViews...>{});
         }

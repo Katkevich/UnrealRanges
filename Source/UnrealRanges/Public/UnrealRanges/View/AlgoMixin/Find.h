@@ -26,9 +26,9 @@ namespace Ur::View {
                         {
                             Found = UR_FWD(Item);
 
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Found;
@@ -46,9 +46,9 @@ namespace Ur::View {
                         {
                             Found = true;
 
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Found;
@@ -66,9 +66,9 @@ namespace Ur::View {
                         {
                             Found = UR_FWD(Item);
 
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Found;
@@ -86,9 +86,9 @@ namespace Ur::View {
                         {
                             Found = true;
 
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Found;
@@ -106,9 +106,9 @@ namespace Ur::View {
                         {
                             Found = UR_FWD(Item);
 
-                            return Misc::ELoop::Break;
+                            return Ur::ELoop::Break;
                         }
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Found;

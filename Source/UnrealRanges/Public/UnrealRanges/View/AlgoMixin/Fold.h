@@ -29,7 +29,7 @@ namespace Ur::View {
                         else
                             Result.Emplace(std::invoke(Fn, UR_FWD(Init), UR_FWD(Item)));
 
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 if (Result)
@@ -73,7 +73,7 @@ namespace Ur::View {
                                 Result.Emplace(std::invoke(Fn, MoveTemp(*FstItem), UR_FWD(Item)));
                         }
 
-                        return Misc::ELoop::Continue;
+                        return Ur::ELoop::Continue;
                     });
 
                 return Result;

@@ -10,12 +10,11 @@ namespace Ur {
         struct FFromViewTag
         {
         };
-
-        // break/continue support for the internal iteration over views
-        enum class ELoop
-        {
-            Break,
-            Continue
-        };
     }
+    // break/continue support for the internal iteration over views
+    enum class ELoop
+    {
+        Break,
+        Continue
+    };
 }

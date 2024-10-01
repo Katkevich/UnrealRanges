@@ -63,7 +63,7 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             // no optimal implementation using only internal iteration because GroupView is iterating
             // underlying view FROM A PARTICULAR cursor (from Self.BeginCursor) and not from the beginning of the underlying view
@@ -71,10 +71,10 @@ namespace Ur::View {
             auto EndCurs = CursorEnd<IsForward>(Self);
             for (auto Curs = CursorBegin<IsForward>(Self); !CursorEq(Self, Curs, EndCurs); CursorInc(Self, Curs))
             {
-                if (Callback(CursorDeref(Self, Curs)) == Misc::ELoop::Break)
+                if (Callback(CursorDeref(Self, Curs)) == Ur::ELoop::Break)
                     break;
             }
-            return Misc::ELoop::Break;
+            return Ur::ELoop::Break;
         }
 
         template<bool IsForward, typename TSelf>
@@ -189,17 +189,17 @@ namespace Ur::View {
 
     private:
         template<bool IsForward, typename TSelf, typename TCallback>
-        UR_DEBUG_NOINLINE static Misc::ELoop InternalIterate(TSelf& Self, TCallback Callback)
+        UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
             // no optimal implementation using only internal iteration because GroupView requires cursor for it to work anyway
             // so fallback to default cursor-based iteration instead
             auto EndCurs = CursorEnd<IsForward>(Self);
             for (auto Curs = CursorBegin<IsForward>(Self); !CursorEq(Self, Curs, EndCurs); CursorInc(Self, Curs))
             {
-                if (Callback(CursorDeref(Self, Curs)) == Misc::ELoop::Break)
+                if (Callback(CursorDeref(Self, Curs)) == Ur::ELoop::Break)
                     break;
             }
-            return Misc::ELoop::Break;
+            return Ur::ELoop::Break;
         }
 
         template<bool IsForward, typename TSelf>
