@@ -43,12 +43,11 @@ namespace Ur::View {
             }
             else
             {
+                auto Self = static_cast<const TView*>(this);
+
                 TCount ItemsCount{};
-                Ur::Cursor::Iterate<Misc::Forward>(*static_cast<const TView*>(this), [&](auto&& Item)
-                    {
-                        ++ItemsCount;
-                        return Ur::ELoop::Continue;
-                    });
+                for (auto It = Self->begin(); It != Self->end(); ++It)
+                    ++ItemsCount;
 
                 return ItemsCount;
             }

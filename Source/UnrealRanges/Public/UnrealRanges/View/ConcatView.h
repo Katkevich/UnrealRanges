@@ -59,7 +59,7 @@ namespace Ur::View {
         static_assert((!std::is_rvalue_reference_v<typename TViews::const_reference> && ...), "only lvalue references and values are supported (rvalues are messing common_reference)");
 
         template<typename... UViews>
-        TConcatView(UViews&&... InViews)
+        TConcatView(Misc::FFromViewTag, UViews&&... InViews)
             : Views(UR_FWD(InViews)...)
         {
         }
@@ -232,6 +232,6 @@ namespace Ur::View {
     auto Concat(TRng& Rng, TRngs&... Rngs)
     {
         //TODO: own view & view in support
-        return TConcatView<TRefView<TRng>, TRefView<TRngs>...>(TRefView<TRng>({}, Rng), TRefView<TRngs>({}, Rngs)...);
+        return TConcatView<TRefView<TRng>, TRefView<TRngs>...>({}, TRefView<TRng>({}, Rng), TRefView<TRngs>({}, Rngs)...);
     }
 }

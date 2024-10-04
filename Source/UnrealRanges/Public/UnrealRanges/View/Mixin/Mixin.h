@@ -8,8 +8,10 @@
 #include "UnrealRanges/View/Mixin/DropWhile.h"
 #include "UnrealRanges/View/Mixin/GroupBy.h"
 #include "UnrealRanges/View/Mixin/Concat.h"
+#include "UnrealRanges/View/Mixin/Zip.h"
 #include "UnrealRanges/View/Mixin/Keys.h"
 #include "UnrealRanges/View/Mixin/Values.h"
+#include "UnrealRanges/View/Mixin/Adjacent.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -19,6 +21,7 @@
 #include "UnrealRanges/View/AlgoMixin/Count.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
 #include "UnrealRanges/View/AlgoMixin/Sum.h"
+#include "UnrealRanges/View/AlgoMixin/Foreach.h"
 #include <type_traits>
 
 namespace Ur::View {
@@ -62,12 +65,15 @@ namespace Ur::View {
         TDropWhileMixin,
         TGroupByMixin,
         TConcatMixin,
+        TZipMixin,
         TToMixin,
         TMinMaxMixin,
         TFindFirstMixin,
         TCountMixin,
         TFoldLeftMixin,
         TSumMixin,
+        TForeachMixin,
+        TAdjacentMixin,
         TIteratorMixin
     >;
 

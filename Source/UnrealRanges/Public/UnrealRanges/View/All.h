@@ -14,3 +14,5 @@
 #include "UnrealRanges/View/GroupByView.h"
 #include "UnrealRanges/View/KeysView.h"
 #include "UnrealRanges/View/ValuesView.h"
+#include "UnrealRanges/View/AdjacentView.h"
+#include "UnrealRanges/View/ZipView.h"

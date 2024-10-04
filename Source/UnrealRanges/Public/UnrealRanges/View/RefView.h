@@ -8,7 +8,7 @@
 #include <memory>
 
 #ifndef UR_DEBUG_NOINLINE
-#define UR_DEBUG_NOINLINE //FORCENOINLINE
+#define UR_DEBUG_NOINLINE FORCENOINLINE
 #endif
 
 namespace Ur::View {

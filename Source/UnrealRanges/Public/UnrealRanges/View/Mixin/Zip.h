@@ -6,31 +6,31 @@
 namespace Ur::View {
 
     template<typename... TViews>
-    class TConcatView;
+    class TZipView;
 
     template<typename TRng>
     class TRefView;
 
     template<typename TView>
-    struct TConcatMixin
+    struct TZipMixin
     {
         template<typename... TRngs>
-        auto ConcatWith(TRngs&&... Rngs) const&
+        auto ZipWith(TRngs&&... Rngs) const&
         {
-            return ConcatAll(static_cast<const TView&>(*this), this->IntoView(UR_FWD(Rngs))...);
+            return ZipAll(static_cast<const TView&>(*this), this->IntoView(UR_FWD(Rngs))...);
         }
 
         template<typename... TRngs>
-        auto ConcatWith(TRngs&&... Rngs) &&
+        auto ZipWith(TRngs&&... Rngs)&&
         {
-            return ConcatAll(static_cast<TView&&>(*this), this->IntoView(UR_FWD(Rngs))...);
+            return ZipAll(static_cast<TView&&>(*this), this->IntoView(UR_FWD(Rngs))...);
         }
 
     private:
         template<typename... TViews>
-        static auto ConcatAll(TViews&&... Views)
+        static auto ZipAll(TViews&&... Views)
         {
-            return TConcatView<std::remove_cvref_t<TViews>...>({}, UR_FWD(Views)...);
+            return TZipView<std::remove_cvref_t<TViews>...>({}, UR_FWD(Views)...);
         }
 
         template<typename TRng>
