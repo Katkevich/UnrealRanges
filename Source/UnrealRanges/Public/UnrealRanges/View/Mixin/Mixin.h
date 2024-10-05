@@ -23,6 +23,8 @@
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
 #include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/AlgoMixin/Foreach.h"
+#include "UnrealRanges/View/AlgoMixin/EqualTo.h"
+#include "UnrealRanges/View/AlgoMixin/StartsWith.h"
 #include <type_traits>
 
 namespace Ur::View {
@@ -75,6 +77,8 @@ namespace Ur::View {
         TFoldLeftMixin,
         TSumMixin,
         TForeachMixin,
+        TEqualToMixin,
+        TStartsWithMixin,
         TAdjacentMixin,
         TIteratorMixin
     >;
