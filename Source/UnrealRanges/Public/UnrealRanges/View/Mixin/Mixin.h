@@ -19,6 +19,7 @@
 #include "UnrealRanges/View/AlgoMixin/Find.h"
 #include "UnrealRanges/View/AlgoMixin/Size.h"
 #include "UnrealRanges/View/AlgoMixin/Count.h"
+#include "UnrealRanges/View/AlgoMixin/IsEmpty.h"
 #include "UnrealRanges/View/AlgoMixin/Fold.h"
 #include "UnrealRanges/View/AlgoMixin/Sum.h"
 #include "UnrealRanges/View/AlgoMixin/Foreach.h"
@@ -70,6 +71,7 @@ namespace Ur::View {
         TMinMaxMixin,
         TFindFirstMixin,
         TCountMixin,
+        TIsEmptyMixin,
         TFoldLeftMixin,
         TSumMixin,
         TForeachMixin,
