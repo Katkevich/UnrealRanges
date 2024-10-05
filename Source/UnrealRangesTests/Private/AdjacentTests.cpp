@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverEmptyRange, "UnrealRanges.Adjacent.TestAdjacentViewOverEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverEmptyRange)
 {
     TArray<int32> From;
 
@@ -23,8 +22,7 @@ bool FUnrealRangesTests_AdjacentViewOverEmptyRange::RunTest(const FString& Param
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverRangeWithTooLittleElements, "UnrealRanges.Adjacent.TestAdjacentViewOverRangeWithTooLittleElements", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverRangeWithTooLittleElements::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverRangeWithTooLittleElements)
 {
     TArray<int32> From = { 1,2 };
 
@@ -36,8 +34,7 @@ bool FUnrealRangesTests_AdjacentViewOverRangeWithTooLittleElements::RunTest(cons
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverRangeWithElementsCountEqToAdjacentWindow, "UnrealRanges.Adjacent.TestAdjacentViewOverRangeWithElementsCountEqToAdjacentWindow", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverRangeWithElementsCountEqToAdjacentWindow::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverRangeWithElementsCountEqToAdjacentWindow)
 {
     TArray<int32> From = { 1,2,3 };
 
@@ -53,8 +50,7 @@ bool FUnrealRangesTests_AdjacentViewOverRangeWithElementsCountEqToAdjacentWindow
     return *Result.begin() == TTuple<int32&, int32&, int32&>(One, Two, Three);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverRValues, "UnrealRanges.Adjacent.TestAdjacentViewOverRValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverRValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverRValues)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -67,8 +63,7 @@ bool FUnrealRangesTests_AdjacentViewOverRValues::RunTest(const FString& Paramete
     return EqualTo(Result, { MakeTuple(1,2,3), MakeTuple(2,3,4), MakeTuple(3,4,5) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverFilterView, "UnrealRanges.Adjacent.TestAdjacentViewOverFilterView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverFilterView::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverFilterView)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8 };
 
@@ -81,8 +76,7 @@ bool FUnrealRangesTests_AdjacentViewOverFilterView::RunTest(const FString& Param
     return EqualTo(Result, { ForwardAsTuple(Nums[0], Nums[1], Nums[2]), ForwardAsTuple(Nums[1], Nums[2], Nums[3]) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewOverTakeView, "UnrealRanges.Adjacent.TestAdjacentViewOverTakeView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewOverTakeView::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewOverTakeView)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8 };
 
@@ -95,8 +89,7 @@ bool FUnrealRangesTests_AdjacentViewOverTakeView::RunTest(const FString& Paramet
     return EqualTo(Result, { ForwardAsTuple(Nums[0], Nums[1]), ForwardAsTuple(Nums[1], Nums[2]), ForwardAsTuple(Nums[2], Nums[3]) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewInternalIteration, "UnrealRanges.Adjacent.TestAdjacentViewInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewInternalIteration)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8 };
 
@@ -110,8 +103,7 @@ bool FUnrealRangesTests_AdjacentViewInternalIteration::RunTest(const FString& Pa
     return Result.Num() == 3 && EqualTo(Result, { ForwardAsTuple(Nums[0], Nums[1]), ForwardAsTuple(Nums[1], Nums[2]), ForwardAsTuple(Nums[2], Nums[3]) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_AdjacentViewSize, "UnrealRanges.Adjacent.TestAdjacentViewSize", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_AdjacentViewSize::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Adjacent, TestAdjacentViewSize)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8 };
 

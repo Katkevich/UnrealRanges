@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEmptyRange, "UnrealRanges.Filter.TestFilterEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FilterEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestFilterEmptyRange)
 {
     TArray<int32> From;
 
@@ -23,8 +22,7 @@ bool FUnrealRangesTests_FilterEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterEven, "UnrealRanges.Filter.TestFilterEven", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FilterEven::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestFilterEven)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -33,8 +31,7 @@ bool FUnrealRangesTests_FilterEven::RunTest(const FString& Parameters)
     return EqualTo(Result, { 2,4 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterOutAll, "UnrealRanges.Filter.TestFilterOutAll", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FilterOutAll::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestFilterOutAll)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -43,8 +40,7 @@ bool FUnrealRangesTests_FilterOutAll::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FilterInternalIteration, "UnrealRanges.Filter.TestFilterInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FilterInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestFilterInternalIteration)
 {
     TArray<int32> From = { 1,2,3,4,5, 6 };
 

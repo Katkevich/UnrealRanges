@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Fn/All.h"
@@ -12,24 +12,21 @@
 using namespace Ur::View;
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SumEmptyIntRange, "UnrealRanges.Sum.TestSumEmptyIntRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SumEmptyIntRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Sum, TestSumEmptyIntRange)
 {
     TArray<int32> Array;
 
     return Ref(Array).Sum() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SumEmptyStringRange, "UnrealRanges.Sum.TestSumEmptyStringRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SumEmptyStringRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Sum, TestSumEmptyStringRange)
 {
     TArray<FString> Array;
 
     return Ref(Array).Sum() == FString();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SumEmptyStringRangeUsingProjection, "UnrealRanges.Sum.TestSumEmptyStringRangeUsingProjection", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SumEmptyStringRangeUsingProjection::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Sum, TestSumEmptyStringRangeUsingProjection)
 {
     TArray<FString> Array;
 
@@ -52,16 +49,14 @@ private:
     }
 };
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SumRangeWithCustomItem, "UnrealRanges.Sum.TestSumRangeWithCustomItem", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SumRangeWithCustomItem::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Sum, TestSumRangeWithCustomItem)
 {
     TArray<FItem> Array = { {1}, {2}, {3} };
 
     return Ref(Array).Sum() == 6;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SumOverRValues, "UnrealRanges.Sum.TestSumOverRValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SumOverRValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Sum, TestSumOverRValues)
 {
     const TCHAR* Chars = TEXT("abcdef");
     TArray<int32> Array = { 1,2,3 };

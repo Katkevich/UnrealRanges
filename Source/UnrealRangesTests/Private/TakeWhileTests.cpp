@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWhileEmptyRange, "UnrealRanges.TakeWhile.TestTakeWhileEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeWhileEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeWhileEmptyRange)
 {
     TArray<int32> From;
 
@@ -20,8 +19,7 @@ bool FUnrealRangesTests_TakeWhileEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeAll, "UnrealRanges.TakeWhile.TestTakeAll", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeAll::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeAll)
 {
     TArray<int32> From = { 2,2,2 };
 
@@ -30,8 +28,7 @@ bool FUnrealRangesTests_TakeAll::RunTest(const FString& Parameters)
     return EqualTo(Result, { 2,2,2 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeNothing, "UnrealRanges.TakeWhile.TestTakeNothing", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeNothing::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeNothing)
 {
     TArray<int32> From = { 2,2,2 };
 
@@ -40,8 +37,7 @@ bool FUnrealRangesTests_TakeNothing::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeSome, "UnrealRanges.TakeWhile.TestTakeSome", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeSome::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeSome)
 {
     TArray<int32> From = { 2,2,3 };
 
@@ -50,8 +46,7 @@ bool FUnrealRangesTests_TakeSome::RunTest(const FString& Parameters)
     return EqualTo(Result, { 2,2 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeRValue, "UnrealRanges.TakeWhile.TestTakeRValue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeRValue::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeRValue)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
 
@@ -64,8 +59,7 @@ bool FUnrealRangesTests_TakeRValue::RunTest(const FString& Parameters)
     return EqualTo(Result, { FString(TEXT("11")), FString(TEXT("22")) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeLValue, "UnrealRanges.TakeWhile.TestTakeLValue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeLValue::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeLValue)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
 
@@ -78,8 +72,7 @@ bool FUnrealRangesTests_TakeLValue::RunTest(const FString& Parameters)
     return EqualTo(Result, std::initializer_list<FString>{ });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeLValueAfterReverse, "UnrealRanges.TakeWhile.TestTakeLValueAfterReverse", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeLValueAfterReverse::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeLValueAfterReverse)
 {
     TArray<FString> From = { TEXT("1"), TEXT("2"), TEXT("33") };
 
@@ -93,8 +86,7 @@ bool FUnrealRangesTests_TakeLValueAfterReverse::RunTest(const FString& Parameter
     return EqualTo(Result, { TEXT("2"), TEXT("1")});
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeInternalIteration, "UnrealRanges.TakeWhile.TestTakeInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeInternalIteration)
 {
     TArray<FString> From = { FString(TEXT("11")), FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
 
@@ -106,8 +98,7 @@ bool FUnrealRangesTests_TakeInternalIteration::RunTest(const FString& Parameters
     return EqualTo(Result, { TEXT("1") });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeInternalIterationEmptyResult, "UnrealRanges.TakeWhile.TestTakeInternalIterationEmptyResult", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeInternalIterationEmptyResult::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeInternalIterationEmptyResult)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")) , FString(TEXT("33")) };
 
@@ -118,8 +109,7 @@ bool FUnrealRangesTests_TakeInternalIterationEmptyResult::RunTest(const FString&
     return Result.Num() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeInternalIterationEmptySource, "UnrealRanges.TakeWhile.TestTakeInternalIterationEmptySource", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeInternalIterationEmptySource::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeInternalIterationEmptySource)
 {
     TArray<FString> From;
 
@@ -130,8 +120,7 @@ bool FUnrealRangesTests_TakeInternalIterationEmptySource::RunTest(const FString&
     return Result.Num() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWhileOnDifferentViews, "UnrealRanges.TakeWhile.TestTakeWhileOnDifferentViews", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeWhileOnDifferentViews::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, TakeWhile, TestTakeWhileOnDifferentViews)
 {
     TArray<FString> From = { FString(TEXT("00")), FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("33")), FString(TEXT("4")) };
 

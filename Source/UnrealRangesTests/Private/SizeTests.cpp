@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -11,56 +11,49 @@
 using namespace Ur;
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_RefViewSize, "UnrealRanges.Size.TestRefView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_RefViewSize::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestRefView)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Num() == 3;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateViewSize, "UnrealRanges.Size.TestEnumerateView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateViewSize::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestEnumerateView)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Enumerate().Num() == 3;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TransformViewSize, "UnrealRanges.Size.TestTransformVIew", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TransformViewSize::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestTransformVIew)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Transform([](int32 Num) { return Num; }).Num() == 3;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ReverseViewSize, "UnrealRanges.Size.TestReverseView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ReverseViewSize::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestReverseView)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Reverse().Num() == 3;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeViewSizeGreaterThanArray, "UnrealRanges.Size.TestTakeViewGreaterThanArray", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeViewSizeGreaterThanArray::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestTakeViewGreaterThanArray)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Take(10).Num() == 3;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeViewSizeLessThanArray, "UnrealRanges.Size.TestTakeViewLessThanArray", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeViewSizeLessThanArray::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestTakeViewLessThanArray)
 {
     TArray<int32> Array = { 1,2,3 };
 
     return Ref(Array).Take(2).Num() == 2;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SizedRangeConcept, "UnrealRanges.Size.TestSizedRangeConcept", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SizedRangeConcept::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Size, TestSizedRangeConcept)
 {
     TArray<int32> Array = { 1,2,3 };
     FString Str;

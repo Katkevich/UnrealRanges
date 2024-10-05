@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeEmptyRange, "UnrealRanges.Take.TestTakeEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeEmptyRange)
 {
     TArray<int32> From;
 
@@ -22,8 +21,7 @@ bool FUnrealRangesTests_TakeEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeGettingMoreThanThereIs, "UnrealRanges.Take.TestTakeGettingMoreThanThereIs", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeGettingMoreThanThereIs::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeGettingMoreThanThereIs)
 {
     TArray<int32> From = { 1,2,3 };
 
@@ -32,8 +30,7 @@ bool FUnrealRangesTests_TakeGettingMoreThanThereIs::RunTest(const FString& Param
     return EqualTo(Result, { 1, 2, 3});
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeGettingLessThanThereIs, "UnrealRanges.Take.TestTakeGettingLessThanThereIs", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeGettingLessThanThereIs::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeGettingLessThanThereIs)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -42,8 +39,7 @@ bool FUnrealRangesTests_TakeGettingLessThanThereIs::RunTest(const FString& Param
     return EqualTo(Result, { 1, 2, 3 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeGettingZeroElements, "UnrealRanges.Take.TestTakeGettingZeroElements", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeGettingZeroElements::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeGettingZeroElements)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -52,8 +48,7 @@ bool FUnrealRangesTests_TakeGettingZeroElements::RunTest(const FString& Paramete
     return Result.cbegin() == Result.cend();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWithOtherViewsInternalIteration, "UnrealRanges.Take.TestTakeWithOtherViewsInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeWithOtherViewsInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeWithOtherViewsInternalIteration)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8,9 };
 
@@ -68,8 +63,7 @@ bool FUnrealRangesTests_TakeWithOtherViewsInternalIteration::RunTest(const FStri
     return EqualTo(Result, { FIndexed<int32>(64, 1), FIndexed<int32>(36, 2), FIndexed<int32>(16, 3) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_TakeWithOtherViews, "UnrealRanges.Take.TestTakeWithOtherViews", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_TakeWithOtherViews::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Take, TestTakeWithOtherViews)
 {
     TArray<int32> From = { 1,2,3,4,5,6,7,8,9 };
 

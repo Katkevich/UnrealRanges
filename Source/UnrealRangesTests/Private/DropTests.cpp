@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DropOnEmptyRange, "UnrealRanges.Drop.TestDropEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_DropOnEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Drop, TestDropEmptyRange)
 {
     TArray<int32> From;
 
@@ -22,8 +21,7 @@ bool FUnrealRangesTests_DropOnEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DropSkipAllElements, "UnrealRanges.Drop.TestDropSkipAllElements", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_DropSkipAllElements::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Drop, TestDropSkipAllElements)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -34,8 +32,7 @@ bool FUnrealRangesTests_DropSkipAllElements::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DropIsSizedIfUnderlyingViewIsSized, "UnrealRanges.Drop.TestDropIsSizedIfUnderlyingViewIsSized", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_DropIsSizedIfUnderlyingViewIsSized::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Drop, TestDropIsSizedIfUnderlyingViewIsSized)
 {
     TArray<int32> From = { 1,2,3,4,5 };
 
@@ -44,8 +41,7 @@ bool FUnrealRangesTests_DropIsSizedIfUnderlyingViewIsSized::RunTest(const FStrin
     return Num == 2;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DropIsNotSizedIfUnderlyingViewIsNotSized, "UnrealRanges.Drop.TestDropIsNotSizedIfUnderlyingViewIsNotSized", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_DropIsNotSizedIfUnderlyingViewIsNotSized::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Drop, TestDropIsNotSizedIfUnderlyingViewIsNotSized)
 {
     TArray<int32> From = { 1,2,3,4,5,6 };
 
@@ -56,8 +52,7 @@ bool FUnrealRangesTests_DropIsNotSizedIfUnderlyingViewIsNotSized::RunTest(const 
     return Result.Count() == 2 && EqualTo(Result, { 4,6 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_DropOofRValueItem, "UnrealRanges.Drop.TestDropOofRValueItem", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_DropOofRValueItem::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Drop, TestDropOofRValueItem)
 {
     const TCHAR* Chars = TEXT("abcdef");
     TArray<int32> From = { 1,2,3,4,5,6 };

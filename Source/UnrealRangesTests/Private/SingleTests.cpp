@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Traits.h"
@@ -23,8 +23,7 @@ struct FMoveOnly
     int Num = 0;
 };
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleMakeValue, "UnrealRanges.Single.MakeSingleValue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SingleMakeValue::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Single, MakeSingleValue)
 {
     // Values
     {
@@ -54,8 +53,7 @@ bool FUnrealRangesTests_SingleMakeValue::RunTest(const FString& Parameters)
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleMixWithConcat, "UnrealRanges.Single.MixWithConcat", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SingleMixWithConcat::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Single, MixWithConcat)
 {
     TArray<FString> Array = { TEXT("1"), TEXT("abba1") , TEXT("abba2"), TEXT("2") };
 
@@ -67,8 +65,7 @@ bool FUnrealRangesTests_SingleMixWithConcat::RunTest(const FString& Parameters)
     return EqualTo(Result, { TEXT("bba1") , TEXT("bba2"), TEXT("ingle1"), TEXT("ingle2") });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleMakeRef, "UnrealRanges.Single.MakeSingleRef", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SingleMakeRef::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Single, MakeSingleRef)
 {
     FMoveOnly Obj;
     const FMoveOnly ConstObj;
@@ -112,8 +109,7 @@ bool FUnrealRangesTests_SingleMakeRef::RunTest(const FString& Parameters)
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleRefMixWithConcat, "UnrealRanges.Single.MixSingleRefWithConcat", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SingleRefMixWithConcat::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Single, MixSingleRefWithConcat)
 {
     TArray<FString> Array = { TEXT("1"), TEXT("abba1") , TEXT("abba2"), TEXT("2") };
     FString Single1 = TEXT("single1");
@@ -129,8 +125,7 @@ bool FUnrealRangesTests_SingleRefMixWithConcat::RunTest(const FString& Parameter
     return EqualTo(Result, { TEXT("bba1") , TEXT("bba2"), TEXT("ingle1"), TEXT("ingle2") });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_SingleViewInternalIteration, "UnrealRanges.Single.SingleViewInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_SingleViewInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Single, SingleViewInternalIteration)
 {
     auto Result = Single(FString(TEXT("abba")))
         .To<TArray>();

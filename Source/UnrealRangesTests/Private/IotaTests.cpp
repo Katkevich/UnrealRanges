@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IotaFollowedByTake, "UnrealRanges.Iota.TestIotaFollowedByTake", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_IotaFollowedByTake::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Iota, TestIotaFollowedByTake)
 {
     auto Result = Iota(0).Take(5);
 
@@ -21,8 +20,7 @@ bool FUnrealRangesTests_IotaFollowedByTake::RunTest(const FString& Parameters)
     return EqualTo(Result, { 0,1,2,3,4 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IotaIsNotEmpty, "UnrealRanges.Iota.TestIotaIsNotEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_IotaIsNotEmpty::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Iota, TestIotaIsNotEmpty)
 {
     auto Result = Iota(0);
 
@@ -31,8 +29,7 @@ bool FUnrealRangesTests_IotaIsNotEmpty::RunTest(const FString& Parameters)
     return !Result.IsEmpty();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_IotaInternalIterationForeach, "UnrealRanges.Iota.TestIotaInternalIterationForeach", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_IotaInternalIterationForeach::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Iota, TestIotaInternalIterationForeach)
 {
     TArray<int32> Nums;
     Iota(0, 2).Foreach([&](int32 Num) { Nums.Add(Num); return Num > 8 ? Ur::ELoop::Break : Ur::ELoop::Continue; });

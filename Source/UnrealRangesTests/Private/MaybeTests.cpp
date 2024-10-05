@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Traits.h"
@@ -12,8 +12,7 @@
 using namespace Ur::View;
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeFactoryCallResultType, "UnrealRanges.Maybe.FactoryCallResultType", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeFactoryCallResultType::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, FactoryCallResultType)
 {
     // Values
     {
@@ -125,8 +124,7 @@ bool FUnrealRangesTests_MaybeFactoryCallResultType::RunTest(const FString& Param
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeIterateValue, "UnrealRanges.Maybe.IterateValue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeIterateValue::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, IterateValue)
 {
     bool bResult = true;
     {
@@ -150,8 +148,7 @@ bool FUnrealRangesTests_MaybeIterateValue::RunTest(const FString& Parameters)
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeIterateRef, "UnrealRanges.Maybe.IterateRef", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeIterateRef::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, IterateRef)
 {
     bool bResult = true;
     {
@@ -167,8 +164,7 @@ bool FUnrealRangesTests_MaybeIterateRef::RunTest(const FString& Parameters)
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeIterateOptional, "UnrealRanges.Maybe.IterateOptional", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeIterateOptional::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, IterateOptional)
 {
     bool bResult = true;
     {
@@ -201,8 +197,7 @@ bool FUnrealRangesTests_MaybeIterateOptional::RunTest(const FString& Parameters)
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeConstness, "UnrealRanges.Maybe.Constness", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeConstness::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, Constness)
 {
     TMaybeView<FString> View = Ur::View::MaybeVal(FString());
     TMaybeView<FString>& ViewRef = View;
@@ -215,24 +210,21 @@ bool FUnrealRangesTests_MaybeConstness::RunTest(const FString& Parameters)
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeInternalIteration, "UnrealRanges.Maybe.InternalIterate", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, InternalIterate)
 {
     auto View = Ur::View::MaybeVal(FString(TEXT("1"))).To<TArray>();
 
     return View.Num() == 1 && View[0] == FString(TEXT("1"));
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeInternalIterationEmpty, "UnrealRanges.Maybe.InternalIterationEmpty", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeInternalIterationEmpty::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, InternalIterationEmpty)
 {
     auto View = Ur::View::Maybe(TOptional<FString>()).To<TArray>();
 
     return View.Num() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeInternalIterationNullPtr, "UnrealRanges.Maybe.InternalIterationNullPtr", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeInternalIterationNullPtr::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, InternalIterationNullPtr)
 {
     FString* Str = {};
     auto View = Ur::View::Maybe(Str).To<TArray>();
@@ -240,8 +232,7 @@ bool FUnrealRangesTests_MaybeInternalIterationNullPtr::RunTest(const FString& Pa
     return View.Num() == 0;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeMixWithOtherMixinsInternalIteration, "UnrealRanges.Maybe.MixWithOtherMixinsInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeMixWithOtherMixinsInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, MixWithOtherMixinsInternalIteration)
 {
     TOptional<FString> Str(FString(TEXT("abba")));
     auto View = Ur::View::Maybe(Str)
@@ -251,8 +242,7 @@ bool FUnrealRangesTests_MaybeMixWithOtherMixinsInternalIteration::RunTest(const 
     return View[0] == 4;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MaybeMixWithConcat, "UnrealRanges.Maybe.MixWithConcat", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MaybeMixWithConcat::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Maybe, MixWithConcat)
 {
     TArray<FString> Array = { TEXT("1"), TEXT("abba1") , TEXT("abba2"), TEXT("2") };
 

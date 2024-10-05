@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Traits.h"
@@ -12,8 +12,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_UeTMapValues, "UnrealRanges.Values.TestUeTMapValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_UeTMapValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Values, TestUeTMapValues)
 {
     TMap<FString, FString> UeMap = { { TEXT("Key"), TEXT("Value") } };
     std::map<FString, FString> StdMap = { { TEXT("Key"), TEXT("Value") } };
@@ -32,8 +31,7 @@ bool FUnrealRangesTests_UeTMapValues::RunTest(const FString& Parameters)
         EqualTo(RValueResult, { TEXT("Value") });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FreeValuesFunction, "UnrealRanges.Values.TestFreeValuesFunction", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FreeValuesFunction::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Values, TestFreeValuesFunction)
 {
     TMap<FString, FString> UeMap = { { TEXT("Key"), TEXT("Value") } };
     std::map<FString, FString> StdMap = { { TEXT("Key"), TEXT("Value") } };

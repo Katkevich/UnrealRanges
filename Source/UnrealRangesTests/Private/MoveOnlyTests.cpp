@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Traits.h"
@@ -23,8 +23,7 @@ struct FMoveOnly
     int Num = 0;
 };
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MoveOnlyViewRValueSelfMove, "UnrealRanges.MoveOnly.TestRValueSelfMove", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MoveOnlyViewRValueSelfMove::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, MoveOnly, TestRValueSelfMove)
 {
     auto MaybeView = Maybe(TOptional<FMoveOnly>{ FMoveOnly{} });
     (void)MaybeView;
@@ -48,8 +47,7 @@ bool FUnrealRangesTests_MoveOnlyViewRValueSelfMove::RunTest(const FString& Param
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_MoveOnlyPredicatesAndProjections, "UnrealRanges.MoveOnly.TestMoveOnlyPredicatesAndProjections", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_MoveOnlyPredicatesAndProjections::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, MoveOnly, TestMoveOnlyPredicatesAndProjections)
 {
     Maybe(TOptional<FMoveOnly>{ FMoveOnly{} }).Transform([Member = FMoveOnly{}](FMoveOnly& Val) { return MoveTemp(Val); });
     Maybe(TOptional<FMoveOnly>{ FMoveOnly{} }).Filter([Member = FMoveOnly{}](FMoveOnly& Val) { return true; });

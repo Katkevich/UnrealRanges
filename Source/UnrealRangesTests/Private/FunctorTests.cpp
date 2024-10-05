@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/Fn/All.h"
 #include "UnrealRanges/Traits.h"
@@ -13,8 +13,7 @@ using namespace Ur::Fn;
 struct FVal
 {};
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_KeyFunctor, "UnrealRanges.Functor.TestKeyFunctor", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_KeyFunctor::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Functor, TestKeyFunctor)
 {
     FVal Val;
     FString Str = TEXT("Str");
@@ -55,8 +54,7 @@ bool FUnrealRangesTests_KeyFunctor::RunTest(const FString& Parameters)
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ValueFunctor, "UnrealRanges.Functor.TestValueFunctor", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ValueFunctor::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Functor, TestValueFunctor)
 {
     FVal Val;
     FString Str = TEXT("Str");

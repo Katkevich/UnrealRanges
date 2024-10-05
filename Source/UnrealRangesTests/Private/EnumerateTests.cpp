@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateEmptyRange, "UnrealRanges.Filter.TestEnumerateEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumerateEmptyRange)
 {
     TArray<int32> From;
 
@@ -22,8 +21,7 @@ bool FUnrealRangesTests_EnumerateEmptyRange::RunTest(const FString& Parameters)
     return Result.begin() == Result.end();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateLValues, "UnrealRanges.Filter.TestEnumerateLValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateLValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumerateLValues)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("2")), FString(TEXT("3")) };
 
@@ -39,8 +37,7 @@ bool FUnrealRangesTests_EnumerateLValues::RunTest(const FString& Parameters)
     return EqualTo(Result, { FIndexed<FString&>(From[0], 0), FIndexed<FString&>(From[1], 1), FIndexed<FString&>(From[2], 2)});
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateRValues, "UnrealRanges.Filter.TestEnumerateRValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateRValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumerateRValues)
 {
     const TCHAR* Chars = TEXT("12345");
 
@@ -60,8 +57,7 @@ bool FUnrealRangesTests_EnumerateRValues::RunTest(const FString& Parameters)
     return EqualTo(Result, { FIndexed<FString>(TEXT("1"), 0), FIndexed<FString>(TEXT("12"), 1), FIndexed<FString>(TEXT("123"), 2) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateRValuesWithDifferentDefaults, "UnrealRanges.Filter.TestEnumerateRValuesWithDifferentDefaults", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateRValuesWithDifferentDefaults::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumerateRValuesWithDifferentDefaults)
 {
     const TCHAR* Chars = TEXT("12345");
 
@@ -82,8 +78,7 @@ bool FUnrealRangesTests_EnumerateRValuesWithDifferentDefaults::RunTest(const FSt
     return EqualTo(Result, { FIndexed<FString>(TEXT("123"), 1), FIndexed<FString>(TEXT("12"), 3), FIndexed<FString>(TEXT("1"), 5) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumeratedInternalIteration, "UnrealRanges.Filter.TestEnumeratedInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumeratedInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumeratedInternalIteration)
 {
     TArray<int32> From = { 1,2,3 };
 
@@ -97,8 +92,7 @@ bool FUnrealRangesTests_EnumeratedInternalIteration::RunTest(const FString& Para
 template<typename T>
 struct foo;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_EnumerateStructuredBinding, "UnrealRanges.Filter.TestEnumerateStructuredBinding", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_EnumerateStructuredBinding::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Filter, TestEnumerateStructuredBinding)
 {
     FString Str;
 

@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -13,8 +13,7 @@ using namespace Ur::View;
 template<typename T>
 struct Foo;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupByHasCorrectReferenceTypes, "UnrealRanges.GroupBy.TestGroupByHasCorrectReferenceTypes", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupByHasCorrectReferenceTypes::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupByHasCorrectReferenceTypes)
 {
     auto Pred = [](const FString& Str) { return Str.Len(); };
 
@@ -114,8 +113,7 @@ bool FUnrealRangesTests_GroupByHasCorrectReferenceTypes::RunTest(const FString& 
     return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupByProducesLValueReference, "UnrealRanges.GroupBy.TestGroupByProducesLValueReference", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupByProducesLValueReference::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupByProducesLValueReference)
 {
     bool bResult = true;
 
@@ -146,8 +144,7 @@ bool FUnrealRangesTests_GroupByProducesLValueReference::RunTest(const FString& P
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupByInternalIteration, "UnrealRanges.GroupBy.TestGroupByInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupByInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupByInternalIteration)
 {
     bool bResult = true;
 
@@ -179,8 +176,7 @@ bool FUnrealRangesTests_GroupByInternalIteration::RunTest(const FString& Paramet
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupViewFromGroupByInternalIteration, "UnrealRanges.GroupBy.TestGroupViewFromGroupByInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupViewFromGroupByInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupViewFromGroupByInternalIteration)
 {
     bool bResult = true;
 
@@ -213,8 +209,7 @@ bool FUnrealRangesTests_GroupViewFromGroupByInternalIteration::RunTest(const FSt
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupByOverRValues, "UnrealRanges.GroupBy.TestGroupByOverRValues", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupByOverRValues::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupByOverRValues)
 {
     bool bResult = true;
 
@@ -259,8 +254,7 @@ bool FUnrealRangesTests_GroupByOverRValues::RunTest(const FString& Parameters)
     return bResult;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_GroupByFromFilterAndReverseView, "UnrealRanges.GroupBy.TestGroupByFromFilterAndReverseView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_GroupByFromFilterAndReverseView::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, GroupBy, TestGroupByFromFilterAndReverseView)
 {
     bool bResult = true;
 

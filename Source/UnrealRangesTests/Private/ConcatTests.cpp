@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "UnrealRanges/Traits.h"
@@ -12,8 +12,7 @@
 using namespace Ur::View;
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatOfInts, "UnrealRanges.Concat.TestConcatOfInts", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatOfInts::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatOfInts)
 {
     TDoubleLinkedList<int32> List;
     TArray<int32> Array = { 1,2,3 };
@@ -24,8 +23,7 @@ bool FUnrealRangesTests_ConcatOfInts::RunTest(const FString& Parameters)
     return EqualTo(ConcatView, { 1,2,3,4,5,6 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatOfIntsReverse, "UnrealRanges.Concat.TestConcatOfIntsReverse", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatOfIntsReverse::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatOfIntsReverse)
 {
     TArray<int32> Array = { 1,2,3 };
     TArray<int32> Array2 = { 4,5,6 };
@@ -35,8 +33,7 @@ bool FUnrealRangesTests_ConcatOfIntsReverse::RunTest(const FString& Parameters)
     return EqualTo(ConcatView, { 6,5,4,3,2,1 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatOfIntsWithEmptyRanges, "UnrealRanges.Concat.TestConcatOfIntsWithEmptyRanges", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatOfIntsWithEmptyRanges::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatOfIntsWithEmptyRanges)
 {
     TArray<int32> EmptyArray;
     TArray<int32> EmptyArray2;
@@ -50,8 +47,7 @@ bool FUnrealRangesTests_ConcatOfIntsWithEmptyRanges::RunTest(const FString& Para
     return EqualTo(ConcatView, { 6,5,4,3,2,1 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatAllEmptyCheckIterators, "UnrealRanges.Concat.TestConcatAllEmptyCheckIterators", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatAllEmptyCheckIterators::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatAllEmptyCheckIterators)
 {
     TArray<int32> EmptyArray;
     TArray<int32> EmptyArray2;
@@ -63,8 +59,7 @@ bool FUnrealRangesTests_ConcatAllEmptyCheckIterators::RunTest(const FString& Par
     return ConcatView.begin() == ConcatView.end() && ConcatView.rbegin() == ConcatView.rend();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatAllEmptyCheckInternalIteration, "UnrealRanges.Concat.TestConcatAllEmptyCheckInternalIteration", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatAllEmptyCheckInternalIteration::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatAllEmptyCheckInternalIteration)
 {
     TArray<int32> EmptyArray;
     TArray<int32> EmptyArray2;
@@ -77,8 +72,7 @@ bool FUnrealRangesTests_ConcatAllEmptyCheckInternalIteration::RunTest(const FStr
     return EqualTo(Result, std::initializer_list<int32>{});
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatInternalIterationInterruptsInTheMiddle, "UnrealRanges.Concat.TestConcatInternalIterationInterruptsInTheMiddle", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatInternalIterationInterruptsInTheMiddle::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatInternalIterationInterruptsInTheMiddle)
 {
     TArray<int32> EmptyArray1;
     TArray<int32> Array = { 1,2,3 };
@@ -93,8 +87,7 @@ bool FUnrealRangesTests_ConcatInternalIterationInterruptsInTheMiddle::RunTest(co
     return EqualTo(Result, { 1,2,3,4 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatMixinWithAnotherView, "UnrealRanges.Concat.TestConcatMixinWithAnotherView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatMixinWithAnotherView::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatMixinWithAnotherView)
 {
     TArray<int32> Array = { 1,2,3 };
     TArray<int32> Array2;
@@ -107,8 +100,7 @@ bool FUnrealRangesTests_ConcatMixinWithAnotherView::RunTest(const FString& Param
     return Result.Count() == 6 && EqualTo(Result, { 1,2,3,7,8,9 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatMixinWithContainers, "UnrealRanges.Concat.TestConcatMixinWithContainers", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatMixinWithContainers::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatMixinWithContainers)
 {
     TArray<int32> Array = { 1,2,3 };
     TArray<int32> Array2;
@@ -122,8 +114,7 @@ bool FUnrealRangesTests_ConcatMixinWithContainers::RunTest(const FString& Parame
     return Result.Count() == 6 && EqualTo(Result, { 1,2,3,7,8,9 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatMixinWithContainersAndViewsMix, "UnrealRanges.Concat.TestConcatMixinWithContainersAndViewsMix", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatMixinWithContainersAndViewsMix::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatMixinWithContainersAndViewsMix)
 {
     TArray<int32> Array = { 1,2,3 };
     TArray<int32> Array2;
@@ -137,8 +128,7 @@ bool FUnrealRangesTests_ConcatMixinWithContainersAndViewsMix::RunTest(const FStr
     return Result.Count() == 6 && EqualTo(Result, { 1,2,3,7,8,9 });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatRValuesLValuesMix, "UnrealRanges.Concat.TestConcatRValuesLValuesMix", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatRValuesLValuesMix::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatRValuesLValuesMix)
 {
     const TCHAR* Chars = TEXT("abcdef");
 
@@ -157,8 +147,7 @@ bool FUnrealRangesTests_ConcatRValuesLValuesMix::RunTest(const FString& Paramete
     return Result.Count() == 7 && EqualTo(Result, { FString(TEXT("a")), FString(TEXT("ab")) , FString(TEXT("abc")) , FString(TEXT("xxx")) , FString(TEXT("ab")) ,FString(TEXT("abc")) , FString(TEXT("abcd")) });
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatOnReverseView, "UnrealRanges.Concat.TestConcatOnReverseView", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatOnReverseView::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestConcatOnReverseView)
 {
     TArray<int32> Array = { 1,2,3 };
     TArray<int32> Array1 = {5};
@@ -178,8 +167,7 @@ bool FUnrealRangesTests_ConcatOnReverseView::RunTest(const FString& Parameters)
 }
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ConcatDifferentValueTypesImplicitlyConvertible, "UnrealRanges.Concat.TestDifferentValueTypesImplicitlyConvertible", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ConcatDifferentValueTypesImplicitlyConvertible::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Concat, TestDifferentValueTypesImplicitlyConvertible)
 {
     {
         TArray<FString> Array;

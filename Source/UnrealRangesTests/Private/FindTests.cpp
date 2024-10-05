@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindEmptyRange, "UnrealRanges.Find.TestFindEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindEmptyRange)
 {
     TArray<int32> From;
 
@@ -22,8 +21,7 @@ bool FUnrealRangesTests_FindEmptyRange::RunTest(const FString& Parameters)
     return !Result.IsSet();
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindWithImplicitConvertsion, "UnrealRanges.Find.TestFindWithImplicitConvertsion", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindWithImplicitConvertsion::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindWithImplicitConvertsion)
 {
     TArray<FString> From = { FString(TEXT("a")), FString(TEXT("aa")) , FString(TEXT("aaa")), FString(TEXT("aaa")) };
 
@@ -34,8 +32,7 @@ bool FUnrealRangesTests_FindWithImplicitConvertsion::RunTest(const FString& Para
     return Result.IsSet() && *Result == FString(TEXT("aa"));
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindReturnsVeryFirstMatch, "UnrealRanges.Find.TestFindReturnsVeryFirstMatch", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindReturnsVeryFirstMatch::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindReturnsVeryFirstMatch)
 {
     TArray<FString> From = { FString(TEXT("a")), FString(TEXT("aa")) , FString(TEXT("aa")), FString(TEXT("aa")) };
 
@@ -44,8 +41,7 @@ bool FUnrealRangesTests_FindReturnsVeryFirstMatch::RunTest(const FString& Parame
     return Result.GetPtrOrNull() == std::addressof(From[1]);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindWithProjectionWhichReturnsRValue, "UnrealRanges.Find.TestFindWithProjectionWhichReturnsRValue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindWithProjectionWhichReturnsRValue::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindWithProjectionWhichReturnsRValue)
 {
     TArray<FString> From = { FString(TEXT("a")), FString(TEXT("a")), FString(TEXT("b")) };
 
@@ -54,8 +50,7 @@ bool FUnrealRangesTests_FindWithProjectionWhichReturnsRValue::RunTest(const FStr
     return Result.GetPtrOrNull() == std::addressof(From[2]);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindWithProjectionBeingMemberPtr, "UnrealRanges.Find.TestFindWithProjectionBeingMemberPtr", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindWithProjectionBeingMemberPtr::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindWithProjectionBeingMemberPtr)
 {
     TArray<FString> From = { FString(TEXT("a")), FString(TEXT("aa")), FString(TEXT("b")), FString(TEXT("b")) };
 
@@ -64,8 +59,7 @@ bool FUnrealRangesTests_FindWithProjectionBeingMemberPtr::RunTest(const FString&
     return Result.GetPtrOrNull() == std::addressof(From[1]);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindByPredicate, "UnrealRanges.Find.TestFindByPredicate", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindByPredicate::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindByPredicate)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("23")), FString(TEXT("233")), FString(TEXT("2333")) };
 
@@ -74,8 +68,7 @@ bool FUnrealRangesTests_FindByPredicate::RunTest(const FString& Parameters)
     return Result.GetPtrOrNull() == std::addressof(From[1]);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_FindCalledOnConstRangeReturnsConstResult, "UnrealRanges.Find.TestFindCalledOnConstRangeReturnsConstResult", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_FindCalledOnConstRangeReturnsConstResult::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestFindCalledOnConstRangeReturnsConstResult)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("23")), FString(TEXT("233")), FString(TEXT("2335")), FString(TEXT("2334")) };
     const TRefView<TArray<FString>> RefView = Ref(From);
@@ -87,8 +80,7 @@ bool FUnrealRangesTests_FindCalledOnConstRangeReturnsConstResult::RunTest(const 
     return Result0.GetPtrOrNull() == std::addressof(From[2]) && Result1.GetPtrOrNull() == std::addressof(From[2]) && Result2.GetPtrOrNull() == std::addressof(From[1]);
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ContainsEmptyRange, "UnrealRanges.Find.TestContainsEmptyRange", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ContainsEmptyRange::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Find, TestContainsEmptyRange)
 {
     TArray<FString> From = { FString(TEXT("1")), FString(TEXT("23")), FString(TEXT("233")), FString(TEXT("2335")), FString(TEXT("2334")) };
     const TRefView<TArray<FString>> RefView = Ref(From);

@@ -25,6 +25,8 @@
 #include "UnrealRanges/View/AlgoMixin/Foreach.h"
 #include "UnrealRanges/View/AlgoMixin/EqualTo.h"
 #include "UnrealRanges/View/AlgoMixin/StartsWith.h"
+#include "UnrealRanges/View/AlgoMixin/Front.h"
+#include "UnrealRanges/View/AlgoMixin/Back.h"
 #include <type_traits>
 
 namespace Ur::View {
@@ -79,6 +81,7 @@ namespace Ur::View {
         TForeachMixin,
         TEqualToMixin,
         TStartsWithMixin,
+        TFrontMixin,
         TAdjacentMixin,
         TIteratorMixin
     >;
@@ -86,6 +89,7 @@ namespace Ur::View {
     using TBidirMixins = Detail::TMixinList<
         TFindLastMixin,
         TFoldRightMixin,
+        TBackMixin,
         TReverseMixin,
         TReverseIteratorMixin
     >;

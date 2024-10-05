@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Misc/AutomationTest.h"
-
 #if WITH_DEV_AUTOMATION_TESTS
+
+#include "Test.h"
 
 #include "UnrealRanges/View/All.h"
 #include "EqualTo.h"
@@ -10,8 +10,7 @@
 
 using namespace Ur::View;
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ForeachWithIteratorUnderTheHood, "UnrealRanges.Foreach.TestForeachWithIteratorUnderTheHood", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ForeachWithIteratorUnderTheHood::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Foreach, TestForeachWithIteratorUnderTheHood)
 {
     TArray<int32> From1 = { 1,2,3,4,5,6,7,8 };
     TArray<int32> Result;
@@ -28,8 +27,7 @@ bool FUnrealRangesTests_ForeachWithIteratorUnderTheHood::RunTest(const FString& 
 }
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUnrealRangesTests_ForeachWithCursorUnderTheHood, "UnrealRanges.Foreach.TestForeachWithCursorUnderTheHood", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
-bool FUnrealRangesTests_ForeachWithCursorUnderTheHood::RunTest(const FString& Parameters)
+UR_TEST(UnrealRanges, Foreach, TestForeachWithCursorUnderTheHood)
 {
     TArray<int32> From1 = { 1,2,3,4,5,6,7,8 };
     TArray<int32> From2 = { 1,2,3,4,5,6,7 };
