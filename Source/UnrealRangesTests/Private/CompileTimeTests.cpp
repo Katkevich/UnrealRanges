@@ -1,4 +1,5 @@
 #include "UnrealRanges/View/All.h"
+#include "UnrealRanges/Traits.h"
 #include "Containers/Array.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
@@ -12,6 +13,7 @@
 #include "Containers/UnrealString.h"
 #include "Containers/ArrayView.h"
 #include "Containers/StringView.h"
+#include <utility>
 
 using namespace Ur::View;
 
@@ -116,5 +118,4 @@ namespace Ur::View::Test {
             (void)Str;
         }
     }
-
 }

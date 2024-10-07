@@ -2,8 +2,10 @@
 #include "UnrealRanges/View/View.h"
 #include "UnrealRanges/Utility.h"
 #include "Templates/IntegralConstant.h"
+#include "Templates/Tuple.h"
 #include <concepts>
 #include <type_traits>
+#include <cstddef>
 
 namespace Ur {
 
@@ -81,6 +83,76 @@ namespace Ur {
     concept UnrealView = std::derived_from<TView, Ur::View::FView>;
 
 
+    // TTupleElement
+    namespace Detail {
+        template<std::size_t Idx, typename T>
+        struct TTupleElement
+        {
+            using Type = std::tuple_element_t<Idx, T>;
+        };
+
+        template<std::size_t Idx, typename... Ts>
+        struct TTupleElement<Idx, TTuple<Ts...>>
+        {
+            using Type = typename ::TTupleElement<Idx, TTuple<Ts...>>::Type;
+        };
+    }
+
+    template<std::size_t Idx, typename T>
+    struct TTupleElement
+    {
+        using Type = typename Detail::TTupleElement<Idx, std::remove_cvref_t<T>>::Type;
+    };
+
+    template<std::size_t Idx, typename T>
+    using TTupleElement_T = typename TTupleElement<Idx, T>::Type;
+
+
+    // TTupleSize
+    namespace Detail {
+        template<typename T>
+        struct TTupleSize
+        {
+            static constexpr std::size_t Value = std::tuple_size_v<T>;
+        };
+
+        template<typename... Ts>
+        struct TTupleSize<TTuple<Ts...>>
+        {
+            static constexpr std::size_t Value = sizeof...(Ts);
+        };
+    }
+
+    template<typename T>
+    struct TTupleSize
+    {
+        static constexpr std::size_t Value = Detail::TTupleSize<std::remove_cvref_t<T>>::Value;
+    };
+
+    template<typename T>
+    static constexpr std::size_t TTupleSize_V = TTupleSize<T>::Value;
+
+
+    //// TTupleProtocol
+    //namespace Detail {
+    //    template<typename TTupleLike, std::size_t... Is>
+    //    concept TupleProtocol = requires(TTupleLike Tpl) {
+    //        TTupeList<TTupleElement_T<Is, TTupleLike>...>{};
+    //        (get<Is>(Tpl), ...);
+    //    };
+
+    //    template<typename TTupleLike, typename TIndexSeq>
+    //    constexpr bool TupleProtocol_V = false;
+
+    //    template<typename TTupleLike, std::size_t... Is>
+    //    constexpr bool TupleProtocol_V<TTupleLike, std::index_sequence<Is...>> = TupleProtocol<TTupleLike, Is...>;
+    //}
+
+    //template<typename TTupleLike>
+    //concept TupleProtocol = Detail::TupleProtocol_V<TTupleLike, std::make_index_sequence<TTupleSize_V<TTupleLike>>>;
+
+
+    // TIsSameTemplate
     template<template<typename...> typename T, template<typename...> typename U>
     struct TIsSameTemplate : TIntegralConstant<bool, false>
     {};
@@ -93,6 +165,7 @@ namespace Ur {
     static constexpr bool TIsSameTemplate_V = TIsSameTemplate<T, U>::Value;
 
 
+    // THasTemplate
     namespace Detail
     {
         template<typename T, template<typename...> typename Tmpl>

@@ -16,4 +16,5 @@
 #include "UnrealRanges/View/ValuesView.h"
 #include "UnrealRanges/View/AdjacentView.h"
 #include "UnrealRanges/View/ZipView.h"
+#include "UnrealRanges/View/SwizzleView.h"
 #include "UnrealRanges/View/IotaView.h"

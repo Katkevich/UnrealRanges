@@ -12,6 +12,7 @@
 #include "UnrealRanges/View/Mixin/Keys.h"
 #include "UnrealRanges/View/Mixin/Values.h"
 #include "UnrealRanges/View/Mixin/Adjacent.h"
+#include "UnrealRanges/View/Mixin/Swizzle.h"
 #include "UnrealRanges/View/Mixin/Reverse.h"
 #include "UnrealRanges/View/Mixin/Iterator.h"
 #include "UnrealRanges/View/AlgoMixin/To.h"
@@ -83,6 +84,7 @@ namespace Ur::View {
         TStartsWithMixin,
         TFrontMixin,
         TAdjacentMixin,
+        TSwizzleMixin,
         TIteratorMixin
     >;
 

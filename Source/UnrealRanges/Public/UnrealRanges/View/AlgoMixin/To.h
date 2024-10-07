@@ -90,7 +90,7 @@ namespace Ur::View {
                         }
                         else
                         {
-                            static_assert(Detail::TAlwaysFalse<TContainer>::Value, "sequence of [TUniquePtr<T>] or [TOwned<T>] are only supported for now as a source for TIndirectArray");
+                            static_assert(Ur::Detail::TAlwaysFalse<TContainer>::Value, "sequence of [TUniquePtr<T>] or [TOwned<T>] are only supported for now as a source for TIndirectArray");
                         }
                     }
                     // TStaticArray
