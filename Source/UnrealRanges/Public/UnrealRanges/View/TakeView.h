@@ -4,7 +4,7 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<typename TView, typename TAmount = int32>
+    template<Ur::RangeView TView, std::integral TAmount = int32>
     class TTakeView
         : public FView
         , public Detail::TMixins<TTakeView<TView, TAmount>, TDefaultMixins>

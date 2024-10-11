@@ -151,7 +151,7 @@ namespace Ur::View {
 
 
 
-    template<typename TView, typename TFn>
+    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
     class TGroupByView
         : public FView
         , public Detail::TMixins<TGroupByView<TView, TFn>, TDefaultMixins>

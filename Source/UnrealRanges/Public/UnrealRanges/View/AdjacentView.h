@@ -33,15 +33,14 @@ namespace Ur::View {
         using TTupleOfSize_T = typename TTupleOfSize<T, N>::Type;
     }
 
-    template<typename TView, std::size_t N = 2>
+    template<Ur::RangeView TView, std::size_t N = 2>
+    requires (N > 0)
     class TAdjacentView
         : public FView
         , public Detail::TMixins<TAdjacentView<TView, N>, TDefaultMixins>
         , public Detail::TConditionalMixins<TView::IsSized, TAdjacentView<TView, N>, TSizedMixins>
     {
         friend struct Ur::Cursor;
-
-        static_assert(N > 0, "The 'window' size should be positive");
 
     public:
         using reference = Detail::TTupleOfSize_T<typename TView::reference, N>;

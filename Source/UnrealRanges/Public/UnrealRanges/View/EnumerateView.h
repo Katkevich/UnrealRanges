@@ -5,7 +5,7 @@
 #include <limits>
 
 namespace Ur::View {
-    template<typename TView, typename TIndex>
+    template<Ur::RangeView TView, std::integral TIndex = int32>
     class TEnumerateView
         : public FView
         , public Detail::TMixins<TEnumerateView<TView, TIndex>, TDefaultMixins>

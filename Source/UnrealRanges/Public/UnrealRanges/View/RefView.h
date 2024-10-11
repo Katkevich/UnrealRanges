@@ -35,7 +35,7 @@ namespace Ur::View {
         using TReverseCursorType = typename TReverseCursor<IsBidir, IsConst, TRng>::Type;
     }
 
-    template<typename TRng>
+    template<Ur::Range TRng>
     class TRefView
         : public FView
         , public Detail::TMixins<TRefView<TRng>, TDefaultMixins>

@@ -1,11 +1,12 @@
 #pragma once
 #include "UnrealRanges/Detail/ForwardMacro.h"
+#include "UnrealRanges/Traits.h"
 #include "Templates/IdentityFunctor.h"
 #include <type_traits>
 
 namespace Ur::View {
 
-    template<typename TView, typename TFn>
+    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
     class TGroupByView;
 
     template<typename TView>

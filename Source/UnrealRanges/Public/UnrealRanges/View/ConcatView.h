@@ -6,7 +6,7 @@
 #include <variant>
 
 namespace Ur::View {
-    template<typename... TViews>
+    template<Ur::RangeView... TViews>
     class TConcatView
         : public FView
         , public Detail::TMixins<TConcatView<TViews...>, TDefaultMixins>

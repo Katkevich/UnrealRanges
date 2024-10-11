@@ -4,7 +4,7 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<typename TView, typename TFn>
+    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
     class TTransformView
         : public FView
         , public Detail::TMixins<TTransformView<TView, TFn>, TDefaultMixins>

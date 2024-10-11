@@ -1,8 +1,9 @@
 #pragma once
+#include "UnrealRanges/Traits.h"
 
 namespace Ur::View {
 
-    template<typename TView>
+    template<Ur::RangeView TView>
     class TReverseView;
 
     template<typename TView>

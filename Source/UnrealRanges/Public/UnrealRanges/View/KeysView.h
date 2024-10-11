@@ -4,7 +4,7 @@
 #include "UnrealRanges/Fn/Pair.h"
 
 namespace Ur::View {
-    template<typename TView>
+    template<Ur::RangeView TView>
     class TKeysView : public TTransformView<TView, Ur::Fn::FKey>
     {
     public:

@@ -5,22 +5,22 @@
 
 namespace Ur::View {
 
-    template<typename... TViews>
+    template<Ur::RangeView... TViews>
     class TConcatView;
 
-    template<typename TRng>
+    template<Ur::Range TRng>
     class TRefView;
 
     template<typename TView>
     struct TConcatMixin
     {
-        template<typename... TRngs>
+        template<Ur::Range... TRngs>
         auto ConcatWith(TRngs&&... Rngs) const&
         {
             return ConcatAll(static_cast<const TView&>(*this), this->IntoView(UR_FWD(Rngs))...);
         }
 
-        template<typename... TRngs>
+        template<Ur::Range... TRngs>
         auto ConcatWith(TRngs&&... Rngs) &&
         {
             return ConcatAll(static_cast<TView&&>(*this), this->IntoView(UR_FWD(Rngs))...);
@@ -36,7 +36,7 @@ namespace Ur::View {
         template<typename TRng>
         static decltype(auto) IntoView(TRng&& Rng)
         {
-            if constexpr (UnrealView<TRng>)
+            if constexpr (RangeView<TRng>)
                 return UR_FWD(Rng);
             else if constexpr (std::is_lvalue_reference_v<TRng>)
                 return TRefView<std::remove_reference_t<TRng>>({}, Rng);

@@ -1,10 +1,11 @@
 #pragma once
 #include "UnrealRanges/Detail/ForwardMacro.h"
+#include "UnrealRanges/Traits.h"
 #include <type_traits>
 
 namespace Ur::View {
 
-    template<typename TView, typename TFn>
+    template<Ur::RangeView TView, ViewPredicate<TView> TFn>
     class TFilterView;
 
     template<typename TView>

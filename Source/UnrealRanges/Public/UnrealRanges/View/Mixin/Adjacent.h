@@ -1,9 +1,11 @@
 #pragma once
+#include "UnrealRanges/Traits.h"
 #include <cstddef>
 
 namespace Ur::View {
 
-    template<typename TView, std::size_t N>
+    template<Ur::RangeView TView, std::size_t N>
+    requires (N > 0)
     class TAdjacentView;
 
     template<typename TView>

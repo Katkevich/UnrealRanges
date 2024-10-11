@@ -5,7 +5,7 @@
 
 namespace Ur::View {
 
-    template<typename TView>
+    template<Ur::RangeView TView>
     class TReverseView
         : public FView
         , public Detail::TMixins<TReverseView<TView>, TDefaultMixins>

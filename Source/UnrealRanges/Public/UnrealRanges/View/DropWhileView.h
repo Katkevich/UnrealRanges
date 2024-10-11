@@ -4,7 +4,7 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<typename TView, typename TFn>
+    template<Ur::RangeView TView, ViewPredicate<TView> TFn>
     class TDropWhileView
         : public FView
         , public Detail::TMixins<TDropWhileView<TView, TFn>, TDefaultMixins>

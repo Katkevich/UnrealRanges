@@ -6,10 +6,10 @@
 
 namespace Ur::View {
 
-    template<typename TView, typename TIndex>
+    template<Ur::RangeView TView, std::integral TIndex>
     class TEnumerateView;
 
-    template<typename T, typename TIndex = int32>
+    template<typename T, std::integral TIndex = int32>
     struct FIndexed
     {
     private:

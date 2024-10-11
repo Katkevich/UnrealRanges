@@ -35,10 +35,10 @@ namespace Ur {
 
 
     // we cannot rely on TRng::iterator or something similar coz UE containers may not provide it consistently
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeIterator = decltype(Ur::Begin(std::declval<std::add_lvalue_reference_t<TRng>>())); // TRng& && -> TRng&
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeConstIterator = decltype(Ur::Begin(std::declval<std::add_lvalue_reference_t<std::add_const_t<std::remove_reference_t<TRng>>>>())); // const TRng& && -> const TRng&
 
     template<BiDirRange TRng>
@@ -47,19 +47,19 @@ namespace Ur {
     template<BiDirRange TRng>
     using RangeReverseConstIterator = decltype(Ur::RBegin(std::declval<std::add_lvalue_reference_t<std::add_const_t<std::remove_reference_t<TRng>>>>())); // const TRng& && -> const TRng&
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeValue = IteratorValue<RangeIterator<TRng>>;
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeReference = IteratorReference<RangeIterator<TRng>>;
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeConstReference = IteratorReference<RangeConstIterator<TRng>>;
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangePointer = IteratorPointer<RangeIterator<TRng>>;
 
-    template<Range TRng>
+    template<Ur::Range TRng>
     using RangeConstPointer = IteratorPointer<RangeConstIterator<TRng>>;
 
 
@@ -80,8 +80,12 @@ namespace Ur {
     };
 
     template<typename TView>
-    concept UnrealView = std::derived_from<TView, Ur::View::FView>;
+    concept RangeView = std::derived_from<TView, Ur::View::FView>;
 
+    template<typename TFn, typename TView>
+    concept ViewPredicate = requires(TFn Fn, typename TView::reference Item) {
+        { std::invoke(Fn, Item) } -> std::convertible_to<bool>;
+    };
 
     // TTupleElement
     namespace Detail {

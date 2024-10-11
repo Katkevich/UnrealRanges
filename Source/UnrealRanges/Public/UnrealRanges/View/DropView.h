@@ -4,7 +4,7 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<typename TView, typename TAmount>
+    template<Ur::RangeView TView, std::integral TAmount = int32>
     class TDropView
         : public FView
         , public Detail::TMixins<TDropView<TView, TAmount>, TDefaultMixins>
@@ -31,12 +31,17 @@ namespace Ur::View {
             : View(UR_FWD(InView))
             , Amount(InAmount)
         {
+            ensure(Amount >= 0);
         }
 
         auto Num() const requires IsSized
         {
             auto ViewSize = Ur::Size(View);
-            return (ViewSize < Amount) ? 0 : (ViewSize - Amount);
+            using NumType = decltype(ViewSize);
+
+            return (ViewSize < NumType(Amount))
+                ? NumType(0)
+                : NumType(ViewSize - Amount);
         }
 
     private:

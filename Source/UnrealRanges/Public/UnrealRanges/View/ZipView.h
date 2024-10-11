@@ -8,7 +8,7 @@
 #include <type_traits>
 
 namespace Ur::View {
-    template<typename... TViews>
+    template<Ur::RangeView... TViews>
     class TZipView
         : public FView
         , public Detail::TMixins<TZipView<TViews...>, TDefaultMixins>

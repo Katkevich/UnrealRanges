@@ -20,7 +20,7 @@ namespace Ur::View {
                 return TOptValueType{};
         }
 
-        decltype(auto) Front()
+        auto Front()
         {
             using TOptValueType = TOptional<TReference<TView>>;
 

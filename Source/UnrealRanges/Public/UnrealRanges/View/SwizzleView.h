@@ -27,7 +27,7 @@ namespace Ur::View {
         using TSwizzleReference_T = typename TSwizzleReference<UReference, ItemsOrder...>::Type;
     }
 
-    template<typename TView, std::size_t... ItemsOrder>
+    template<Ur::RangeView TView, std::size_t... ItemsOrder>
     class TSwizzleView
         : public FView
         , public Detail::TMixins<TSwizzleView<TView, ItemsOrder...>, TDefaultMixins>

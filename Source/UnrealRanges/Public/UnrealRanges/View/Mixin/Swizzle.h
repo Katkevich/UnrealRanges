@@ -22,7 +22,7 @@ namespace Ur::View {
             Ur::View::Detail::CheckDuplicates<sizeof...(ItemsOrder), ItemsOrder...>();
     }
 
-    template<typename TView, std::size_t... ItemsOrder>
+    template<Ur::RangeView TView, std::size_t... ItemsOrder>
     class TSwizzleView;
 
     template<typename TView>
