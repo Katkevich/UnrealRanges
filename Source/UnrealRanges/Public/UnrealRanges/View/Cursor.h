@@ -57,37 +57,37 @@ namespace Ur {
         template<bool IsForward = true, typename TView, typename TFn>
         static decltype(auto) Iterate(TView& View, TFn Fn)
         {
-            return TView::InternalIterate<IsForward>(View, Fn);
+            return TView::template InternalIterate<IsForward>(View, Fn);
         }
 
         template<bool IsForward = true, typename TView>
         static decltype(auto) Begin(TView& View)
         {
-            return TView::CursorBegin<IsForward>(View);
+            return TView::template CursorBegin<IsForward>(View);
         }
 
         template<bool IsForward = true, typename TView>
         static decltype(auto) End(TView& View)
         {
-            return TView::CursorEnd<IsForward>(View);
+            return TView::template CursorEnd<IsForward>(View);
         }
 
         template<typename TView, typename TCursor>
         static decltype(auto) Inc(TView& View, TCursor& Curs)
         {
-            return TView::CursorInc(View, Curs);
+            return TView::template CursorInc(View, Curs);
         }
 
         template<typename TView, typename TCursor>
         static decltype(auto) Deref(TView& View, const TCursor& Curs)
         {
-            return TView::CursorDeref(View, Curs);
+            return TView::template CursorDeref(View, Curs);
         }
 
         template<typename TView, typename TCursor>
         static bool Eq(TView& View, const TCursor& Lhs, const TCursor& Rhs)
         {
-            return TView::CursorEq(View, Lhs, Rhs);
+            return TView::template CursorEq(View, Lhs, Rhs);
         }
 
 
@@ -99,7 +99,7 @@ namespace Ur {
         template<typename TView, typename TCursor>
         static bool IsEnd(TView& View, const TCursor& Curs)
         {
-            return TView::CursorEq(View, Curs, TView::CursorEnd<IsForward<TView, TCursor>>(View));
+            return TView::template CursorEq(View, Curs, TView::template CursorEnd<IsForward<TView, TCursor>>(View));
         }
 
         template<typename TView>

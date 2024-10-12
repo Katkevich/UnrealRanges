@@ -83,13 +83,13 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorBegin(TSelf& Self)
         {
-            return Ur::BeginEx<IsForward>(AsConstLike<TSelf>(*Self.Rng));
+            return Ur::BeginEx<IsForward>(Ur::AsConstLike<TSelf>(*Self.Rng));
         }
 
         template<bool IsForward, typename TSelf>
         UR_DEBUG_NOINLINE static auto CursorEnd(TSelf& Self)
         {
-            return Ur::EndEx<IsForward>(AsConstLike<TSelf>(*Self.Rng));
+            return Ur::EndEx<IsForward>(Ur::AsConstLike<TSelf>(*Self.Rng));
         }
 
         template<typename TSelf, typename TCursor>
