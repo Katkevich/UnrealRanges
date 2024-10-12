@@ -5,6 +5,7 @@
 #include "Test.h"
 
 #include "UnrealRanges/View/All.h"
+#include "UnrealRanges/StringLiteral.h"
 #include "EqualTo.h"
 #include "Containers/Array.h"
 
@@ -138,6 +139,19 @@ UR_TEST(UnrealRanges, Zip, TestZipSized)
     static_assert(std::is_same_v<TTuple<double&, int32&, FString&>, decltype(*Result.begin())>);
 
     return Result.Num() == 2;
+}
+
+UR_TEST(UnrealRanges, Zip, TestConcatZipAndSwizzle)
+{
+    auto Strs = TArray<FString>{ TEXT("0"),TEXT("1") };
+
+    TMap<int32, FString> Map = Ur::View::Ref(Strs)      // "0","1"
+        .ConcatWith(Ur::View::Single(TEXT("2")))        // "0","1","2"
+        .ZipWith(Ur::View::Ints(0))                     // TTuple("0", 0), TTuple("1", 1), TTuple("2", 2)
+        .Swizzle<1, 0>()                                // TTuple(0, "0"), TTuple(1, "1"), TTuple(2, "2")
+        .To<TMap>();                                    // TMap{ TPair(0, "0"), TPair(1, "1"), TPair(2, "2") }
+
+    return Ref(Map).EqualTo(std::array{ MakeTuple(0, TEXT("0"_s)), MakeTuple(1, TEXT("1"_s)), MakeTuple(2, TEXT("2"_s)) });
 }
 
 #endif

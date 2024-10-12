@@ -80,7 +80,7 @@ namespace Ur {
     };
 
     template<typename TView>
-    concept RangeView = std::derived_from<TView, Ur::View::FView>;
+    concept RangeView = std::derived_from<std::remove_cvref_t<TView>, Ur::View::FView>;
 
     template<typename TFn, typename TView>
     concept ViewPredicate = requires(TFn Fn, typename TView::reference Item) {

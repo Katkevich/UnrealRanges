@@ -166,6 +166,44 @@ UR_TEST(UnrealRanges, Concat, TestConcatOnReverseView)
     return Result.Count() == 7 && ResultArray.Num() == 7 && EqualTo(Result, {3,2,1,5,9,8,7});
 }
 
+UR_TEST(UnrealRanges, Concat, TestConcatConstAndNonConstViews)
+{
+    bool bIsAllOk = true;
+    {
+        TArray<int32> Array0 = { 1,2,3 };
+        TArray<int32> Array1 = { 7,8,9 };
+
+        TRefView<const TArray<int32>> ConstView = Cref(Array0);
+        TRefView<TArray<int32>> NonConstView = Ref(Array1);
+
+        auto Result = ConstView.ConcatWith(NonConstView);
+        static_assert(std::is_same_v<decltype(Result), TConcatView<TRefView<const TArray<int32>>, TRefView<TArray<int32>>>>);
+        static_assert(std::is_same_v<decltype(*Result.begin()), const int32&>);
+        static_assert(std::is_same_v<decltype(Result)::reference, const int32&>);
+        static_assert(std::is_same_v<Ur::RangeReference<decltype(Result)>, const int32&>);
+
+        bIsAllOk &= EqualTo(Result, { 1,2,3,7,8,9 });
+    }
+
+    {
+        TArray<int32> Array0 = { 1,2,3 };
+        TArray<int32> Array1 = { 7,8,9 };
+
+        TRefView<const TArray<int32>> ConstView = Cref(Array0);
+        TRefView<TArray<int32>> NonConstView = Ref(Array1);
+
+        auto Result = NonConstView.ConcatWith(ConstView);
+        static_assert(std::is_same_v<decltype(Result), TConcatView<TRefView<TArray<int32>>, TRefView<const TArray<int32>>>>);
+        static_assert(std::is_same_v<decltype(*Result.begin()), const int32&>);
+        static_assert(std::is_same_v<decltype(Result)::reference, const int32&>);
+        static_assert(std::is_same_v<Ur::RangeReference<decltype(Result)>, const int32&>);
+
+        bIsAllOk &= EqualTo(Result, { 7,8,9,1,2,3 });
+    }
+
+    return bIsAllOk;
+}
+
 
 UR_TEST(UnrealRanges, Concat, TestDifferentValueTypesImplicitlyConvertible)
 {

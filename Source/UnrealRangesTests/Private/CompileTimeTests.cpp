@@ -14,6 +14,7 @@
 #include "Containers/ArrayView.h"
 #include "Containers/StringView.h"
 #include <utility>
+#include <ranges>
 
 using namespace Ur::View;
 
@@ -116,6 +117,43 @@ namespace Ur::View::Test {
         for (const FString& Str : DeepConstView)
         {
             (void)Str;
+        }
+    }
+
+    static void UnrealRangesVsStdRanges()
+    {
+        std::vector<int32> Array = { 1,2,3 };
+
+        auto Print = [](const auto& Rng) {
+            for (auto& Val : Rng)
+            {
+            }
+        };
+
+        {
+            const auto StdFilteredConst = Array | std::views::filter(Ur::Fn::Even);
+            const auto StdTakenConst = Array | std::views::take(5);
+            auto StdTakenNonConst = Array | std::views::take(5);
+
+            // StdFilteredConst.begin();                                                        // BAD - wont't compile (begin is non-const)
+            // StdFilteredConst.cbegin();                                                       // BAD - wont't compile (cbegin member is missing)
+            static_assert(std::is_same_v<decltype(*StdTakenConst.begin()), int32&>);            // BAD - no const-propagation
+            static_assert(std::is_same_v<decltype(*std::cbegin(StdTakenConst)), int32&>);       // BAD - std::cbegin is broken
+            static_assert(std::is_same_v<decltype(*std::cbegin(StdTakenNonConst)), int32&>);    // BAD - std::cbegin is broken
+            // Print(StdFilteredConst);                                                         // BAD - won't compile
+        }
+
+        {
+            const auto UrFilteredConst = Ref(Array).Filter(Ur::Fn::Even);
+            const auto UrTakenConst = Ref(Array).Take(2);
+            auto UrTakenNonConst = Ref(Array).Take(2);
+
+            static_assert(std::is_same_v<decltype(*UrFilteredConst.begin()), const int32&>);        // OK
+            static_assert(std::is_same_v<decltype(*UrFilteredConst.cbegin()), const int32&>);       // OK
+            static_assert(std::is_same_v<decltype(*UrTakenConst.begin()), const int32&>);           // OK (const-propagation)
+            static_assert(std::is_same_v<decltype(*std::cbegin(UrTakenConst)), const int32&>);      // OK
+            static_assert(std::is_same_v<decltype(*std::cbegin(UrTakenNonConst)), const int32&>);   // OK
+            Print(UrFilteredConst);                                                                 // OK
         }
     }
 }

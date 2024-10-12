@@ -52,13 +52,13 @@ namespace Ur::View {
     {
     public:
         template<Ur::Range TRng>
-        auto EqualTo(TRng& Rng)
+        auto EqualTo(TRng&& Rng)
         {
             return Detail::TEqualToMixin<TView>::EqualTo(*static_cast<TView*>(this), Rng);
         }
 
         template<Ur::Range TRng>
-        auto EqualTo(TRng& Rng) const
+        auto EqualTo(TRng&& Rng) const
         {
             return Detail::TEqualToMixin<TView>::EqualTo(*static_cast<const TView*>(this), Rng);
         }
