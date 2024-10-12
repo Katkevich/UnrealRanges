@@ -9,19 +9,6 @@ Unreal Engine containers are well known for their unique iteration model, which 
 
 The goal of UnrealRanges library is to provide a modern, composable, performant, and easy-to-use interface for Unreal Engine containers, out of the box.
 
-UnrealRanges offers:
-
-* A large selection of algorithms and views adaptors for creating powerful and efficient data pipelines
-* Unreal Engine containers support (TArray, TSet, TMap, etc.)
-* **Discoverability** – Each view adaptor and algorithm for a particular view is essentially a **C++ method** of that view, meaning auto-complete in most IDEs will work out of the box. In my opinion, this is the most appealing, important, and powerful feature of this library, one that is hard to overestimate. You simply type a *dot* on your keyboard, and your IDE’s auto-complete instantly shows the available adaptors and algorithms. Just like in C# or Rust! No more abusing `operator|` overload set nonsence.
-* Improved safety compared to standard library iterators and ranges (due to iteration model which is based on *cursors* instead of *iterators*)
-* Near zero overhead and overall improved run-time efficiency for some common operations (due to usage of so-called *internal iteration* for most common algorithms)
-* Consistency and const-correctness (C++20 ranges are known for not providing const-correctness for some of its views of for having caching *begin()* which is a SUPER bad decision IMHO and it will hurt C++ ranges reputation badly)
-
-## Documentation ##
-
-Work-in-progress...
-
 ## A Quick Example ##
 
 ```cpp
@@ -57,6 +44,19 @@ for (const auto [ItemReference, Index] : Ur::View::Ref(Strs).Reverse().Enumerate
     // ["0", 14]
 }
 ```
+
+## Key features ##
+
+* A large selection of algorithms and views adaptors for creating powerful and efficient data pipelines
+* Unreal Engine containers support (TArray, TSet, TMap, etc.)
+* **Discoverability** – Each view adaptor and algorithm for a particular view is essentially a **C++ method** of that view, meaning auto-complete in most IDEs will work out of the box. In my opinion, this is the most appealing, important, and powerful feature of this library, one that is hard to overestimate. You simply type a *dot* on your keyboard, and your IDE’s auto-complete instantly shows the available adaptors and algorithms. Just like in C# or Rust! No more abusing `operator|` overload set nonsence.
+* Improved safety compared to standard library iterators and ranges (due to iteration model which is based on *cursors* instead of *iterators*)
+* Near zero overhead and overall improved run-time efficiency for some common operations (due to usage of so-called *internal iteration* for most common algorithms)
+* Consistency and const-correctness (C++20 ranges are known for not providing const-correctness for some of its views of for having caching *begin()* which is a SUPER bad decision IMHO and it will hurt C++ ranges reputation badly)
+
+## Documentation ##
+
+Work-in-progress...
 
 ## Fab (Epic Games marketplace) ##
 
