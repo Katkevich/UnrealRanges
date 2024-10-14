@@ -4,27 +4,27 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<Ur::RangeView TView, ViewPredicate<TView> TFn>
+    template<Ur::RangeView TUnderlView, ViewPredicate<TUnderlView> TFn>
     class TTakeWhileView
         : public FView
-        , public Detail::TMixins<TTakeWhileView<TView, TFn>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::LikeMap, TTakeWhileView<TView, TFn>, TMapMixins>
+        , public Detail::TMixins<TTakeWhileView<TUnderlView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::LikeMap, TTakeWhileView<TUnderlView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = typename TView::reference;
-        using const_reference = typename TView::const_reference;
-        using value_type = typename TView::value_type;
+        using reference = typename TUnderlView::reference;
+        using const_reference = typename TUnderlView::const_reference;
+        using value_type = typename TUnderlView::value_type;
 
         struct Cursor
         {
-            typename TView::Cursor Nested;
+            typename TUnderlView::Cursor Nested;
             bool bIsEnd = false;
         };
         struct ConstCursor
         {
-            typename TView::ConstCursor Nested;
+            typename TUnderlView::ConstCursor Nested;
             bool bIsEnd = false;
         };
         using ReverseCursor = void;
@@ -32,10 +32,10 @@ namespace Ur::View {
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = false;
-        static constexpr bool LikeMap = TView::LikeMap;
+        static constexpr bool LikeMap = TUnderlView::LikeMap;
 
-        template<typename UView, typename UFn>
-        TTakeWhileView(UView&& InView, UFn&& InFn)
+        template<typename UUnderlView, typename UFn>
+        TTakeWhileView(UUnderlView&& InView, UFn&& InFn)
             : View(UR_FWD(InView))
             , Fn(UR_FWD(InFn))
         {
@@ -94,7 +94,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TFn Fn;
     };
 

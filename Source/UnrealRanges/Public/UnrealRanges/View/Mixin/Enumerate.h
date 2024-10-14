@@ -6,7 +6,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView, std::integral TIndex>
+    template<Ur::RangeView TUnderlView, std::integral TIndex>
     class TEnumerateView;
 
     template<typename T, std::integral TIndex = int32>

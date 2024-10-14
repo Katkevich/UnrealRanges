@@ -4,38 +4,38 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<Ur::RangeView TView, std::integral TAmount = int32>
+    template<Ur::RangeView TUnderlView, std::integral TAmount = int32>
     class TTakeView
         : public FView
-        , public Detail::TMixins<TTakeView<TView, TAmount>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::LikeMap, TTakeView<TView, TAmount>, TMapMixins>
+        , public Detail::TMixins<TTakeView<TUnderlView, TAmount>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::LikeMap, TTakeView<TUnderlView, TAmount>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = typename TView::reference;
-        using const_reference = typename TView::const_reference;
-        using value_type = typename TView::value_type;
+        using reference = typename TUnderlView::reference;
+        using const_reference = typename TUnderlView::const_reference;
+        using value_type = typename TUnderlView::value_type;
 
         struct Cursor
         {
-            typename TView::Cursor Nested{};
+            typename TUnderlView::Cursor Nested{};
             TAmount Index{};
         };
         struct ConstCursor
         {
-            typename TView::ConstCursor Nested{};
+            typename TUnderlView::ConstCursor Nested{};
             TAmount Index{};
         };
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
-        static constexpr bool IsSized = TView::IsSized;
-        static constexpr bool LikeMap = TView::LikeMap;
+        static constexpr bool IsSized = TUnderlView::IsSized;
+        static constexpr bool LikeMap = TUnderlView::LikeMap;
 
-        template<typename UView, typename UAmount>
-        TTakeView(UView&& InView, UAmount InAmount)
+        template<typename UUnderlView, typename UAmount>
+        TTakeView(UUnderlView&& InView, UAmount InAmount)
             : View(UR_FWD(InView))
             , Amount(InAmount)
         {
@@ -107,7 +107,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TAmount Amount;
     };
 

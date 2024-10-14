@@ -33,37 +33,37 @@ namespace Ur::View {
         using TTupleOfSize_T = typename TTupleOfSize<T, N>::Type;
     }
 
-    template<Ur::RangeView TView, std::size_t N = 2>
+    template<Ur::RangeView TUnderlView, std::size_t N = 2>
     requires (N > 0)
     class TAdjacentView
         : public FView
-        , public Detail::TMixins<TAdjacentView<TView, N>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::IsSized, TAdjacentView<TView, N>, TSizedMixins>
+        , public Detail::TMixins<TAdjacentView<TUnderlView, N>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsSized, TAdjacentView<TUnderlView, N>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = Detail::TTupleOfSize_T<typename TView::reference, N>;
-        using const_reference = Detail::TTupleOfSize_T<typename TView::const_reference, N>;
+        using reference = Detail::TTupleOfSize_T<typename TUnderlView::reference, N>;
+        using const_reference = Detail::TTupleOfSize_T<typename TUnderlView::const_reference, N>;
         using value_type = reference;
 
         struct Cursor
         {
-            std::array<typename TView::Cursor, N> Nested;
+            std::array<typename TUnderlView::Cursor, N> Nested;
         };
         struct ConstCursor
         {
-            std::array<typename TView::ConstCursor, N> Nested;
+            std::array<typename TUnderlView::ConstCursor, N> Nested;
         };
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
-        static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool IsSized = TUnderlView::IsSized;
         static constexpr bool LikeMap = false;
 
-        template<typename UView>
-        TAdjacentView(Misc::FFromViewTag, UView&& InView)
+        template<typename UUnderlView>
+        TAdjacentView(Misc::FFromViewTag, UUnderlView&& InView)
             : View(UR_FWD(InView))
         {
         }
@@ -83,10 +83,10 @@ namespace Ur::View {
         template<bool IsForward, typename TSelf, typename TCallback>
         UR_DEBUG_NOINLINE static Ur::ELoop InternalIterate(TSelf& Self, TCallback Callback)
         {
-            static_assert(std::is_lvalue_reference_v<typename TView::reference> || std::movable<typename TView::reference>,
+            static_assert(std::is_lvalue_reference_v<typename TUnderlView::reference> || std::movable<typename TUnderlView::reference>,
                 "We should be able to copy/move items coz we are reusing items from previous iteration by moving them into adjacent slots");
 
-            std::array<TOptional<typename TView::reference>, N> AdjacentItems;
+            std::array<TOptional<typename TUnderlView::reference>, N> AdjacentItems;
             int32 Counter = 0;
 
             return Ur::Cursor::Iterate<IsForward>(Self.View, [&](auto&& Item)
@@ -176,7 +176,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
     };
 
 

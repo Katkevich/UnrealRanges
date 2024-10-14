@@ -4,13 +4,13 @@
 #include "UnrealRanges/Fn/Pair.h"
 
 namespace Ur::View {
-    template<Ur::RangeView TView>
-    class TKeysView : public TTransformView<TView, Ur::Fn::FKey>
+    template<Ur::RangeView TUnderlView>
+    class TKeysView : public TTransformView<TUnderlView, Ur::Fn::FKey>
     {
     public:
-        template<typename UView>
-        TKeysView(Misc::FFromViewTag, UView&& InView)
-            : TTransformView<TView, Ur::Fn::FKey>(UR_FWD(InView), Ur::Fn::Key)
+        template<typename UUnderlView>
+        TKeysView(Misc::FFromViewTag, UUnderlView&& InView)
+            : TTransformView<TUnderlView, Ur::Fn::FKey>(UR_FWD(InView), Ur::Fn::Key)
         {
         }
     };

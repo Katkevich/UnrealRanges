@@ -4,30 +4,30 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<Ur::RangeView TView, ViewPredicate<TView> TFn>
+    template<Ur::RangeView TUnderlView, ViewPredicate<TUnderlView> TFn>
     class TFilterView
         : public FView
-        , public Detail::TMixins<TFilterView<TView, TFn>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::IsBidir, TFilterView<TView, TFn>, TBidirMixins>
-        , public Detail::TConditionalMixins<TView::LikeMap, TFilterView<TView, TFn>, TMapMixins>
+        , public Detail::TMixins<TFilterView<TUnderlView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsBidir, TFilterView<TUnderlView, TFn>, TBidirMixins>
+        , public Detail::TConditionalMixins<TUnderlView::LikeMap, TFilterView<TUnderlView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = typename TView::reference;
-        using const_reference = typename TView::const_reference;
-        using value_type = typename TView::value_type;
-        using Cursor = typename TView::Cursor;
-        using ConstCursor = typename TView::ConstCursor;
-        using ReverseCursor = typename TView::ReverseCursor;
-        using ReverseConstCursor = typename TView::ReverseConstCursor;
+        using reference = typename TUnderlView::reference;
+        using const_reference = typename TUnderlView::const_reference;
+        using value_type = typename TUnderlView::value_type;
+        using Cursor = typename TUnderlView::Cursor;
+        using ConstCursor = typename TUnderlView::ConstCursor;
+        using ReverseCursor = typename TUnderlView::ReverseCursor;
+        using ReverseConstCursor = typename TUnderlView::ReverseConstCursor;
 
-        static constexpr bool IsBidir = TView::IsBidir;
+        static constexpr bool IsBidir = TUnderlView::IsBidir;
         static constexpr bool IsSized = false;
-        static constexpr bool LikeMap = TView::LikeMap;
+        static constexpr bool LikeMap = TUnderlView::LikeMap;
 
-        template<typename UView, typename UFn>
-        TFilterView(UView&& InView, UFn&& InFn)
+        template<typename UUnderlView, typename UFn>
+        TFilterView(UUnderlView&& InView, UFn&& InFn)
             : View(UR_FWD(InView))
             , Fn(UR_FWD(InFn))
         {
@@ -92,7 +92,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TFn Fn;
     };
 

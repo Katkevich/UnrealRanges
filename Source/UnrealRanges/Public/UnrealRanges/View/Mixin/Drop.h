@@ -3,7 +3,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView, std::integral TAmount>
+    template<Ur::RangeView TUnderlView, std::integral TAmount>
     class TDropView;
 
     template<typename TView>

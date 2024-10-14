@@ -5,7 +5,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView, ViewPredicate<TView> TFn>
+    template<Ur::RangeView TUnderlView, ViewPredicate<TUnderlView> TFn>
     class TDropWhileView;
 
     template<typename TView>

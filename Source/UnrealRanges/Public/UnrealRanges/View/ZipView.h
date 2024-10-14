@@ -8,31 +8,31 @@
 #include <type_traits>
 
 namespace Ur::View {
-    template<Ur::RangeView... TViews>
+    template<Ur::RangeView... TUnderlViews>
     class TZipView
         : public FView
-        , public Detail::TMixins<TZipView<TViews...>, TDefaultMixins>
+        , public Detail::TMixins<TZipView<TUnderlViews...>, TDefaultMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = TTuple<typename TViews::reference...>;
-        using const_reference = TTuple<typename TViews::const_reference...>;
+        using reference = TTuple<typename TUnderlViews::reference...>;
+        using const_reference = TTuple<typename TUnderlViews::const_reference...>;
         using value_type = reference;
 
         struct Cursor
         {
-            TTuple<typename TViews::Cursor...> Nested{};
+            TTuple<typename TUnderlViews::Cursor...> Nested{};
         };
         struct ConstCursor
         {
-            TTuple<typename TViews::ConstCursor...> Nested{};
+            TTuple<typename TUnderlViews::ConstCursor...> Nested{};
         };
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
-        static constexpr bool IsSized = (TViews::IsSized && ...);
+        static constexpr bool IsSized = (TUnderlViews::IsSized && ...);
         static constexpr bool LikeMap = false;
 
         template<typename... UViews>
@@ -43,11 +43,11 @@ namespace Ur::View {
 
         auto Num() const requires IsSized
         {
-            using CommonSizeType = std::common_type_t<std::invoke_result_t<FSizeCpo, TViews>...>;
+            using CommonSizeType = std::common_type_t<std::invoke_result_t<FSizeCpo, TUnderlViews>...>;
 
             const std::array Sizes = [&]<size_t... Indices>(std::index_sequence<Indices...>) {
                 return std::array{ static_cast<CommonSizeType>(Ur::Size(get<Indices>(Views)))... };
-            }(std::index_sequence_for<TViews...>{});
+            }(std::index_sequence_for<TUnderlViews...>{});
 
             return *Algo::MinElement(Sizes);
         }
@@ -74,7 +74,7 @@ namespace Ur::View {
             {
                 [&]<std::size_t... Is>(std::index_sequence<Is...>) {
                     return MakeTuple(Ur::Cursor::Begin<IsForward>(get<Is>(Self.Views))...);
-                }(std::index_sequence_for<TViews...>{})
+                }(std::index_sequence_for<TUnderlViews...>{})
             };
         }
 
@@ -85,7 +85,7 @@ namespace Ur::View {
             {
                 [&] <std::size_t... Is>(std::index_sequence<Is...>) {
                     return MakeTuple(Ur::Cursor::End<IsForward>(get<Is>(Self.Views))...);
-                }(std::index_sequence_for<TViews...>{})
+                }(std::index_sequence_for<TUnderlViews...>{})
             };
         }
 
@@ -94,7 +94,7 @@ namespace Ur::View {
         {
             [&] <std::size_t... Is>(std::index_sequence<Is...>) {
                 (Ur::Cursor::Inc(get<Is>(Self.Views), get<Is>(Curs.Nested)), ...);
-            }(std::index_sequence_for<TViews...>{});
+            }(std::index_sequence_for<TUnderlViews...>{});
         }
 
         template<typename TSelf, typename TCursor>
@@ -102,7 +102,7 @@ namespace Ur::View {
         {
             return [&]<std::size_t... Is>(std::index_sequence<Is...>) -> decltype(auto) {
                 return TReference<TSelf>{ Ur::Cursor::Deref(get<Is>(Self.Views), get<Is>(Curs.Nested))... };
-            }(std::index_sequence_for<TViews...>{});
+            }(std::index_sequence_for<TUnderlViews...>{});
         }
 
         template<typename TSelf, typename TCursor>
@@ -119,7 +119,7 @@ namespace Ur::View {
 
             bool bHasCursorPairBothEnd = [&] <std::size_t... Is>(std::index_sequence<Is...>) {
                 return (CmpCursors(get<Is>(Self.Views), get<Is>(Lhs.Nested), get<Is>(Rhs.Nested)) || ...);
-            }(std::index_sequence_for<TViews...>{});
+            }(std::index_sequence_for<TUnderlViews...>{});
 
             if (bHasCursorPairBothEnd)
                 return true;
@@ -128,7 +128,7 @@ namespace Ur::View {
         }
 
     private:
-        TTuple<TViews...> Views;
+        TTuple<TUnderlViews...> Views;
     };
 
 

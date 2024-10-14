@@ -5,32 +5,32 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView>
+    template<Ur::RangeView TUnderlView>
     class TReverseView
         : public FView
-        , public Detail::TMixins<TReverseView<TView>, TDefaultMixins>
-        , public Detail::TMixins<TReverseView<TView>, TBidirMixins>
-        , public Detail::TConditionalMixins<TView::IsSized, TReverseView<TView>, TSizedMixins>
-        , public Detail::TConditionalMixins<TView::LikeMap, TReverseView<TView>, TMapMixins>
+        , public Detail::TMixins<TReverseView<TUnderlView>, TDefaultMixins>
+        , public Detail::TMixins<TReverseView<TUnderlView>, TBidirMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsSized, TReverseView<TUnderlView>, TSizedMixins>
+        , public Detail::TConditionalMixins<TUnderlView::LikeMap, TReverseView<TUnderlView>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using value_type = typename TView::value_type;
-        using reference = typename TView::reference;
-        using const_reference = typename TView::const_reference;
+        using value_type = typename TUnderlView::value_type;
+        using reference = typename TUnderlView::reference;
+        using const_reference = typename TUnderlView::const_reference;
 
-        using Cursor = typename TView::ReverseCursor;
-        using ConstCursor = typename TView::ReverseConstCursor;
-        using ReverseCursor = typename TView::Cursor;
-        using ReverseConstCursor = typename TView::ConstCursor;
+        using Cursor = typename TUnderlView::ReverseCursor;
+        using ConstCursor = typename TUnderlView::ReverseConstCursor;
+        using ReverseCursor = typename TUnderlView::Cursor;
+        using ReverseConstCursor = typename TUnderlView::ConstCursor;
 
         static constexpr bool IsBidir = true;
-        static constexpr bool IsSized = TView::IsSized;
-        static constexpr bool LikeMap = TView::LikeMap;
+        static constexpr bool IsSized = TUnderlView::IsSized;
+        static constexpr bool LikeMap = TUnderlView::LikeMap;
 
-        template<typename UView>
-        TReverseView(Misc::FFromViewTag, UView&& InView)
+        template<typename UUnderlView>
+        TReverseView(Misc::FFromViewTag, UUnderlView&& InView)
             : View(UR_FWD(InView))
         {
         }
@@ -73,7 +73,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
     };
 
 

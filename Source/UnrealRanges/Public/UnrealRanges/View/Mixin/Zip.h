@@ -5,7 +5,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView... TViews>
+    template<Ur::RangeView... TUnderlViews>
     class TZipView;
 
     template<Ur::Range TRng>

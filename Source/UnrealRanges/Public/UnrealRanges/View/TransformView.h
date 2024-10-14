@@ -4,18 +4,18 @@
 #include "UnrealRanges/Utility.h"
 
 namespace Ur::View {
-    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
+    template<Ur::RangeView TUnderlView, std::regular_invocable<typename TUnderlView::reference> TFn>
     class TTransformView
         : public FView
-        , public Detail::TMixins<TTransformView<TView, TFn>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::IsBidir, TTransformView<TView, TFn>, TBidirMixins>
-        , public Detail::TConditionalMixins<TView::IsSized, TTransformView<TView, TFn>, TSizedMixins>
-        , public Detail::TConditionalMixins<TIsPair_V<std::invoke_result_t<TFn, typename TView::reference>>, TTransformView<TView, TFn>, TMapMixins>
+        , public Detail::TMixins<TTransformView<TUnderlView, TFn>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsBidir, TTransformView<TUnderlView, TFn>, TBidirMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsSized, TTransformView<TUnderlView, TFn>, TSizedMixins>
+        , public Detail::TConditionalMixins<TIsPair_V<std::invoke_result_t<TFn, typename TUnderlView::reference>>, TTransformView<TUnderlView, TFn>, TMapMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = std::invoke_result_t<TFn, typename TView::reference>;
+        using reference = std::invoke_result_t<TFn, typename TUnderlView::reference>;
         using value_type = std::remove_cvref_t<reference>;
         using const_reference = std::conditional_t<
             std::is_lvalue_reference_v<reference>,
@@ -23,17 +23,17 @@ namespace Ur::View {
             value_type
         >;
 
-        using Cursor = typename TView::Cursor;
-        using ConstCursor = typename TView::ConstCursor;
-        using ReverseCursor = typename TView::ReverseCursor;
-        using ReverseConstCursor = typename TView::ReverseConstCursor;
+        using Cursor = typename TUnderlView::Cursor;
+        using ConstCursor = typename TUnderlView::ConstCursor;
+        using ReverseCursor = typename TUnderlView::ReverseCursor;
+        using ReverseConstCursor = typename TUnderlView::ReverseConstCursor;
 
-        static constexpr bool IsBidir = TView::IsBidir;
-        static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool IsBidir = TUnderlView::IsBidir;
+        static constexpr bool IsSized = TUnderlView::IsSized;
         static constexpr bool LikeMap = TIsPair_V<value_type>;
 
-        template<typename UView, typename UFn>
-        TTransformView(UView&& InView, UFn&& InFn)
+        template<typename UUnderlView, typename UFn>
+        TTransformView(UUnderlView&& InView, UFn&& InFn)
             : View(UR_FWD(InView))
             , Fn(UR_FWD(InFn))
         {
@@ -80,7 +80,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TFn Fn;
     };
 

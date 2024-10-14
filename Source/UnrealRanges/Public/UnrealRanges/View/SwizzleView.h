@@ -27,39 +27,39 @@ namespace Ur::View {
         using TSwizzleReference_T = typename TSwizzleReference<UReference, ItemsOrder...>::Type;
     }
 
-    template<Ur::RangeView TView, std::size_t... ItemsOrder>
+    template<Ur::RangeView TUnderlView, std::size_t... ItemsOrder>
     class TSwizzleView
         : public FView
-        , public Detail::TMixins<TSwizzleView<TView, ItemsOrder...>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::IsSized, TSwizzleView<TView, ItemsOrder...>, TSizedMixins>
+        , public Detail::TMixins<TSwizzleView<TUnderlView, ItemsOrder...>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsSized, TSwizzleView<TUnderlView, ItemsOrder...>, TSizedMixins>
         , public Detail::TConditionalMixins<
-            TIsPair_V<Detail::TSwizzleReference_T<typename TView::reference, ItemsOrder...>>,
-            TSwizzleView<TView, ItemsOrder...>,
+            TIsPair_V<Detail::TSwizzleReference_T<typename TUnderlView::reference, ItemsOrder...>>,
+            TSwizzleView<TUnderlView, ItemsOrder...>,
             TMapMixins>
     {
         friend struct Ur::Cursor;
 
-        static_assert(Ur::TTupleSize_V<typename TView::value_type> == sizeof...(ItemsOrder),
+        static_assert(Ur::TTupleSize_V<typename TUnderlView::value_type> == sizeof...(ItemsOrder),
             "the amount of indices you passed into swizzle should match the tuple size (members count is a case of an aggregate) of a view items");
-        static_assert(Ur::View::Detail::SwizzleIndices<TView, ItemsOrder...>,
+        static_assert(Ur::View::Detail::SwizzleIndices<TUnderlView, ItemsOrder...>,
             "swizzle indices should be unique and be in the range of [0..N-1] where N is a tuple size of a view item");
 
     public:
-        using reference = Detail::TSwizzleReference_T<typename TView::reference, ItemsOrder...>;
-        using const_reference = Detail::TSwizzleReference_T<typename TView::const_reference, ItemsOrder...>;
+        using reference = Detail::TSwizzleReference_T<typename TUnderlView::reference, ItemsOrder...>;
+        using const_reference = Detail::TSwizzleReference_T<typename TUnderlView::const_reference, ItemsOrder...>;
         using value_type = reference;
 
-        using Cursor = typename TView::Cursor;
-        using ConstCursor = typename TView::ConstCursor;
+        using Cursor = typename TUnderlView::Cursor;
+        using ConstCursor = typename TUnderlView::ConstCursor;
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
-        static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool IsSized = TUnderlView::IsSized;
         static constexpr bool LikeMap = TIsPair_V<reference>;
 
-        template<typename UView>
-        TSwizzleView(Misc::FFromViewTag, UView&& InView)
+        template<typename UUnderlView>
+        TSwizzleView(Misc::FFromViewTag, UUnderlView&& InView)
             : View(UR_FWD(InView))
         {
         }
@@ -111,7 +111,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
     };
 
 

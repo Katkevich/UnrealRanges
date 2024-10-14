@@ -151,37 +151,37 @@ namespace Ur::View {
 
 
 
-    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
+    template<Ur::RangeView TUnderlView, std::regular_invocable<typename TUnderlView::reference> TFn>
     class TGroupByView
         : public FView
-        , public Detail::TMixins<TGroupByView<TView, TFn>, TDefaultMixins>
+        , public Detail::TMixins<TGroupByView<TUnderlView, TFn>, TDefaultMixins>
     {
         friend struct Ur::Cursor;
 
         template<typename TBaseGroupByView, typename TBaseCursor>
         friend class TGroupView;
 
-        using TUnderlyingView = TView;
+        using TUnderlyingView = TUnderlView;
 
     public:
-        using Cursor = typename TView::Cursor;
-        using ConstCursor = typename TView::ConstCursor;
+        using Cursor = typename TUnderlView::Cursor;
+        using ConstCursor = typename TUnderlView::ConstCursor;
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
-        using reference = TGroupView<TGroupByView<TView, TFn>, Cursor>;
-        using const_reference = TGroupView<TGroupByView<TView, TFn>, ConstCursor>;
+        using reference = TGroupView<TGroupByView<TUnderlView, TFn>, Cursor>;
+        using const_reference = TGroupView<TGroupByView<TUnderlView, TFn>, ConstCursor>;
         using value_type = reference;
 
         static constexpr bool IsBidir = false;
         static constexpr bool IsSized = false;
         static constexpr bool LikeMap = false;
 
-        static_assert(std::is_invocable_v<TFn, typename TView::reference>, "TFn should be invokable over underlying view items references");
-        static_assert(EqComparable<std::invoke_result_t<TFn, typename TView::reference>>, "The result of TFn invokation should be comparable using '==' operator");
+        static_assert(std::is_invocable_v<TFn, typename TUnderlView::reference>, "TFn should be invokable over underlying view items references");
+        static_assert(EqComparable<std::invoke_result_t<TFn, typename TUnderlView::reference>>, "The result of TFn invokation should be comparable using '==' operator");
 
-        template<typename UView, typename UFn>
-        TGroupByView(UView&& InView, UFn&& InFn)
+        template<typename UUnderlView, typename UFn>
+        TGroupByView(UUnderlView&& InView, UFn&& InFn)
             : View(UR_FWD(InView))
             , Fn(UR_FWD(InFn))
         {
@@ -245,7 +245,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TFn Fn{};
     };
 

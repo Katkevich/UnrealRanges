@@ -4,7 +4,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView, std::size_t N>
+    template<Ur::RangeView TUnderlView, std::size_t N>
     requires (N > 0)
     class TAdjacentView;
 

@@ -5,38 +5,38 @@
 #include <limits>
 
 namespace Ur::View {
-    template<Ur::RangeView TView, std::integral TIndex = int32>
+    template<Ur::RangeView TUnderlView, std::integral TIndex = int32>
     class TEnumerateView
         : public FView
-        , public Detail::TMixins<TEnumerateView<TView, TIndex>, TDefaultMixins>
-        , public Detail::TConditionalMixins<TView::IsSized, TEnumerateView<TView, TIndex>, TSizedMixins>
+        , public Detail::TMixins<TEnumerateView<TUnderlView, TIndex>, TDefaultMixins>
+        , public Detail::TConditionalMixins<TUnderlView::IsSized, TEnumerateView<TUnderlView, TIndex>, TSizedMixins>
     {
         friend struct Ur::Cursor;
 
     public:
-        using reference = FIndexed<typename TView::reference, TIndex>;
-        using const_reference = FIndexed<typename TView::const_reference, TIndex>;
+        using reference = FIndexed<typename TUnderlView::reference, TIndex>;
+        using const_reference = FIndexed<typename TUnderlView::const_reference, TIndex>;
         using value_type = reference;
 
         struct Cursor
         {
-            typename TView::Cursor Nested{};
+            typename TUnderlView::Cursor Nested{};
             TIndex Index{};
         };
         struct ConstCursor
         {
-            typename TView::ConstCursor Nested{};
+            typename TUnderlView::ConstCursor Nested{};
             TIndex Index{};
         };
         using ReverseCursor = void;
         using ReverseConstCursor = void;
 
         static constexpr bool IsBidir = false;
-        static constexpr bool IsSized = TView::IsSized;
+        static constexpr bool IsSized = TUnderlView::IsSized;
         static constexpr bool LikeMap = false;
 
-        template<typename UView, typename UIndex>
-        TEnumerateView(UView&& InView, UIndex InIndexFrom, UIndex InStep)
+        template<typename UUnderlView, typename UIndex>
+        TEnumerateView(UUnderlView&& InView, UIndex InIndexFrom, UIndex InStep)
             : View(UR_FWD(InView))
             , IndexFrom(InIndexFrom)
             , Step(InStep)
@@ -92,7 +92,7 @@ namespace Ur::View {
         }
 
     private:
-        TView View;
+        TUnderlView View;
         TIndex IndexFrom{};
         TIndex Step{};
     };

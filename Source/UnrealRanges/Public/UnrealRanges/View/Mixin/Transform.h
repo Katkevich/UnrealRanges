@@ -5,7 +5,7 @@
 
 namespace Ur::View {
 
-    template<Ur::RangeView TView, std::regular_invocable<typename TView::reference> TFn>
+    template<Ur::RangeView TUnderlView, std::regular_invocable<typename TUnderlView::reference> TFn>
     class TTransformView;
 
     template<typename TView>
